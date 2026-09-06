@@ -152,7 +152,7 @@
     <div>
       <p class="eyebrow">One job, end to end</p>
       <h1>Stocktake Workflow</h1>
-      <p class="lede">The day-to-day job workflow, and how the system runs it &mdash; one back-office PC, the browser app, and the Honeywell scanners on site.</p>
+      <p class="lede">The day-to-day job workflow, and how the system runs it on site &mdash; one laptop, a private Wi-Fi router, and three Honeywell scanners.</p>
     </div>
     <button class="tt" id="tt" type="button" aria-label="Toggle colour theme">Theme</button>
   </header>
@@ -319,114 +319,123 @@
       <b>Contract-dependent steps:</b> printed location sheets (stage 4) are produced only when the contract calls for them; the variance report (stage 6) is produced only when the client supplies a book stock file.
     </div>
 
-    <h2 class="sec">How the system runs</h2>
-    <p class="sec-lede">One back-office PC runs the browser-based app. The Honeywell scanners on site reach it over the internet and feed every scan straight onto the one master list &mdash; so there is nothing to merge at the end.</p>
+    <h2 class="sec">Running it on site, step by step</h2>
+    <p class="sec-lede">One laptop runs the app and holds the one master list. A TP-Link router makes a private Wi-Fi called <b>STOCKTAKE</b> &mdash; it only needs a power socket and is <b>not</b> connected to the client&rsquo;s Wi-Fi or the internet. The three Honeywells join that Wi-Fi and open the app in a browser.</p>
 
     <figure>
       <div class="fig-scroll">
-        <svg class="diagram" viewBox="0 0 1120 360" role="img" aria-label="A back-office PC runs the browser-based app as the server and holds the one master list and reports. It is reached over the internet, hosted on a small cloud server or exposed through a secure tunnel. On site, a travel router with a 4G SIM or the client line provides local Wi-Fi. Three Honeywell scanners run the app in Chrome with an offline queue and connect to the router. Scans go up to the back-office PC; live updates and the product list come down. With no signal, scans queue on the device and send when back online, and are never counted twice.">
+        <svg class="diagram" viewBox="0 0 1120 392" role="img" aria-label="Your laptop runs the app and holds the one master list, at address 192.168.0.10 on the router, and is also your progress screen. It connects to a TP-Link router by network cable (best) or Wi-Fi. The router makes a private Wi-Fi called STOCKTAKE, needs only a power socket, and is not connected to the client Wi-Fi or the internet. Three Honeywell scanners join that Wi-Fi and run the app in a browser with an offline queue. No internet anywhere; reports go to the client afterwards by USB stick or email from the office.">
           <defs>
             <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0 0L10 5L0 10z" fill="currentColor"/>
             </marker>
-            <marker id="arA3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M0 0L10 5L0 10z" fill="var(--accent)"/>
-            </marker>
           </defs>
 
-          <rect x="16" y="40" width="380" height="288" rx="8" fill="var(--surface-2)"/>
-          <rect x="740" y="40" width="364" height="288" rx="8" fill="var(--accent)" opacity="0.08"/>
-          <text x="28" y="64" class="tag">BACK OFFICE</text>
-          <text x="752" y="64" class="tag accent">ON SITE</text>
+          <rect x="120" y="34" width="372" height="92" rx="8" class="node"/>
+          <text x="140" y="64" class="h2">YOUR LAPTOP</text>
+          <text x="140" y="86" class="meta">runs the app &middot; holds the one master list</text>
+          <text x="140" y="105" class="meta">also your live progress screen</text>
+          <text x="524" y="76" class="meta">&larr; address on the router: 192.168.0.10</text>
 
-          <rect x="40" y="80" width="332" height="86" rx="8" class="node"/>
-          <text x="58" y="110" class="h2">Back-office PC</text>
-          <text x="58" y="131" class="meta">runs the browser-based app &mdash; the server</text>
-          <text x="58" y="150" class="meta">also the supervisor&rsquo;s screen</text>
+          <line x1="306" y1="126" x2="306" y2="186" marker-end="url(#ar3)"/>
+          <text x="318" y="161" class="meta">network cable (best) or Wi-Fi</text>
 
-          <rect x="40" y="196" width="332" height="104" rx="8" class="node"/>
-          <text x="58" y="224" class="h2">Master list &mdash; one database</text>
-          <text x="58" y="246" class="meta">every scan lands here</text>
-          <text x="58" y="266" class="meta">reports: audit &middot; summary &middot;</text>
-          <text x="58" y="284" class="meta">comparison &middot; variance</text>
+          <rect x="186" y="186" width="240" height="82" rx="8" class="node"/>
+          <text x="206" y="216" class="h2">TP-LINK ROUTER</text>
+          <text x="206" y="238" class="meta">private Wi-Fi: &ldquo;STOCKTAKE&rdquo;</text>
+          <text x="206" y="256" class="meta">power socket only</text>
+          <text x="462" y="212" class="meta accent">&larr; NOT connected to the client&rsquo;s</text>
+          <text x="462" y="230" class="meta accent">&nbsp;&nbsp;&nbsp;Wi-Fi or the internet</text>
 
-          <line x1="206" y1="166" x2="206" y2="194" marker-end="url(#ar3)"/>
+          <line x1="306" y1="268" x2="150" y2="312" marker-end="url(#ar3)"/>
+          <line x1="306" y1="268" x2="306" y2="312" marker-end="url(#ar3)"/>
+          <line x1="306" y1="268" x2="500" y2="312" marker-end="url(#ar3)"/>
+          <text x="318" y="292" class="meta">Wi-Fi</text>
 
-          <text x="568" y="150" class="tag mid">INTERNET</text>
-          <text x="568" y="172" class="meta mid">app on a small cloud host,</text>
-          <text x="568" y="189" class="meta mid">or the PC via a secure tunnel</text>
+          <rect x="60" y="314" width="180" height="52" rx="7" class="node"/>
+          <text x="78" y="338" class="h2">Honeywell #1</text>
+          <text x="78" y="356" class="meta">browser + offline queue</text>
+          <rect x="260" y="314" width="180" height="52" rx="7" class="node"/>
+          <text x="278" y="338" class="h2">Honeywell #2</text>
+          <text x="278" y="356" class="meta">browser + offline queue</text>
+          <rect x="460" y="314" width="180" height="52" rx="7" class="node"/>
+          <text x="478" y="338" class="h2">Honeywell #3</text>
+          <text x="478" y="356" class="meta">browser + offline queue</text>
+          <text x="672" y="344" class="meta">&larr; counters carry these, run the app</text>
 
-          <line x1="396" y1="116" x2="740" y2="116" marker-start="url(#ar3)" marker-end="url(#ar3)"/>
-          <text x="408" y="106" class="meta">HTTPS &mdash; scans up &middot; live updates + product list down</text>
-
-          <rect x="760" y="80" width="324" height="64" rx="8" class="node"/>
-          <text x="778" y="107" class="h2">Site router</text>
-          <text x="778" y="128" class="meta">4G SIM or client line &middot; local Wi-Fi</text>
-
-          <rect x="760" y="170" width="324" height="34" rx="7" class="node"/>
-          <text x="778" y="192" class="meta">Honeywell #1 &mdash; Chrome + the app &middot; offline queue</text>
-          <rect x="760" y="212" width="324" height="34" rx="7" class="node"/>
-          <text x="778" y="234" class="meta">Honeywell #2 &mdash; Chrome + the app &middot; offline queue</text>
-          <rect x="760" y="254" width="324" height="34" rx="7" class="node"/>
-          <text x="778" y="276" class="meta">Honeywell #3 &mdash; Chrome + the app &middot; offline queue</text>
-
-          <line x1="800" y1="144" x2="800" y2="168" marker-end="url(#ar3)"/>
-          <text x="812" y="162" class="meta">Wi-Fi</text>
-
-          <text x="760" y="308" class="meta accent">No signal? scans queue on the device and</text>
-          <text x="760" y="325" class="meta accent">send when back online &mdash; never counted twice.</text>
+          <text x="60" y="384" class="meta accent">No internet anywhere. Reports go to the client afterwards &mdash; USB stick or email from the office.</text>
         </svg>
       </div>
-      <figcaption>The back-office PC is the only place the job data lives. The site just needs a router with internet and the three Honeywells &mdash; nothing is installed on the scanners beyond a browser.</figcaption>
+      <figcaption>Everything talks inside the router&rsquo;s private Wi-Fi. The laptop is the only place the job data lives; the client&rsquo;s network is never touched.</figcaption>
     </figure>
 
     <div class="flow">
       <div class="grp">
-        <h3>Back office &mdash; before the job</h3>
+        <h3>Set up once &mdash; at your office</h3>
         <ol>
-          <li>The back-office PC runs the browser-based app. It is the <b>server</b>: it holds the one master list and produces the reports. For the site to reach it, the app is put on a small cloud host, or the PC is exposed through a <b>secure tunnel</b> (e.g. Cloudflare Tunnel / Tailscale).</li>
-          <li>In the app, <b>create the job</b> for the client and load the <b>product file</b> (barcodes &rarr; codes &rarr; descriptions).</li>
-          <li>Set the <b>location map</b> (e.g. 9.002&ndash;9.084), any <b>groups</b>, and assign a location range to each counter.</li>
+          <li>In the TP-Link settings, set the Wi-Fi name to <b>STOCKTAKE</b> with a password. Leave the internet (WAN) socket unused.</li>
+          <li>Reserve a fixed address for the laptop &mdash; &ldquo;Address Reservation&rdquo; &rarr; <b>192.168.0.10</b> &mdash; so the scanners always find it.</li>
+          <li>Install the app on the laptop and set it to start automatically. It runs a small web server on the laptop itself.</li>
+          <li>On each Honeywell: join <b>STOCKTAKE</b> Wi-Fi, open the browser at <b>http://192.168.0.10:5000</b>, add it to the home screen.</li>
+          <li>Test &mdash; all three scan a few barcodes and you see them land on the laptop.</li>
         </ol>
       </div>
       <div class="grp">
-        <h3>On site &mdash; setup</h3>
-        <ol start="4">
-          <li>Plug in the <b>travel router</b>. It takes internet from a <b>4G SIM</b> (or the client&rsquo;s line) and broadcasts the local Wi-Fi.</li>
-          <li>Power on the <b>3 Honeywells</b>. On each, open <b>Chrome</b> and go to the app&rsquo;s address (saved as a bookmark / installed icon) &mdash; nothing else is installed on the device.</li>
-          <li>Each counter <b>logs in with a PIN</b>. The Honeywell downloads its assigned locations and a copy of the product list, kept on the device.</li>
+        <h3>Job day &mdash; arrival (about 3 minutes)</h3>
+        <ol start="6">
+          <li>Plug the <b>TP-Link into a power socket</b> near where you will count. Switch it on.</li>
+          <li>Plug in the laptop, open the lid &mdash; the app is already running. Connect it to the router (<b>network cable</b> is most reliable; Wi-Fi is fine).</li>
+          <li>Turn on the <b>3 Honeywells</b> &mdash; they remember STOCKTAKE Wi-Fi and open the app on their own.</li>
         </ol>
       </div>
       <div class="grp">
-        <h3>On site &mdash; counting</h3>
-        <ol start="7">
-          <li>The counter <b>pulls the trigger</b>; the barcode goes into the app on the Honeywell.</li>
-          <li>The scan is <b>saved on the Honeywell first</b>, then sent: Wi-Fi &rarr; router &rarr; internet &rarr; the back-office PC, onto the master list.</li>
-          <li><b>No signal</b> in a corner? The Honeywell keeps the scans and sends them when it is back online. Each scan has an ID, so a resend never double-counts.</li>
-          <li>The supervisor watches the <b>live grid</b> (same browser app, from the back office or a site laptop) fill in &mdash; green done, white waiting, amber duplicate.</li>
+        <h3>Job day &mdash; start the job</h3>
+        <ol start="9">
+          <li>On the laptop, <b>create the job</b> for the client and load the <b>product file</b>.</li>
+          <li>Build the <b>location map</b> (e.g. 9.002&ndash;9.084) and set <b>groups</b> if the site uses them.</li>
+          <li>Assign a <b>location range</b> to each of the three counters. Each Honeywell pulls its list plus a copy of the product file, kept on the device.</li>
         </ol>
       </div>
       <div class="grp">
-        <h3>On site &mdash; amend &amp; check</h3>
-        <ol start="11">
-          <li>Quantity fixes, missed-item adds, and <b>duplicate resolution</b> are all done in the browser app.</li>
-          <li><b>Print location sheets</b> from the app if the contract requires them; printed locations tick as &ldquo;printed&rdquo;.</li>
+        <h3>Counting</h3>
+        <ol start="12">
+          <li>A counter <b>selects a location</b> (or scans its label). It turns <b>amber &mdash; in progress</b> on your screen.</li>
+          <li>They scan items &mdash; <b>single scan</b> (1 barcode = 1 unit) or <b>multi scan</b> (scan, then key the quantity).</li>
+          <li>Each scan is <b>saved on the Honeywell first</b>, then sent over STOCKTAKE Wi-Fi to the laptop at 192.168.0.10, onto the one master list. Your progress screen updates live.</li>
+          <li>A spot with <b>no Wi-Fi</b>? The Honeywell holds the scans and sends them when back in range. Each scan has an ID, so a resend never double-counts.</li>
+          <li>The counter <b>closes the location</b> &mdash; it turns <b>green</b> on your screen.</li>
         </ol>
       </div>
       <div class="grp">
-        <h3>Back office &mdash; finish</h3>
-        <ol start="13">
-          <li>When every location is <b>green</b> (or genuinely unused), the back-office PC generates the <b>audit, summary, comparison and variance</b> reports from the one master list.</li>
-          <li>Reports are emailed to the client; the job is closed. <b>Nothing to merge</b> &mdash; there was only ever one list.</li>
+        <h3>Watch &amp; fix &mdash; on the laptop</h3>
+        <ol start="17">
+          <li>Track the grid &mdash; <b>green</b> done, <b>white</b> waiting, <b>amber</b> in progress, <b>red</b> duplicate.</li>
+          <li><b>Range check</b> &mdash; enter 9.002&ndash;9.084; anything untouched in between shows as &ldquo;waiting&rdquo;.</li>
+          <li><b>Amend</b> &mdash; change a quantity, add a missed barcode (with location + quantity), or delete / zero a line. Totals recalculate.</li>
+          <li><b>Duplicate</b> (two counters, one location) &mdash; open it, see both, choose <b>Merge / Keep one / Delete both</b>.</li>
+          <li><b>Print checks</b> (if contracted) &mdash; print each completed location; printed ones tick as &ldquo;printed&rdquo;.</li>
         </ol>
       </div>
       <div class="grp">
-        <h3>What makes this work</h3>
+        <h3>Finish on site</h3>
+        <ol start="22">
+          <li>Confirm every location is <b>green</b> (or genuinely unused), no open duplicates, no &ldquo;waiting&rdquo; gaps.</li>
+          <li>Confirm each Honeywell shows <b>&ldquo;0 unsent&rdquo;</b>.</li>
+          <li><b>Export the job file to a USB stick</b> as a backup. The laptop has also been auto-saving a copy every few minutes.</li>
+        </ol>
+      </div>
+      <div class="grp">
+        <h3>Back at the office</h3>
+        <ol start="25">
+          <li>Open the job file (or the laptop) and generate the reports &mdash; <b>audit</b> (Excel), <b>summary</b>, <b>comparison</b>, and <b>variance</b> (variance only if a book stock file was supplied).</li>
+          <li>Email the reports to the client, with the printed sheets if they were in the contract. <b>Close the job.</b></li>
+        </ol>
+      </div>
+      <div class="grp">
+        <h3>If something goes wrong</h3>
         <ul class="rlist">
-          <li><b>Browser-based.</b> The Honeywells only need Chrome and the app address &mdash; no per-device install.</li>
-          <li><b>Offline queue.</b> Counting never stops for the network; scans sync when the signal returns.</li>
-          <li><b>One list.</b> Every Honeywell writes to the back-office PC directly, so there is no end-of-job merge.</li>
-          <li><b>Site internet.</b> A 4G SIM in the router is simplest; the client&rsquo;s Wi-Fi or line also works.</li>
+          <li><b>Laptop dies mid-count.</b> Start the app on the spare laptop, load the latest auto-saved copy; the Honeywells reconnect to the same Wi-Fi and you carry on. The Honeywells still hold their own recent scans too.</li>
+          <li><b>A Honeywell breaks.</b> Its synced scans are safe on the laptop; a replacement device logs in and picks up the unfinished locations.</li>
         </ul>
       </div>
     </div>

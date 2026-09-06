@@ -26,14 +26,16 @@ Contract-dependent steps: printed location sheets (stage 4) only when the contra
 calls for them; the variance report (stage 6) only when the client supplies a book
 stock file.
 
-### How the system runs
+### Running it on site, step by step
 
-One back-office PC runs the browser-based app (the server + the one master list).
-On site: a travel router with a 4G SIM (or the client's line) gives local Wi-Fi;
-three Honeywell scanners run the app in Chrome with an offline queue. Scans go up
-to the back-office PC; live updates and the product list come down. No signal —
-scans queue on the device and send when back online, never counted twice. Nothing
-to merge at the end because there is only one list.
+One laptop runs the app and holds the one master list. A TP-Link router makes a
+private Wi-Fi called `STOCKTAKE` — power socket only, **not** connected to the
+client's Wi-Fi or the internet. The three Honeywells join that Wi-Fi (laptop at
+`192.168.0.10`) and open the app in a browser with an offline queue. Detailed
+steps: set up once at the office, job-day arrival, start the job, counting,
+watch & fix, finish on site, back at the office, and what to do if the laptop or
+a scanner fails. No internet anywhere — reports go to the client afterwards by
+USB stick or email.
 
 ## Running locally
 
