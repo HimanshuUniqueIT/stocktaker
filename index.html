@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stocktake Workflow</title>
+<meta name="description" content="Day-to-day stocktake workflow, end to end — from the client's request in the back office to the finished reports.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  html{color-scheme:light}
+  :root[data-theme="dark"]{color-scheme:dark}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+
+  :root{
+    font-size:17.5px;
+    --bg:#F1F4F4;
+    --surface:#FFFFFF;
+    --surface-2:#F3F6F6;
+    --ink:#1B2327;
+    --muted:#54636A;
+    --border:#DBE0E0;
+    --accent:#B4531A;
+    --font-display:'Archivo','Helvetica Neue',Arial,sans-serif;
+    --font-body:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  :root[data-theme="dark"]{
+    --bg:#12171A;
+    --surface:#1A2125;
+    --surface-2:#212A2E;
+    --ink:#E7ECEC;
+    --muted:#94A2A8;
+    --border:#2E393E;
+    --accent:#E0834A;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--font-body);line-height:1.68;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  .wrap{max-width:1000px;margin:0 auto;padding:56px 30px 104px}
+  @media (max-width:640px){.wrap{padding:34px 16px 72px}}
+
+  .top{
+    display:flex;justify-content:space-between;align-items:flex-start;gap:28px;
+    padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:44px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.16em;
+    font-size:.78rem;color:var(--accent);margin:0 0 14px;
+  }
+  h1{
+    font-family:var(--font-display);font-weight:700;
+    font-size:clamp(2rem,1.35rem + 2.7vw,2.9rem);
+    letter-spacing:-.021em;line-height:1.08;margin:0;text-wrap:balance;
+  }
+  .lede{margin:16px 0 0;color:var(--muted);max-width:60ch;font-size:1.18rem;line-height:1.55}
+  .tt{
+    flex:none;font-family:var(--font-mono);font-size:.78rem;letter-spacing:.09em;
+    text-transform:uppercase;border:1px solid var(--border);background:var(--surface);
+    color:var(--ink);padding:10px 14px;border-radius:6px;cursor:pointer;
+  }
+  .tt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  main{display:flex;flex-direction:column;gap:14px}
+
+  figure{
+    margin:0 0 34px;border:1px solid var(--border);border-radius:12px;
+    background:var(--surface);padding:22px 22px 18px;
+  }
+  .fig-scroll{overflow-x:auto}
+  figure svg{display:block;width:100%;height:auto;min-width:760px}
+  figcaption{
+    margin-top:16px;padding-top:14px;border-top:1px solid var(--border);
+    font-family:var(--font-mono);font-size:.86rem;line-height:1.6;color:var(--muted);
+  }
+  .diagram{color:var(--ink)}
+  .diagram .node{fill:var(--surface);stroke:var(--border);stroke-width:1.2}
+  .diagram text{font-family:var(--font-body);fill:var(--ink)}
+  .diagram .h2{font-family:var(--font-display);font-weight:600;font-size:13.5px}
+  .diagram .tag{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;fill:var(--muted)}
+  .diagram .meta{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.04em;fill:var(--muted)}
+  .diagram .accent{fill:var(--accent)}
+  .diagram .mid{text-anchor:middle}
+  .diagram line{stroke:currentColor;stroke-width:1.5}
+
+  .stage{
+    display:grid;grid-template-columns:72px 1fr;gap:26px;
+    padding-top:32px;border-top:1px solid var(--border);
+  }
+  .stage:first-of-type{border-top:0;padding-top:0}
+  .stage .num{font-family:var(--font-display);font-weight:700;font-size:2.2rem;line-height:1;color:var(--accent)}
+  .stage .head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+  .stage h2{font-family:var(--font-display);font-weight:600;font-size:1.4rem;letter-spacing:-.01em;margin:0}
+  .who{
+    display:inline-block;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.08em;
+    text-transform:uppercase;padding:3px 10px;border-radius:999px;
+    border:1px solid var(--border);color:var(--muted);
+  }
+  .who.site{color:var(--accent);border-color:var(--accent)}
+  .stage ol{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:11px;font-size:1.06rem;line-height:1.55}
+  .stage ol li::marker{color:var(--muted);font-family:var(--font-mono);font-size:.9rem}
+  .stage ol li b{font-weight:600}
+  .stage .rlist{
+    margin:4px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;
+    border-left:2px solid var(--border);
+  }
+  .stage .rlist li{padding:2px 0 2px 16px;font-size:1.04rem;line-height:1.5}
+  .stage .rlist b{font-weight:600;font-family:var(--font-display)}
+  @media (max-width:640px){.stage{grid-template-columns:1fr;gap:10px}.stage .num{font-size:1.7rem}}
+
+  .note{
+    border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:10px;background:var(--surface-2);padding:16px 20px;
+    font-size:1.02rem;line-height:1.55;margin-top:34px;
+  }
+  .note b{font-weight:600}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <p class="eyebrow">One job, end to end</p>
+      <h1>Stocktake Workflow</h1>
+      <p class="lede">The day-to-day workflow &mdash; from the client&rsquo;s request landing in the back office to the finished reports going back out.</p>
+    </div>
+    <button class="tt" id="tt" type="button" aria-label="Toggle colour theme">Theme</button>
+  </header>
+
+  <main>
+    <figure>
+      <div class="fig-scroll">
+        <svg class="diagram" viewBox="0 0 1120 300" role="img" aria-label="Seven stages on two lanes. Back office lane: stage 1 Requirement, then stage 6 Reporting and stage 7 Handover. On-site lane: stage 2 Setup, stage 3 Counting, stage 4 Amend and check, stage 5 Consolidate. The sequence runs 1 to 7. Two hand-offs are highlighted: after stage 1 the product file goes out to the team, and after stage 5 the job file comes back to base.">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0L10 5L0 10z" fill="currentColor"/>
+            </marker>
+            <marker id="arA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0L10 5L0 10z" fill="var(--accent)"/>
+            </marker>
+          </defs>
+
+          <rect x="118" y="34" width="984" height="104" rx="8" fill="var(--surface-2)"/>
+          <rect x="118" y="162" width="984" height="104" rx="8" fill="var(--accent)" opacity="0.08"/>
+          <text x="20" y="82" class="tag">BACK</text>
+          <text x="20" y="98" class="tag">OFFICE</text>
+          <text x="20" y="218" class="tag accent">ON SITE</text>
+
+          <g>
+            <rect x="132" y="50" width="128" height="66" rx="8" class="node"/>
+            <text x="196" y="76" class="mid meta accent">STAGE 1</text>
+            <text x="196" y="97" class="mid h2">Requirement</text>
+          </g>
+          <g>
+            <rect x="300" y="178" width="128" height="66" rx="8" class="node"/>
+            <text x="364" y="204" class="mid meta accent">STAGE 2</text>
+            <text x="364" y="225" class="mid h2">Setup</text>
+          </g>
+          <g>
+            <rect x="452" y="178" width="128" height="66" rx="8" class="node"/>
+            <text x="516" y="204" class="mid meta accent">STAGE 3</text>
+            <text x="516" y="225" class="mid h2">Counting</text>
+          </g>
+          <g>
+            <rect x="604" y="178" width="140" height="66" rx="8" class="node"/>
+            <text x="674" y="204" class="mid meta accent">STAGE 4</text>
+            <text x="674" y="225" class="mid h2">Amend &amp; check</text>
+          </g>
+          <g>
+            <rect x="768" y="178" width="128" height="66" rx="8" class="node"/>
+            <text x="832" y="204" class="mid meta accent">STAGE 5</text>
+            <text x="832" y="225" class="mid h2">Consolidate</text>
+          </g>
+          <g>
+            <rect x="912" y="50" width="128" height="66" rx="8" class="node"/>
+            <text x="976" y="76" class="mid meta accent">STAGE 6</text>
+            <text x="976" y="97" class="mid h2">Reporting</text>
+          </g>
+          <g>
+            <rect x="912" y="150" width="128" height="60" rx="8" class="node"/>
+            <text x="976" y="174" class="mid meta accent">STAGE 7</text>
+            <text x="976" y="194" class="mid h2">Handover</text>
+          </g>
+
+          <path d="M232 116 C 270 150, 300 150, 340 176" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#arA)"/>
+          <text x="250" y="150" class="meta accent">product file &rarr; team</text>
+
+          <line x1="428" y1="211" x2="450" y2="211" marker-end="url(#ar)"/>
+          <line x1="580" y1="211" x2="602" y2="211" marker-end="url(#ar)"/>
+          <line x1="744" y1="211" x2="766" y2="211" marker-end="url(#ar)"/>
+
+          <path d="M872 190 C 895 150, 900 130, 912 100" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#arA)"/>
+          <text x="812" y="150" class="meta accent">job file &rarr; base</text>
+
+          <line x1="976" y1="116" x2="976" y2="148" marker-end="url(#ar)"/>
+        </svg>
+      </div>
+      <figcaption>Stage 1 and stages 6&ndash;7 are back-office work; the count itself (2&ndash;5) happens on site. The two orange arrows are the hand-offs &mdash; the product file goes out, the finished job file comes back.</figcaption>
+    </figure>
+
+    <div class="stage">
+      <div class="num">1</div>
+      <div>
+        <div class="head"><h2>Requirement</h2><span class="who">Back office</span></div>
+        <ol>
+          <li>Client sends a stocktake requirement &mdash; site(s), count date, whether <b>printed location sheets</b> are a contract term, and whether they will supply a <b>book stock file</b> (their expected quantities).</li>
+          <li>Client sends the <b>product file</b> &mdash; barcodes &rarr; product codes &rarr; descriptions. On an old site some lines arrive with no description and are entered by hand later.</li>
+          <li>Back office creates the job for that client and pushes the product file out, so every laptop used on the job holds the same database.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="num">2</div>
+      <div>
+        <div class="head"><h2>Setup</h2><span class="who site">On site</span></div>
+        <ol>
+          <li>Team sets up the laptop(s) and handheld scanners and opens the job.</li>
+          <li>Build the <b>location map</b> &mdash; enter the location-ticket range, e.g. <b>9.002 to 9.084</b>. Each ticket is one countable area: a shelf, a bay, or a zone. Mark any ticket that will not be used.</li>
+          <li>Define <b>groups</b> if needed &mdash; e.g. Stockroom / Bunker / Shop floor, with a location range assigned to each. A single flat storage area needs no groups.</li>
+          <li>Assign a range of location tickets to each counter.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="num">3</div>
+      <div>
+        <div class="head"><h2>Counting</h2><span class="who site">On site</span></div>
+        <ol>
+          <li>Counters scan their locations. <b>Single scan</b> &mdash; one barcode is one unit (clothing, retail). <b>Multi scan</b> &mdash; scan the item, then key in the quantity (grocery, bulk).</li>
+          <li>Each finished location is <b>closed off</b> &mdash; recorded against the counter and device (e.g. Omar, location 9.002, 81 units).</li>
+          <li>Supervisor tracks coverage &mdash; <b>green</b> completed, <b>white</b> not started. A start-to-end range check flags any location missed in between as <b>&ldquo;waiting&rdquo;</b>.</li>
+          <li>If two people counted the same location it is flagged <b>&ldquo;duplicate&rdquo;</b> for the supervisor to resolve.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="num">4</div>
+      <div>
+        <div class="head"><h2>Amend &amp; check</h2><span class="who site">On site</span></div>
+        <ol>
+          <li>Corrections are made from the laptop &mdash; adjust a quantity, add a barcode the counter missed (with its location and quantity), or delete a line / set it to zero. The location total recalculates.</li>
+          <li><b>Print checks</b> (if in the contract) &mdash; print each completed location&rsquo;s sheet. Printed locations tick as <b>&ldquo;printed&rdquo;</b>, so outstanding sheets stay visible.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="num">5</div>
+      <div>
+        <div class="head"><h2>Consolidate</h2><span class="who site">On site &rarr; back office</span></div>
+        <ol>
+          <li>If more than one laptop was used &mdash; each exports its <b>data file</b>; the files are imported onto one laptop and the data merges into a single complete set for the job.</li>
+          <li>Final checks &mdash; every location green or genuinely unused, no open duplicates, no &ldquo;waiting&rdquo; gaps.</li>
+          <li>The consolidated <b>job file</b> goes back to base (USB or sent in), so the back office can produce the paperwork even if a site laptop had a problem.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="num">6</div>
+      <div>
+        <div class="head"><h2>Reporting</h2><span class="who">Back office</span></div>
+        <p style="margin:0 0 6px;color:var(--muted);font-size:1.02rem">Generated from the consolidated job file:</p>
+        <ul class="rlist">
+          <li><b>Audit report (Excel)</b> &mdash; line detail: location, counter, date, client, product code, description, quantity. Multi-scans consolidated into one quantity per item. Always produced.</li>
+          <li><b>Summary report</b> &mdash; units by location, subtotals by group, grand total (e.g. 9,655 units). The client&rsquo;s headline figure.</li>
+          <li><b>Comparison report</b> &mdash; a product&rsquo;s quantity across groups (e.g. Stockroom vs Bunker), where groups were used.</li>
+          <li><b>Variance report</b> &mdash; only with a book stock file: counted quantities vs the client&rsquo;s expected quantities, listing the discrepancies.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="num">7</div>
+      <div>
+        <div class="head"><h2>Handover</h2><span class="who">Back office</span></div>
+        <ol>
+          <li>Reports are sent to the client, with the printed location sheets if those were part of the contract.</li>
+          <li>The job is closed. The client stays on the client list for future counts.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Contract-dependent steps:</b> printed location sheets (stage 4) are produced only when the contract calls for them; the variance report (stage 6) is produced only when the client supplies a book stock file.
+    </div>
+  </main>
+</div>
+
+<script>
+  (function(){
+    var root=document.documentElement,btn=document.getElementById('tt'),KEY='stk-theme';
+    try{var s=localStorage.getItem(KEY);if(s)root.setAttribute('data-theme',s);}catch(e){}
+    function cur(){return root.getAttribute('data-theme')||'light';}
+    btn.addEventListener('click',function(){
+      var next=cur()==='dark'?'light':'dark';
+      root.setAttribute('data-theme',next);
+      try{localStorage.setItem(KEY,next);}catch(e){}
+    });
+  })();
+</script>
+</body>
+</html>
