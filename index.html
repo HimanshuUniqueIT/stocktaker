@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Stocktake Workflow</title>
-<meta name="description" content="Day-to-day stocktake workflow, end to end — from the client's request in the back office to the finished reports.">
+<meta name="description" content="Day-to-day stocktake workflow end to end, plus how the system runs: one back-office PC, the browser app, and the Honeywell scanners on site.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -121,6 +121,28 @@
   }
   .note b{font-weight:600}
 
+  .sec{
+    font-family:var(--font-display);font-weight:700;font-size:1.7rem;
+    letter-spacing:-.015em;margin:60px 0 8px;padding-top:46px;
+    border-top:2px solid var(--border);
+  }
+  .sec.first{border-top:0;padding-top:0;margin-top:0}
+  .sec-lede{color:var(--muted);font-size:1.12rem;line-height:1.55;margin:0 0 26px;max-width:66ch}
+  .flow{display:flex;flex-direction:column;gap:24px}
+  .flow .grp h3{
+    font-family:var(--font-mono);font-size:.82rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--accent);margin:0 0 10px;
+  }
+  .flow ol{
+    margin:0;padding-left:1.5rem;display:flex;flex-direction:column;gap:9px;
+    font-size:1.05rem;line-height:1.55;
+  }
+  .flow ol li::marker{color:var(--muted);font-family:var(--font-mono);font-size:.85rem}
+  .flow ol li b{font-weight:600}
+  .flow .rlist{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;border-left:2px solid var(--border)}
+  .flow .rlist li{padding:2px 0 2px 16px;font-size:1.04rem;line-height:1.5}
+  .flow .rlist b{font-weight:600;font-family:var(--font-display)}
+
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -130,12 +152,13 @@
     <div>
       <p class="eyebrow">One job, end to end</p>
       <h1>Stocktake Workflow</h1>
-      <p class="lede">The day-to-day workflow &mdash; from the client&rsquo;s request landing in the back office to the finished reports going back out.</p>
+      <p class="lede">The day-to-day job workflow, and how the system runs it &mdash; one back-office PC, the browser app, and the Honeywell scanners on site.</p>
     </div>
     <button class="tt" id="tt" type="button" aria-label="Toggle colour theme">Theme</button>
   </header>
 
   <main>
+    <h2 class="sec first">The job, stage by stage</h2>
     <figure>
       <div class="fig-scroll">
         <svg class="diagram" viewBox="0 0 1120 300" role="img" aria-label="Seven stages on two lanes. Back office lane: stage 1 Requirement, then stage 6 Reporting and stage 7 Handover. On-site lane: stage 2 Setup, stage 3 Counting, stage 4 Amend and check, stage 5 Consolidate. The sequence runs 1 to 7. Two hand-offs are highlighted: after stage 1 the product file goes out to the team, and after stage 5 the job file comes back to base.">
@@ -294,6 +317,118 @@
 
     <div class="note">
       <b>Contract-dependent steps:</b> printed location sheets (stage 4) are produced only when the contract calls for them; the variance report (stage 6) is produced only when the client supplies a book stock file.
+    </div>
+
+    <h2 class="sec">How the system runs</h2>
+    <p class="sec-lede">One back-office PC runs the browser-based app. The Honeywell scanners on site reach it over the internet and feed every scan straight onto the one master list &mdash; so there is nothing to merge at the end.</p>
+
+    <figure>
+      <div class="fig-scroll">
+        <svg class="diagram" viewBox="0 0 1120 360" role="img" aria-label="A back-office PC runs the browser-based app as the server and holds the one master list and reports. It is reached over the internet, hosted on a small cloud server or exposed through a secure tunnel. On site, a travel router with a 4G SIM or the client line provides local Wi-Fi. Three Honeywell scanners run the app in Chrome with an offline queue and connect to the router. Scans go up to the back-office PC; live updates and the product list come down. With no signal, scans queue on the device and send when back online, and are never counted twice.">
+          <defs>
+            <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0L10 5L0 10z" fill="currentColor"/>
+            </marker>
+            <marker id="arA3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0L10 5L0 10z" fill="var(--accent)"/>
+            </marker>
+          </defs>
+
+          <rect x="16" y="40" width="380" height="288" rx="8" fill="var(--surface-2)"/>
+          <rect x="740" y="40" width="364" height="288" rx="8" fill="var(--accent)" opacity="0.08"/>
+          <text x="28" y="64" class="tag">BACK OFFICE</text>
+          <text x="752" y="64" class="tag accent">ON SITE</text>
+
+          <rect x="40" y="80" width="332" height="86" rx="8" class="node"/>
+          <text x="58" y="110" class="h2">Back-office PC</text>
+          <text x="58" y="131" class="meta">runs the browser-based app &mdash; the server</text>
+          <text x="58" y="150" class="meta">also the supervisor&rsquo;s screen</text>
+
+          <rect x="40" y="196" width="332" height="104" rx="8" class="node"/>
+          <text x="58" y="224" class="h2">Master list &mdash; one database</text>
+          <text x="58" y="246" class="meta">every scan lands here</text>
+          <text x="58" y="266" class="meta">reports: audit &middot; summary &middot;</text>
+          <text x="58" y="284" class="meta">comparison &middot; variance</text>
+
+          <line x1="206" y1="166" x2="206" y2="194" marker-end="url(#ar3)"/>
+
+          <text x="568" y="150" class="tag mid">INTERNET</text>
+          <text x="568" y="172" class="meta mid">app on a small cloud host,</text>
+          <text x="568" y="189" class="meta mid">or the PC via a secure tunnel</text>
+
+          <line x1="396" y1="116" x2="740" y2="116" marker-start="url(#ar3)" marker-end="url(#ar3)"/>
+          <text x="408" y="106" class="meta">HTTPS &mdash; scans up &middot; live updates + product list down</text>
+
+          <rect x="760" y="80" width="324" height="64" rx="8" class="node"/>
+          <text x="778" y="107" class="h2">Site router</text>
+          <text x="778" y="128" class="meta">4G SIM or client line &middot; local Wi-Fi</text>
+
+          <rect x="760" y="170" width="324" height="34" rx="7" class="node"/>
+          <text x="778" y="192" class="meta">Honeywell #1 &mdash; Chrome + the app &middot; offline queue</text>
+          <rect x="760" y="212" width="324" height="34" rx="7" class="node"/>
+          <text x="778" y="234" class="meta">Honeywell #2 &mdash; Chrome + the app &middot; offline queue</text>
+          <rect x="760" y="254" width="324" height="34" rx="7" class="node"/>
+          <text x="778" y="276" class="meta">Honeywell #3 &mdash; Chrome + the app &middot; offline queue</text>
+
+          <line x1="800" y1="144" x2="800" y2="168" marker-end="url(#ar3)"/>
+          <text x="812" y="162" class="meta">Wi-Fi</text>
+
+          <text x="760" y="308" class="meta accent">No signal? scans queue on the device and</text>
+          <text x="760" y="325" class="meta accent">send when back online &mdash; never counted twice.</text>
+        </svg>
+      </div>
+      <figcaption>The back-office PC is the only place the job data lives. The site just needs a router with internet and the three Honeywells &mdash; nothing is installed on the scanners beyond a browser.</figcaption>
+    </figure>
+
+    <div class="flow">
+      <div class="grp">
+        <h3>Back office &mdash; before the job</h3>
+        <ol>
+          <li>The back-office PC runs the browser-based app. It is the <b>server</b>: it holds the one master list and produces the reports. For the site to reach it, the app is put on a small cloud host, or the PC is exposed through a <b>secure tunnel</b> (e.g. Cloudflare Tunnel / Tailscale).</li>
+          <li>In the app, <b>create the job</b> for the client and load the <b>product file</b> (barcodes &rarr; codes &rarr; descriptions).</li>
+          <li>Set the <b>location map</b> (e.g. 9.002&ndash;9.084), any <b>groups</b>, and assign a location range to each counter.</li>
+        </ol>
+      </div>
+      <div class="grp">
+        <h3>On site &mdash; setup</h3>
+        <ol start="4">
+          <li>Plug in the <b>travel router</b>. It takes internet from a <b>4G SIM</b> (or the client&rsquo;s line) and broadcasts the local Wi-Fi.</li>
+          <li>Power on the <b>3 Honeywells</b>. On each, open <b>Chrome</b> and go to the app&rsquo;s address (saved as a bookmark / installed icon) &mdash; nothing else is installed on the device.</li>
+          <li>Each counter <b>logs in with a PIN</b>. The Honeywell downloads its assigned locations and a copy of the product list, kept on the device.</li>
+        </ol>
+      </div>
+      <div class="grp">
+        <h3>On site &mdash; counting</h3>
+        <ol start="7">
+          <li>The counter <b>pulls the trigger</b>; the barcode goes into the app on the Honeywell.</li>
+          <li>The scan is <b>saved on the Honeywell first</b>, then sent: Wi-Fi &rarr; router &rarr; internet &rarr; the back-office PC, onto the master list.</li>
+          <li><b>No signal</b> in a corner? The Honeywell keeps the scans and sends them when it is back online. Each scan has an ID, so a resend never double-counts.</li>
+          <li>The supervisor watches the <b>live grid</b> (same browser app, from the back office or a site laptop) fill in &mdash; green done, white waiting, amber duplicate.</li>
+        </ol>
+      </div>
+      <div class="grp">
+        <h3>On site &mdash; amend &amp; check</h3>
+        <ol start="11">
+          <li>Quantity fixes, missed-item adds, and <b>duplicate resolution</b> are all done in the browser app.</li>
+          <li><b>Print location sheets</b> from the app if the contract requires them; printed locations tick as &ldquo;printed&rdquo;.</li>
+        </ol>
+      </div>
+      <div class="grp">
+        <h3>Back office &mdash; finish</h3>
+        <ol start="13">
+          <li>When every location is <b>green</b> (or genuinely unused), the back-office PC generates the <b>audit, summary, comparison and variance</b> reports from the one master list.</li>
+          <li>Reports are emailed to the client; the job is closed. <b>Nothing to merge</b> &mdash; there was only ever one list.</li>
+        </ol>
+      </div>
+      <div class="grp">
+        <h3>What makes this work</h3>
+        <ul class="rlist">
+          <li><b>Browser-based.</b> The Honeywells only need Chrome and the app address &mdash; no per-device install.</li>
+          <li><b>Offline queue.</b> Counting never stops for the network; scans sync when the signal returns.</li>
+          <li><b>One list.</b> Every Honeywell writes to the back-office PC directly, so there is no end-of-job merge.</li>
+          <li><b>Site internet.</b> A 4G SIM in the router is simplest; the client&rsquo;s Wi-Fi or line also works.</li>
+        </ul>
+      </div>
     </div>
   </main>
 </div>
