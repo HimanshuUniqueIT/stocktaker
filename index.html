@@ -121,6 +121,18 @@
   }
   .note b{font-weight:600}
 
+  .obj{
+    border:1px solid var(--border);border-radius:12px;background:var(--surface);
+    padding:24px 26px;margin-bottom:10px;
+  }
+  .obj h2{
+    font-family:var(--font-mono);font-size:.8rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--accent);margin:0 0 12px;
+  }
+  .obj p{margin:0 0 12px;font-size:1.08rem;line-height:1.55}
+  .obj ul{margin:6px 0 0;padding-left:1.2rem;display:flex;flex-direction:column;gap:7px;font-size:1.02rem;line-height:1.5}
+  .obj ul b{font-weight:600}
+
   .sec{
     font-family:var(--font-display);font-weight:700;font-size:1.7rem;
     letter-spacing:-.015em;margin:60px 0 8px;padding-top:46px;
@@ -158,6 +170,18 @@
   </header>
 
   <main>
+    <div class="obj">
+      <h2>Objective</h2>
+      <p>Build a browser-based stock-taking app to replace the licensed third-party system. One on-site laptop runs it as a local server; the Honeywell scanners work on a private Wi-Fi with no internet.</p>
+      <p>It should deliver:</p>
+      <ul>
+        <li><b>One shared job list</b> &mdash; every scanner writes to the laptop directly, so there is no end-of-job merging.</li>
+        <li><b>Offline-tolerant counting</b> &mdash; scans hold on the device through Wi-Fi gaps and sync when back in range.</li>
+        <li><b>Live progress</b> for the supervisor, with built-in duplicate handling.</li>
+        <li><b>The same client reports</b> &mdash; audit, summary, comparison, variance.</li>
+      </ul>
+    </div>
+
     <h2 class="sec first">The job, stage by stage</h2>
     <figure>
       <div class="fig-scroll">
