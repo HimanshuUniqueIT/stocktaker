@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Stock Takes — Admin Panel" />
+  <title>Stock Takes — Admin Panel</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] } } }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+
+<body class="h-screen flex overflow-hidden font-sans antialiased bg-[var(--color-background)]">
+
+  <!-- ══════ SIDEBAR ══════ -->
+  <aside id="sidebar" aria-label="Main navigation"
+    class="hidden lg:flex flex-col w-64 shrink-0 h-full
+           bg-[var(--color-sidebar-bg)] border-r border-[var(--color-sidebar-border)]">
+
+    <div class="flex items-center justify-center h-16 px-6 shrink-0 border-b border-[var(--color-border)]">
+      <img src="assets/images/logo-icon.png" alt="IH Stocktaker Ltd" class="h-11 w-auto object-contain" />
+    </div>
+
+    <nav class="flex-1 overflow-y-auto py-4 px-3" aria-label="Sidebar navigation">
+      <ul role="list" class="space-y-0.5">
+
+        <!-- Dashboard -->
+        <li>
+          <a href="dashboard.html"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+            Dashboard
+          </a>
+        </li>
+
+        <!-- Clients -->
+        <li>
+          <a href="clients-list.html"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Clients
+          </a>
+        </li>
+
+        <!-- Devices -->
+        <li>
+          <a href="devices-list.html"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <rect x="5" y="2" width="14" height="20" rx="3" ry="3"/>
+              <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/>
+              <path d="M9 7h6M9 11h6"/>
+            </svg>
+            Devices
+          </a>
+        </li>
+
+        <!-- Jobs ACTIVE -->
+        <li>
+          <a href="jobs-list.html" aria-current="page"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold
+                   bg-[var(--color-nav-active-bg)] text-[var(--color-nav-active-text)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            Stock Takes
+          </a>
+        </li>
+
+        <!-- Client Report -->
+        <li>
+          <a href="reports.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            Client Report
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+
+    <div class="shrink-0 border-t border-[var(--color-border)] px-4 py-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="flex items-center justify-center w-9 h-9 rounded-full shrink-0
+                     bg-[var(--color-primary-light)] text-[var(--color-primary)]" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </span>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-[var(--color-text-primary)] truncate">Admin User</p>
+          <p class="text-xs text-[var(--color-text-muted)] truncate">Administrator</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <!-- End Sidebar -->
+
+
+  <!-- ══════ RIGHT PANEL ══════ -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- Header -->
+    <header id="main-header" role="banner"
+      class="flex items-center shrink-0 h-16 px-4 sm:px-6
+             bg-[var(--color-surface)] border-b border-[var(--color-border)]">
+      <button id="mobile-menu-btn" type="button" aria-label="Open navigation menu"
+        class="lg:hidden flex items-center justify-center w-10 h-10 mr-3 -ml-1 rounded-lg
+               text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+               transition-colors duration-150">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <div class="flex-1 min-w-0"></div>
+      <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+        <button id="notification-btn" type="button" aria-label="View notifications"
+          class="flex items-center justify-center w-10 h-10 rounded-lg
+                 text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                 transition-colors duration-150">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </button>
+        <button id="user-menu-btn" type="button" aria-label="Open user menu"
+          class="flex items-center gap-2 px-3 h-10 rounded-lg text-sm font-medium
+                 text-[var(--color-text-primary)] hover:bg-[var(--color-nav-hover-bg)]
+                 transition-colors duration-150">
+          <span class="flex items-center justify-center w-7 h-7 rounded-full shrink-0
+                       bg-[var(--color-primary-light)] text-[var(--color-primary)]" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </span>
+          <span class="hidden sm:block truncate max-w-[120px]">Admin User</span>
+          <svg class="hidden sm:block shrink-0" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main (scrollable) -->
+    <main id="main-content" class="flex-1 overflow-y-auto flex flex-col min-w-0" aria-label="Main content">
+      <section class="flex-1 p-4 sm:p-6 lg:p-8" aria-labelledby="page-heading">
+
+        <!-- Page heading row -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div>
+            <h1 id="page-heading"
+              class="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)] leading-tight">
+              Stock Takes
+            </h1>
+            
+          </div>
+          <!-- Create New Stock Take button -->
+          <a href="manage-job.html" id="create-new-job-btn"
+            class="inline-flex items-center gap-2 px-4 h-10 rounded-lg
+                   bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)]
+                   text-white text-sm font-semibold shrink-0
+                   transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Create New Stock Take
+          </a>
+        </div>
+
+        <!-- ── Job Table Container ───────────────────── -->
+        <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden">
+
+          <!-- Table toolbar -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3
+                      border-b border-[var(--color-border)]">
+            <!-- Search -->
+            <div class="relative flex-1 max-w-xs">
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
+                   xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="job-search" placeholder="Search stock takes, clients, or IDs…"
+                class="w-full h-9 pl-9 pr-3 text-sm text-[var(--color-text-primary)]
+                       placeholder-[var(--color-text-muted)]
+                       border border-[var(--color-border)] rounded-lg bg-white
+                       focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]
+                       focus:border-[var(--color-primary)] transition-colors duration-150" />
+            </div>
+            <p class="text-sm text-[var(--color-text-muted)] shrink-0">3 stock takes</p>
+          </div>
+
+          <!-- Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[840px] text-sm" aria-label="Jobs list">
+              <thead>
+                <tr class="border-b border-[var(--color-border)] bg-[var(--color-background)] select-none">
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider w-10">#</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Stock Take Details & ID</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Client</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Stock Book Import</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Status</th>
+                  <th class="px-4 py-3 text-right text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[var(--color-border)]">
+                <tr class="hover:bg-slate-50 transition-colors duration-100">
+                  <td class="px-4 py-3.5 text-[var(--color-text-muted)] font-medium">1</td>
+                  <td class="px-4 py-3.5">
+                    <div>
+                      <a href="job-details.html?job=ST-2026-001" class="font-semibold text-[var(--color-primary)] hover:underline block">
+                        Pavers Stocktake 0589
+                      </a>
+                      <span class="text-[11px] font-mono text-[var(--color-text-muted)]">ST-2026-001  &bull; Stock Take 0589 &bull; 16 Sep 2026</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3.5 font-medium text-[var(--color-text-primary)]">Pavers</td>
+                  <td class="px-4 py-3.5">
+                    <div class="flex items-center gap-1.5 text-xs text-slate-700">
+                      <svg class="text-emerald-600" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      <span class="font-mono text-slate-800">Client product file</span>
+                      <span class="text-[10px] text-slate-500">(no book stock)</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3.5">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border-emerald-200 border">
+                      Completed
+                    </span>
+                  </td>
+                  <td class="px-4 py-3.5 text-right">
+                    <a href="job-details.html?job=ST-2026-001"
+                      class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold
+                             bg-blue-50 text-[var(--color-primary)] hover:bg-blue-100
+                             transition-colors duration-150">
+                      View Details
+                    </a>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition-colors duration-100">
+                  <td class="px-4 py-3.5 text-[var(--color-text-muted)] font-medium">2</td>
+                  <td class="px-4 py-3.5">
+                    <div>
+                      <a href="job-details.html?job=ST-2025-001" class="font-semibold text-[var(--color-primary)] hover:underline block">
+                        Stratford City Stocktake
+                      </a>
+                      <span class="text-[11px] font-mono text-[var(--color-text-muted)]">ST-2025-001  &bull; Store 9104 &bull; 01 Jun 2025</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3.5 font-medium text-[var(--color-text-primary)]">Stratford City</td>
+                  <td class="px-4 py-3.5">
+                    <div class="flex items-center gap-1.5 text-xs text-slate-700">
+                      <svg class="text-emerald-600" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      <span class="font-mono text-slate-800">Current Stock_2024-09-24 Lookup File Master.xlsx</span>
+                      <span class="text-[10px] text-slate-500">(310 items)</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3.5">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border-emerald-200 border">
+                      Completed
+                    </span>
+                  </td>
+                  <td class="px-4 py-3.5 text-right">
+                    <a href="job-details.html?job=ST-2025-001"
+                      class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold
+                             bg-blue-50 text-[var(--color-primary)] hover:bg-blue-100
+                             transition-colors duration-150">
+                      View Details
+                    </a>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition-colors duration-100">
+                  <td class="px-4 py-3.5 text-[var(--color-text-muted)] font-medium">3</td>
+                  <td class="px-4 py-3.5">
+                    <div>
+                      <a href="job-details.html?job=ST-2024-001" class="font-semibold text-[var(--color-primary)] hover:underline block">
+                        Sloane Square Stocktake
+                      </a>
+                      <span class="text-[11px] font-mono text-[var(--color-text-muted)]">ST-2024-001  &bull; 14 Aug 2024</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3.5 font-medium text-[var(--color-text-primary)]">The Conran Shop - Sloane Square</td>
+                  <td class="px-4 py-3.5">
+                    <div class="flex items-center gap-1.5 text-xs text-slate-700">
+                      <svg class="text-emerald-600" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      <span class="font-mono text-slate-800">Client product file</span>
+                      <span class="text-[10px] text-slate-500">(no book stock)</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3.5">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border-emerald-200 border">
+                      Completed
+                    </span>
+                  </td>
+                  <td class="px-4 py-3.5 text-right">
+                    <a href="job-details.html?job=ST-2024-001"
+                      class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold
+                             bg-blue-50 text-[var(--color-primary)] hover:bg-blue-100
+                             transition-colors duration-150">
+                      View Details
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Table footer -->
+          <div class="flex items-center justify-between px-4 py-3 border-t border-[var(--color-border)]">
+            <p class="text-xs text-[var(--color-text-muted)]">Showing 1–3 of 3 stock takes</p>
+            <div class="flex items-center gap-1">
+              <button type="button" disabled class="h-8 px-2.5 rounded border border-[var(--color-border)] text-xs text-[var(--color-text-muted)] cursor-not-allowed">Previous</button>
+              <button type="button" class="h-8 w-8 rounded border border-[var(--color-primary)] bg-[var(--color-primary)] text-white text-xs font-semibold">1</button>
+              <button type="button" disabled class="h-8 px-2.5 rounded border border-[var(--color-border)] text-xs text-[var(--color-text-muted)] cursor-not-allowed">Next</button>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Footer -->
+      <footer id="main-footer" role="contentinfo"
+        class="shrink-0 border-t border-[var(--color-border)] bg-[var(--color-surface)]
+               px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between
+                    gap-1 sm:gap-0 text-xs text-[var(--color-text-muted)]">
+          <span>© 2026 Admin Panel. All rights reserved.</span>
+          <span>Version 1.0.0</span>
+        </div>
+      </footer>
+    </main>
+
+  </div>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

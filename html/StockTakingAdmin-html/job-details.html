@@ -1,0 +1,2333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Stocktake Details, Real-Time Hardware Device Sync & Data Audit — Enterprise Admin Panel" />
+  <title>Stocktake Details — Admin Panel</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/js/data.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <style>
+    @media print {
+
+      #sidebar,
+      #main-header,
+      #main-footer,
+      .no-print {
+        display: none !important;
+      }
+
+      body,
+      #main-content {
+        height: auto !important;
+        overflow: visible !important;
+        background: white !important;
+      }
+    }
+
+    #location-progress-table th,
+    #location-progress-table td {
+      padding-top: 0.25rem !important;
+      padding-bottom: 0.25rem !important;
+      padding-left: 0.375rem !important;
+      padding-right: 0.375rem !important;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+
+<body class="h-screen flex overflow-hidden font-sans antialiased bg-slate-50 text-slate-900">
+
+  <!-- ══════════════════════════════════════════════════════════
+       SIDEBAR NAVIGATION
+  ══════════════════════════════════════════════════════════ -->
+  <aside id="sidebar" aria-label="Main navigation" class="hidden lg:flex flex-col
+           w-64 shrink-0 h-full
+           bg-[var(--color-sidebar-bg)]
+           border-r border-[var(--color-sidebar-border)]">
+
+    <!-- Logo area (matches header height) -->
+    <div class="flex items-center justify-center
+             h-16 px-6 shrink-0
+             border-b border-[var(--color-border)]" aria-label="Company logo">
+      <!--
+        Replace with real logo when ready:
+          <img src="assets/images/logo.png" alt="Company Logo" class="h-8 w-auto object-contain" />
+      -->
+      <img src="assets/images/logo-icon.png" alt="IH Stocktaker Ltd" class="h-11 w-auto object-contain" />
+    </div>
+
+    <!-- Navigation (scrolls if items overflow) -->
+    <nav class="flex-1 overflow-y-auto py-4 px-3" aria-label="Sidebar navigation">
+      <ul role="list" class="space-y-0.5">
+
+        <!-- Dashboard (ACTIVE) -->
+        <li>
+          <a href="dashboard.html" aria-current="page" class="flex items-center gap-3
+                   px-3 py-2.5 rounded-lg
+                   text-sm font-semibold
+                   bg-[var(--color-nav-active-bg)]
+                   text-[var(--color-nav-active-text)]
+                   focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+              class="shrink-0">
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+            Dashboard
+          </a>
+        </li>
+
+        <!-- Clients -->
+        <li>
+          <a href="clients-list.html" class="flex items-center gap-3
+                   px-3 py-2.5 rounded-lg
+                   text-sm font-medium
+                   text-[var(--color-text-secondary)]
+                   hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)]
+                   focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                   transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+              class="shrink-0">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            Clients
+          </a>
+        </li>
+
+
+
+        <!-- Workers -->
+        <li>
+          <a href="workers-list.html" class="flex items-center gap-3
+                   px-3 py-2.5 rounded-lg
+                   text-sm font-medium
+                   text-[var(--color-text-secondary)]
+                   hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)]
+                   focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                   transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+              class="shrink-0">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Workers
+          </a>
+        </li>
+        <!-- Jobs -->
+        <li>
+          <a href="jobs-list.html" class="flex items-center gap-3
+                   px-3 py-2.5 rounded-lg
+                   text-sm font-medium
+                   text-[var(--color-text-secondary)]
+                   hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)]
+                   focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                   transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+              class="shrink-0">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+            </svg>
+            Stock Takes
+          </a>
+        </li>
+        <!-- Client Report -->
+        <li>
+          <a href="reports.html" class="flex items-center gap-3
+                   px-3 py-2.5 rounded-lg
+                   text-sm font-medium
+                   text-[var(--color-text-secondary)]
+                   hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)]
+                   focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                   transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+              class="shrink-0">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+            Client Report
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+    <!-- End nav -->
+
+    <!-- User profile (pinned to sidebar bottom) -->
+    <div class="shrink-0
+             border-t border-[var(--color-border)]
+             px-4 py-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="flex items-center justify-center
+                 w-9 h-9 rounded-full shrink-0
+                 bg-[var(--color-primary-light)]
+                 text-[var(--color-primary)]" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+          </svg>
+        </span>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-[var(--color-text-primary)] truncate">Admin User</p>
+          <p class="text-xs text-[var(--color-text-muted)] truncate">Administrator</p>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MAIN CONTENT WRAPPER
+  ══════════════════════════════════════════════════════════ -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- Header -->
+    <header id="main-header" class="flex items-center shrink-0
+             h-16 px-4 sm:px-6
+             bg-[var(--color-surface)]
+             border-b border-[var(--color-border)]" style="min-height: var(--header-height);" role="banner">
+
+      <!-- Mobile: hamburger (hidden on lg+) -->
+      <button id="mobile-menu-btn" type="button" aria-label="Open navigation menu" class="lg:hidden flex items-center justify-center
+               w-10 h-10 mr-3 -ml-1
+               rounded-lg text-[var(--color-text-secondary)]
+               hover:bg-[var(--color-nav-hover-bg)]
+               focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+               transition-colors duration-150">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+
+      <!-- Left Top Bar Breadcrumb & Navigation -->
+      <div class="flex-1 flex items-center gap-2.5 sm:gap-3 min-w-0">
+        <a href="jobs-list.html"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 shadow-2xs transition-colors shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          Back to Stock Takes
+        </a>
+        <span class="text-slate-300 font-light select-none">/</span>
+        <nav aria-label="Breadcrumb" class="min-w-0">
+          <ol class="flex items-center gap-2 text-xs text-slate-500 font-medium truncate">
+            <li><a href="jobs-list.html" class="hover:text-blue-600 transition-colors shrink-0">Stock Takes</a></li>
+            <li class="text-slate-300 font-light select-none">/</li>
+            <li class="text-slate-900 font-bold uppercase tracking-wider text-[11px] truncate">AUDIT PROGRESS & LIVE
+              CONTROL</li>
+          </ol>
+        </nav>
+      </div>
+
+      <!-- Right-side header actions -->
+      <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+
+        <!-- Notification icon -->
+        <button id="notification-btn" type="button" aria-label="View notifications" class="flex items-center justify-center
+                 w-10 h-10 rounded-lg
+                 text-[var(--color-text-secondary)]
+                 hover:bg-[var(--color-nav-hover-bg)]
+                 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                 transition-colors duration-150">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </button>
+
+        <!-- User profile button -->
+        <button id="user-menu-btn" type="button" aria-label="Open user menu" class="flex items-center gap-2
+                 px-3 h-10 rounded-lg
+                 text-sm font-medium
+                 text-[var(--color-text-primary)]
+                 hover:bg-[var(--color-nav-hover-bg)]
+                 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                 transition-colors duration-150">
+          <!-- Avatar -->
+          <span class="flex items-center justify-center
+                   w-7 h-7 rounded-full shrink-0
+                   bg-[var(--color-primary-light)]
+                   text-[var(--color-primary)]" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+            </svg>
+          </span>
+          <!-- Name + chevron (hidden on mobile) -->
+          <span class="hidden sm:block truncate max-w-[120px]">Admin User</span>
+          <svg class="hidden sm:block shrink-0" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+
+      </div>
+
+    </header>
+
+    <!-- Main Scrollable Body -->
+    <main id="main-content" class="flex-1 overflow-y-auto flex flex-col min-w-0 bg-slate-50/70 custom-scrollbar"
+      aria-label="Main content">
+
+      <div class="flex-1 px-2.5 sm:px-3 pt-1 pb-2 space-y-1 max-w-[1720px] w-full mx-auto">
+
+        <!-- ══════════════════════════════════════════════════════════
+             1. PAGE HEADER (TITLE & PRIMARY ACTIONS)
+        ══════════════════════════════════════════════════════════ -->
+        <div class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 shadow-2xs relative">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+
+            <!-- Left: Client Name & Job Name on one simple line -->
+            <div class="flex flex-wrap items-center gap-2">
+              <h1 id="page-heading" class="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
+                Loading…
+              </h1>
+              <span class="text-slate-300 font-light hidden sm:inline">&bull;</span>
+              <span id="job-subtitle" class="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                Stocktake Monitor & Control
+              </span>
+            </div>
+
+            <!-- Right: Complete Stocktake Button -->
+            <div class="flex items-center gap-2 shrink-0 no-print">
+              <button type="button" onclick="openCompleteStocktakeModal()"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-2xs transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Complete Stocktake
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════════
+             2. TABS NAVIGATION (LOCATION SETUP | STOCK TAKE | IMPORT / EXPORT)
+        ══════════════════════════════════════════════════════════ -->
+        <div class="bg-white border border-slate-200 rounded-lg shadow-2xs no-print w-full overflow-hidden">
+          <div class="grid grid-cols-3 w-full border-b border-slate-200">
+
+            <!-- Tab 1: Location Setup -->
+            <button type="button" onclick="switchJobTab('location-setup')" id="tab-btn-location-setup"
+              class="job-tab-btn w-full px-2.5 py-2.5 -mb-px border-b-2 border-transparent text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span>Location Setup</span>
+            </button>
+
+            <!-- Tab 2: Stock Take -->
+            <button type="button" onclick="switchJobTab('stock-take')" id="tab-btn-stock-take"
+              class="job-tab-btn w-full px-2.5 py-2.5 -mb-px border-b-2 border-blue-600 text-xs sm:text-sm font-bold text-blue-600 bg-blue-50/60 transition-colors flex items-center justify-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                <path d="m3.3 7 8.7 5 8.7-5" />
+                <path d="M12 22V12" />
+              </svg>
+              <span>Stock Take</span>
+            </button>
+
+            <!-- Tab 3: Import / Export -->
+            <button type="button" onclick="switchJobTab('import-export')" id="tab-btn-import-export"
+              class="job-tab-btn w-full px-2.5 py-2.5 -mb-px border-b-2 border-transparent text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Import / Export</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- TAB PANE 1: LOCATION SETUP -->
+        <div id="tab-pane-location-setup" class="job-tab-pane hidden space-y-1.5">
+
+          <!-- 1. AREA & LOCATION GENERATOR CARD -->
+          <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs">
+            <div class="border-b border-slate-100 pb-3 mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                <h2 class="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider">AREA & LOCATION
+                  GENERATOR</h2>
+              </div>
+              <span class="text-xs text-slate-500 font-medium">Generate sequential locations & assign location
+                barcodes</span>
+            </div>
+
+            <!-- Mode Selector: Use Existing Area vs + Add New Area -->
+            <div class="space-y-4">
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="setAreaMode('existing')" id="area-mode-btn-existing"
+                  class="area-mode-btn px-4 py-2 rounded-lg text-xs font-bold bg-blue-600 text-white transition-colors shadow-2xs">
+                  Use Existing Area
+                </button>
+                <button type="button" onclick="setAreaMode('new')" id="area-mode-btn-new"
+                  class="area-mode-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
+                  + Add New Area
+                </button>
+              </div>
+
+              <!-- Option A: Use Existing Area Form -->
+              <div id="area-existing-block" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label for="loc-area-select" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                    Selected Area
+                  </label>
+                  <select id="loc-area-select"
+                    class="w-full h-9 text-xs font-semibold px-3 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800"></select>
+                </div>
+                <div>
+                  <label for="loc-start-num" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                    Start Location #
+                  </label>
+                  <input type="number" id="loc-start-num" value="9021" min="1" step="1"
+                    class="w-full h-9 text-xs font-mono font-semibold px-3 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                  <label for="loc-end-num" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                    End Location #
+                  </label>
+                  <input type="number" id="loc-end-num" value="9035" min="1" step="1"
+                    class="w-full h-9 text-xs font-mono font-semibold px-3 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+              </div>
+
+              <!-- Option B: Add New Area Form (Toggled) -->
+              <div id="area-new-block" class="hidden p-4 bg-blue-50/70 border border-blue-200 rounded-xl space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                  <div class="sm:col-span-2">
+                    <label for="new-area-name" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                      Enter New Area Name
+                    </label>
+                    <input type="text" id="new-area-name" placeholder="e.g. Area 3 - Back Office"
+                      class="w-full h-9 text-xs font-semibold px-3 bg-white border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800" />
+                  </div>
+                  <div>
+                    <button type="button" onclick="handleAddNewArea()"
+                      class="w-full h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                      </svg>
+                      <span>Save & Select Area</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Generate Locations Button -->
+              <div class="pt-2 flex justify-end border-t border-slate-100">
+                <button type="button" onclick="handleCreateLocations()"
+                  class="px-5 h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2 shadow-2xs">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  <span>Create Locations</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. GENERATED LOCATIONS TABLE -->
+          <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+            <div
+              class="px-4 py-3 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">Generated Locations</h3>
+                <span id="loc-count-badge"
+                  class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">5
+                  Locations</span>
+              </div>
+              <div class="relative">
+                <svg class="absolute left-2.5 top-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="14"
+                  height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" id="loc-search-input" placeholder="Search Area, Location, Barcode..."
+                  onkeyup="filterLocationSetupTable()"
+                  class="w-56 sm:w-72 h-8 pl-8 pr-3 text-xs bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" />
+              </div>
+            </div>
+
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-xs text-left border-collapse" id="generated-locations-table">
+                <thead>
+                  <tr
+                    class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px] select-none">
+                    <th class="py-2 px-4 w-12 text-center border-r border-slate-200">#</th>
+                    <th class="py-2 px-4 border-r border-slate-200">AREA</th>
+                    <th class="py-2 px-4 text-center border-r border-slate-200">LOCATION #</th>
+                    <th class="py-2 px-4 border-r border-slate-200">LOCATION BARCODE</th>
+                    <th class="py-2 px-4 text-center border-r border-slate-200">STATUS</th>
+                    <th class="py-2 px-4 text-center no-print">ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody id="generated-locations-tbody" class="divide-y divide-slate-100">
+                  <tr id="generated-locations-empty-row" class="hidden">
+                    <td colspan="6" class="py-8 text-center text-slate-400 text-xs font-medium">No locations generated
+                      yet. Set a range above and click "Create Locations".</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- END TAB PANE 1: LOCATION SETUP -->
+
+        <!-- TAB PANE 2: STOCK TAKE -->
+        <div id="tab-pane-stock-take" class="job-tab-pane space-y-3">
+
+          <!-- SINGLE COMBINED ACCORDION: JOB STATISTICS, PRINT & REPORT, ACTIVESYNC TERMINAL LOGS -->
+          <div class="accordion-item bg-white border border-slate-200 rounded-lg overflow-hidden shadow-xs">
+            <div onclick="toggleStocktakeAccordion('sec-job-dashboard-body', this)"
+              class="px-3 py-2 bg-white flex flex-wrap items-center justify-between gap-2 text-slate-800 cursor-pointer hover:bg-slate-50 transition-colors select-none">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-800">Stock Take Statistics,
+                  Print & Terminal Logs</h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <svg class="accord-chevron transition-transform duration-200" xmlns="http://www.w3.org/2000/svg"
+                  width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+            </div>
+
+            <div id="sec-job-dashboard-body" class="hidden p-2.5 bg-white border-t border-slate-100">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+
+                <!-- 1. JOB STATISTICS BOX -->
+                <div
+                  class="p-2.5 bg-slate-50/70 border border-slate-200 rounded-lg space-y-2 flex flex-col justify-between">
+                  <div class="flex items-center justify-between border-b border-slate-200/80 pb-1.5">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      <h4 class="text-xs font-bold uppercase tracking-wider text-slate-800">Stock Take
+                        Statistics</h4>
+                    </div>
+                    <span
+                      class="text-[10px] font-mono text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100">Live
+                      Counters</span>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-2 text-xs font-sans">
+                    <div class="p-2 bg-white rounded border border-slate-200 flex flex-col justify-between">
+                      <span class="text-slate-500 text-[10.5px] font-medium">Complete Locs:</span>
+                      <span class="font-mono font-bold text-emerald-700 text-sm" id="stat-complete">0</span>
+                    </div>
+                    <div class="p-2 bg-white rounded border border-slate-200 flex flex-col justify-between">
+                      <span class="text-slate-500 text-[10.5px] font-medium">Waiting Locs:</span>
+                      <span class="font-mono font-bold text-amber-700 text-sm" id="stat-waiting">0</span>
+                    </div>
+                    <div class="p-2 bg-white rounded border border-slate-200 flex flex-col justify-between">
+                      <span class="text-slate-500 text-[10.5px] font-medium">Total Items:</span>
+                      <span class="font-mono font-bold text-slate-900 text-sm" id="stat-total-items">0</span>
+                    </div>
+                    <div class="p-2 bg-white rounded border border-slate-200 flex flex-col justify-between">
+                      <span class="text-slate-500 text-[10.5px] font-medium">Not On File Qty/Count:</span>
+                      <span class="font-mono font-semibold text-slate-700 text-xs"><strong
+                          class="text-blue-700" id="stat-nof-qty">0</strong> / <span id="stat-nof-total">0</span></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. PRINT & REPORT BOX -->
+                <div
+                  class="p-2.5 bg-slate-50/70 border border-slate-200 rounded-lg space-y-2 flex flex-col justify-between">
+                  <div class="flex items-center justify-between border-b border-slate-200/80 pb-1.5">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-purple-600"></span>
+                      <h4 class="text-xs font-bold uppercase tracking-wider text-slate-800">Print &
+                        Report</h4>
+                    </div>
+                    <label onclick="event.stopPropagation()"
+                      class="flex items-center gap-1.5 cursor-pointer text-xs text-slate-600 font-medium select-none">
+                      <input type="checkbox" id="auto-print-chk" checked
+                        class="rounded text-blue-600 focus:ring-blue-500 h-3.5 w-3.5" />
+                      <span>Auto Print</span>
+                    </label>
+                  </div>
+
+                  <div class="flex flex-col gap-1.5">
+                    <button type="button" onclick="triggerGeneralPrint()"
+                      class="w-full h-7 px-2.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
+                      <span>Print All Locations</span>
+                    </button>
+                    <button type="button" onclick="printSelectedLocation()"
+                      class="w-full h-7 px-2.5 rounded border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
+                      <span>Print Summary</span>
+                    </button>
+                    <button type="button" onclick="reloadColumns()"
+                      class="w-full h-7 px-2.5 rounded border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 text-xs font-semibold transition-colors flex items-center justify-center gap-1 shadow-2xs">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                        <path d="M3 3v5h5" />
+                      </svg>
+                      <span>Reload Columns</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 3. ACTIVESYNC SYSTEM & HARDWARE TERMINAL LOGS BOX -->
+                <div
+                  class="bg-slate-50/70 border border-slate-200 rounded-lg overflow-hidden flex flex-col">
+                  <div class="flex items-center justify-between px-2.5 pt-2.5 pb-1.5 border-b border-slate-200/80">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                      <h4 class="text-xs font-mono font-bold text-slate-800 uppercase">ActiveSync
+                        Terminal Logs</h4>
+                    </div>
+                    <button type="button" onclick="event.stopPropagation(); clearConsoleLog()"
+                      class="px-2 py-0.5 text-[10px] font-mono font-semibold text-slate-600 bg-white hover:bg-slate-100 border border-slate-300 rounded transition-colors">
+                      Clear Log
+                    </button>
+                  </div>
+
+                  <div id="sec-terminal-logs-body"
+                    class="p-2 text-xs font-mono text-slate-700 space-y-1 overflow-y-auto custom-scrollbar bg-white flex-1">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- ACCORDION 2: CONNECTED HANDHELD DEVICES -->
+          <div class="accordion-item bg-white border border-slate-200 rounded-lg overflow-hidden shadow-xs">
+            <div onclick="toggleStocktakeAccordion('sec-connected-devices-body', this)"
+              class="px-3 py-2 bg-white flex flex-wrap items-center justify-between gap-2 text-slate-800 cursor-pointer hover:bg-slate-50 transition-colors select-none">
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" class="text-blue-600">
+                  <rect x="5" y="2" width="14" height="20" rx="3" ry="3" />
+                  <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3" />
+                  <path d="M9 7h6M9 11h6" />
+                </svg>
+                <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-800">Connected Handheld
+                  Devices
+                </h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="event.stopPropagation(); confirmSendLookupToAll()"
+                  class="px-2.5 py-1 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded transition-colors flex items-center gap-1.5 shadow-2xs">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  <span>Send Lookup to All Devices</span>
+                </button>
+                <svg class="accord-chevron transition-transform duration-200" xmlns="http://www.w3.org/2000/svg"
+                  width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+            </div>
+
+            <div id="sec-connected-devices-body"
+              class="hidden overflow-x-auto custom-scrollbar max-h-[160px] border-t border-slate-100 w-full">
+              <table class="w-full min-w-full text-xs text-left border-collapse">
+                <thead class="bg-slate-100 text-slate-700 font-bold text-xs sticky top-0 uppercase tracking-wider">
+                  <tr>
+                    <th class="py-1.5 px-3 border-b border-slate-200">Device Id</th>
+                    <th class="py-1.5 px-3 border-b border-slate-200">User Name</th>
+                    <th class="py-1.5 px-3 border-b border-slate-200">Device Data / Stream File</th>
+                    <th class="py-1.5 px-3 border-b border-slate-200 text-center">Location</th>
+                    <th class="py-1.5 px-3 border-b border-slate-200 text-right">Qty</th>
+                    <th class="py-1.5 px-3 border-b border-slate-200 text-center">Connection Status</th>
+                    <th class="py-1.5 px-3 border-b border-slate-200 text-center no-print">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-mono text-xs" id="devices-stream-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+        <!-- ══════════════════════════════════════════════════════════
+             4. MAIN LOCATION STOCKTAKING PROGRESS & INLINE EDIT TABLE
+        ══════════════════════════════════════════════════════════ -->
+        <div
+          class="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-xs flex-1 flex flex-col min-h-[450px]">
+
+          <!-- Primary Header for Location Stocktaking Progress -->
+          <div onclick="toggleStocktakeAccordion('sec-location-progress-body', this)"
+            class="px-3.5 py-2 bg-white border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 shrink-0 cursor-pointer hover:bg-slate-50 transition-colors select-none">
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+              <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">LOCATION STOCKTAKING
+                PROGRESS
+                DIRECTORY</h3>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 no-print" onclick="event.stopPropagation()">
+              <!-- Search Input -->
+              <div class="relative">
+                <svg class="absolute left-2.5 top-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="14"
+                  height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" id="table-search-input" placeholder="Search Location, User, Device ID..."
+                  onkeyup="filterLocationTable()"
+                  class="w-44 sm:w-64 h-8 pl-8 pr-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" />
+              </div>
+
+              <!-- Status Filter Radio Group -->
+              <div class="flex items-center gap-2 h-8 px-2.5 bg-white border border-slate-300 rounded-md">
+                <label class="flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs font-semibold text-slate-700">
+                  <input type="radio" name="table-status-filter" value="all" checked onchange="filterLocationTable()"
+                    class="w-3 h-3 text-blue-600 focus:ring-1 focus:ring-blue-500 border-slate-300">
+                  <span>All</span>
+                </label>
+                <label class="flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs font-semibold text-slate-700">
+                  <input type="radio" name="table-status-filter" value="Complete" onchange="filterLocationTable()"
+                    class="w-3 h-3 text-blue-600 focus:ring-1 focus:ring-blue-500 border-slate-300">
+                  <span>Complete</span>
+                </label>
+                <label class="flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs font-semibold text-slate-700">
+                  <input type="radio" name="table-status-filter" value="Waiting" onchange="filterLocationTable()"
+                    class="w-3 h-3 text-blue-600 focus:ring-1 focus:ring-blue-500 border-slate-300">
+                  <span>Waiting</span>
+                </label>
+              </div>
+            </div>
+
+            <svg class="accord-chevron rotate-180 transition-transform duration-200 shrink-0" xmlns="http://www.w3.org/2000/svg"
+              width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+
+          <div id="sec-location-progress-body" class="contents">
+
+          <!-- Main Location Progress Table with Accordion & Inline Editing (EXCEL GRID STYLED) -->
+          <div class="overflow-x-auto custom-scrollbar flex-1">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200"
+              id="location-progress-table">
+              <thead>
+                <tr
+                  class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-xs select-none">
+                  <th class="py-2 px-3 w-12 text-center border-r border-slate-200">PRODUCTS</th>
+                  <th class="py-2 px-3 min-w-[190px] border-r border-slate-200">DEVICE ID</th>
+                  <th class="py-2 px-3 min-w-[120px] border-r border-slate-200">USER NAME</th>
+                  <th class="py-2 px-3 min-w-[100px] border-r border-slate-200 text-center">LOCATION #</th>
+                  <th class="py-2 px-3 min-w-[130px] border-r border-slate-200 text-center">LOCATION BARCODE</th>
+                  <th class="py-2 px-3 min-w-[110px] border-r border-slate-200 text-center">STATUS</th>
+                  <th class="py-2 px-3 min-w-[90px] border-r border-slate-200 text-right">QTY</th>
+                  <th class="py-2 px-3 min-w-[140px] border-r border-slate-200">TIME STARTED</th>
+                  <th class="py-2 px-3 w-16 text-center border-r border-slate-200">PRINTED</th>
+                  <th class="py-2 px-3 w-16 text-center border-r border-slate-200">DUPLICATE</th>
+                  <th class="py-2 px-3 w-16 text-center">CHANGED</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 font-mono text-xs" id="location-tbody"></tbody>
+            </table>
+          </div>
+
+          <!-- Table Footer Pagination -->
+          <div
+            class="p-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-600 no-print">
+            <span class="font-mono text-slate-500">Total Complete Locations: <strong
+                class="text-emerald-700" id="foot-complete">0</strong> | Waiting: <strong class="text-amber-700" id="foot-waiting">0</strong></span>
+            <div class="flex items-center gap-2">
+              <button type="button"
+                class="px-3 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100 text-slate-700 font-semibold disabled:opacity-50">Previous</button>
+              <span class="font-semibold text-slate-800">Page 1 of 1</span>
+              <button type="button"
+                class="px-3 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100 text-slate-700 font-semibold">Next</button>
+            </div>
+          </div>
+
+          </div>
+          <!-- END sec-location-progress-body -->
+        </div>
+      </div>
+      <!-- END TAB PANE 2: STOCK TAKE -->
+
+      <!-- TAB PANE 3: IMPORT / EXPORT -->
+      <div id="tab-pane-import-export" class="job-tab-pane hidden space-y-3">
+
+        <!-- 1. CURRENT DATA DIRECTORY (LIVE STOCKTAKE DATA TABLE) -->
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+          <div
+            class="px-3.5 py-2.5 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+              <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">Current Data</h3>
+              <span id="current-data-count-badge"
+                class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">
+                0 Items
+              </span>
+            </div>
+
+            <!-- Toolbar / Search / Group Filter -->
+            <div class="flex items-center gap-2">
+              <div class="relative w-48 sm:w-64">
+                <svg class="absolute left-2.5 top-2.5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="13"
+                  height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" id="current-data-search" onkeyup="filterCurrentDataTable()"
+                  placeholder="Search Device ID, Location..."
+                  class="w-full h-8 pl-8 pr-2.5 text-xs bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" />
+              </div>
+              <select id="current-data-group-filter" onchange="filterCurrentDataTable()"
+                class="h-8 px-2.5 text-xs bg-white border border-slate-300 rounded-md font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <option value="all">Group Filter (All)</option>
+                
+              </select>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto custom-scrollbar max-h-[220px]">
+            <table id="current-data-table" class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead
+                class="bg-slate-100 text-slate-700 font-bold text-xs uppercase tracking-wider sticky top-0 border-b border-slate-200 select-none">
+                <tr>
+                  <th class="py-2 px-3 w-10 text-center border-r border-slate-200">
+                    <input type="checkbox" onchange="toggleSelectAllCurrentRows(this)"
+                      class="h-3.5 w-3.5 rounded text-blue-600 focus:ring-blue-500" />
+                  </th>
+                  <th class="py-2 px-3 min-w-[180px] border-r border-slate-200">Area</th>
+                  <th class="py-2 px-3 min-w-[140px] border-r border-slate-200">Location</th>
+                  <th class="py-2 px-3 min-w-[90px] border-r border-slate-200 text-right">Qty</th>
+                  <th class="py-2 px-3 min-w-[140px]">Group</th>
+                </tr>
+              </thead>
+              <tbody id="current-data-tbody" class="divide-y divide-slate-200 font-mono text-xs bg-white"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. IMPORTED DATA (STAGING DIRECTORY TABLE) -->
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+          <div
+            class="px-3.5 py-2.5 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
+              <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">Imported Data</h3>
+              <span id="imported-data-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200">Staging Buffer (0 Batches)</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="relative w-48 sm:w-64">
+                <svg class="absolute left-2.5 top-2.5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="13"
+                  height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" id="imported-data-search" onkeyup="filterImportedDataTable()"
+                  placeholder="Search Device / File Name..."
+                  class="w-full h-8 pl-8 pr-2.5 text-xs bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" />
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto custom-scrollbar min-h-[160px] max-h-[200px]">
+            <table id="imported-data-table" class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead
+                class="bg-slate-100 text-slate-700 font-bold text-xs uppercase tracking-wider sticky top-0 border-b border-slate-200 select-none">
+                <tr>
+                  <th class="py-2 px-3 w-10 text-center border-r border-slate-200">
+                    <input type="checkbox" onchange="toggleSelectAllImportedRows(this)"
+                      class="h-3.5 w-3.5 rounded text-blue-600 focus:ring-blue-500" />
+                  </th>
+                  <th class="py-2 px-3 min-w-[180px] border-r border-slate-200">Area</th>
+                  <th class="py-2 px-3 min-w-[140px] border-r border-slate-200">Location</th>
+                  <th class="py-2 px-3 min-w-[90px] border-r border-slate-200 text-right">Qty</th>
+                  <th class="py-2 px-3 min-w-[140px]">Group</th>
+                </tr>
+              </thead>
+              <tbody id="imported-data-tbody" class="divide-y divide-slate-200 font-mono text-xs bg-white"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. BOTTOM CONTROL ACTION BAR (IMPORT DATA | MERGE DATA | EXPORT DATA) -->
+        <div
+          class="bg-white border border-slate-200 rounded-xl p-3 shadow-2xs flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button type="button" title="Use when a handheld could not sync over the local network" onclick="openImportModal('device')"
+              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <span>Import Device File</span>
+            </button>
+            <button type="button" title="Bring in the full stock take file exported from another laptop" onclick="openImportModal('laptop')"
+              class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <span>Import Laptop File</span>
+            </button>
+
+            <button type="button" onclick="handleMergeData()"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="M16 3h5v5" />
+                <path d="M8 3H3v5" />
+                <path d="M21 3l-7 7" />
+                <path d="M3 3l7 7" />
+                <path d="M16 21h5v-5" />
+                <path d="M8 21H3v-5" />
+              </svg>
+              <span>Merge Data</span>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="handleExportData()"
+              class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Export Data</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <footer id="main-footer" role="contentinfo"
+        class="shrink-0 border-t border-slate-200 bg-white px-4 sm:px-6 lg:px-8 py-3.5 mt-auto no-print">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-xs text-slate-500">
+          <span>© 2026 Admin Panel — Stocktake Real-Time Engine</span>
+          <span>Version 2.4.0</span>
+        </div>
+      </footer>
+    </main>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MODAL: FILE IMPORT MODAL (SINGLE / MULTIPLE DEVICE FILES)
+  ══════════════════════════════════════════════════════════ -->
+  <div id="import-file-modal"
+    class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-lg overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+        <h3 class="text-sm font-bold text-slate-900" id="import-modal-title">Import Device File</h3>
+        <button type="button" onclick="closeImportModal()"
+          class="text-slate-400 hover:text-slate-600 text-lg leading-none">&times;</button>
+      </div>
+      <div class="p-5 space-y-4">
+        <div
+          class="p-6 border-2 border-dashed border-blue-300 rounded-xl bg-blue-50/50 text-center cursor-pointer hover:border-blue-500 transition-all">
+          <input type="file" id="modal-file-input" multiple class="hidden" accept=".txt,.dat,.csv" onchange="handleFileSelected(this)" />
+          <label for="modal-file-input" class="cursor-pointer block">
+            <svg class="mx-auto text-blue-600 mb-2" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <span class="text-xs font-bold text-slate-800 block">Click to select handheld device data file</span>
+            <span class="text-[11px] text-slate-500 block mt-1">For a handheld that could not sync over the local network &bull; DAT, TXT, CSV</span>
+          </label>
+        </div>
+        <div id="file-selection-name" class="hidden p-3 bg-slate-100 rounded-lg text-xs font-mono text-slate-700"></div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeImportModal()"
+            class="px-4 h-9 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200">Cancel</button>
+          <button type="button" onclick="submitImportFile()"
+            class="px-4 h-9 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700">Import</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION (LIGHT STYLED) -->
+  <div id="toast-notification"
+    class="hidden fixed bottom-5 right-5 z-50 bg-white text-slate-900 px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 border border-slate-300">
+    <span id="toast-icon" class="text-emerald-600 font-bold">✓</span>
+    <span id="toast-message" class="text-xs font-semibold text-slate-800">Action completed successfully</span>
+  </div>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+    // Tab Navigation Switcher
+    function switchJobTab(tabId) {
+      document.querySelectorAll('.job-tab-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'text-blue-600', 'bg-blue-50/60', 'font-bold');
+        btn.classList.add('border-transparent', 'text-slate-500', 'hover:text-slate-800', 'hover:bg-slate-50', 'font-semibold');
+      });
+      document.querySelectorAll('.job-tab-pane').forEach(pane => {
+        pane.classList.add('hidden');
+      });
+
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      const activePane = document.getElementById(`tab-pane-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-transparent', 'text-slate-500', 'hover:text-slate-800', 'hover:bg-slate-50', 'font-semibold');
+        activeBtn.classList.add('border-blue-600', 'text-blue-600', 'bg-blue-50/60', 'font-bold');
+      }
+      if (activePane) {
+        activePane.classList.remove('hidden');
+      }
+    }
+
+    // Location Setup Area Mode Switcher
+    function setAreaMode(mode) {
+      const existingBlock = document.getElementById('area-existing-block');
+      const newBlock = document.getElementById('area-new-block');
+      const btnExisting = document.getElementById('area-mode-btn-existing');
+      const btnNew = document.getElementById('area-mode-btn-new');
+
+      if (mode === 'new') {
+        if (existingBlock) existingBlock.classList.add('hidden');
+        if (newBlock) newBlock.classList.remove('hidden');
+        if (btnNew) btnNew.className = 'area-mode-btn px-4 py-2 rounded-lg text-xs font-bold bg-blue-600 text-white transition-colors shadow-2xs';
+        if (btnExisting) btnExisting.className = 'area-mode-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors';
+      } else {
+        if (newBlock) newBlock.classList.add('hidden');
+        if (existingBlock) existingBlock.classList.remove('hidden');
+        if (btnExisting) btnExisting.className = 'area-mode-btn px-4 py-2 rounded-lg text-xs font-bold bg-blue-600 text-white transition-colors shadow-2xs';
+        if (btnNew) btnNew.className = 'area-mode-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors';
+      }
+    }
+
+    // Add New Area Handler
+    function handleAddNewArea() {
+      const input = document.getElementById('new-area-name');
+      const areaName = input ? input.value.trim() : '';
+      if (!areaName) {
+        showToast('Please enter a valid Area Name', 'info');
+        return;
+      }
+      const select = document.getElementById('loc-area-select');
+      if (select) {
+        const opt = document.createElement('option');
+        opt.value = areaName;
+        opt.textContent = areaName;
+        opt.selected = true;
+        select.appendChild(opt);
+      }
+      input.value = '';
+      setAreaMode('existing');
+      showToast(`New Area "${areaName}" created and selected!`, 'success');
+    }
+
+    // Sequential Location Generator
+    function handleCreateLocations() {
+      const select = document.getElementById('loc-area-select');
+      const area = select ? select.value : ((JOB.areas[0] || {}).name || 'Area 1');
+      const startNum = parseInt(document.getElementById('loc-start-num').value) || 9021;
+      const endNum = parseInt(document.getElementById('loc-end-num').value) || 9035;
+
+      if (endNum < startNum) {
+        showToast('End Location # must be greater than or equal to Start Location #', 'info');
+        return;
+      }
+
+      const tbody = document.getElementById('generated-locations-tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = '';
+      let count = 0;
+
+      for (let i = startNum; i <= endNum; i++) {
+        count++;
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50/80 transition-colors location-row text-slate-900 border-b border-slate-200';
+        tr.innerHTML = `
+          <td class="py-2.5 px-4 text-center font-mono text-slate-500 border-r border-slate-200 row-num-cell">${count}</td>
+          <td class="py-2.5 px-4 font-sans font-medium border-r border-slate-200 area-cell text-slate-800">${area}</td>
+          <td class="py-2.5 px-4 text-center font-bold border-r border-slate-200 loc-cell text-slate-900">${i}</td>
+          <td class="py-2.5 px-4 font-bold border-r border-slate-200 loc-barcode-cell text-slate-800">LOC-BAR-${i}</td>
+          <td class="py-2.5 px-4 text-center border-r border-slate-200 status-cell">
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Active</span>
+          </td>
+          <td class="py-2.5 px-4 text-center no-print actions-cell">
+            <div class="flex items-center justify-center gap-1">
+              <button type="button" onclick="enableSetupInlineEdit(this)" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-sans font-semibold transition-colors shadow-2xs">
+                Inline Edit
+              </button>
+              <button type="button" onclick="deleteSetupLocation(this)" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-[10px] font-sans font-semibold border border-rose-200 transition-colors">
+                Delete
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+
+      updateGeneratedLocationsCount();
+      showToast(`Generated ${count} locations (${startNum} to ${endNum}) under ${area}`, 'success');
+    }
+
+    function updateGeneratedLocationsCount() {
+      const tbody = document.getElementById('generated-locations-tbody');
+      const emptyRow = document.getElementById('generated-locations-empty-row');
+      const rows = tbody ? tbody.querySelectorAll('tr.location-row') : [];
+      const countBadge = document.getElementById('loc-count-badge');
+      if (countBadge) countBadge.textContent = `${rows.length} Locations`;
+      if (emptyRow) emptyRow.classList.toggle('hidden', rows.length > 0);
+      rows.forEach((row, idx) => {
+        const numCell = row.querySelector('.row-num-cell');
+        if (numCell) numCell.textContent = idx + 1;
+      });
+    }
+
+    function deleteSetupLocation(btn) {
+      const row = btn.closest('tr');
+      const locNum = row.querySelector('.loc-cell')?.textContent.trim();
+      if (!confirm(`Delete Location #${locNum}?\nThis action cannot be undone.`)) return;
+      row.remove();
+      updateGeneratedLocationsCount();
+      showToast(`Location #${locNum} deleted.`, 'info');
+    }
+
+    // Inline Edit for Location Setup Table
+    function enableSetupInlineEdit(btn) {
+      const row = btn.closest('tr');
+      if (row.classList.contains('editing-mode')) return;
+      row.classList.add('editing-mode');
+
+      const areaCell = row.querySelector('.area-cell');
+      const locCell = row.querySelector('.loc-cell');
+      const barcodeCell = row.querySelector('.loc-barcode-cell');
+      const actionsCell = row.querySelector('.actions-cell');
+
+      row.dataset.origArea = areaCell.textContent.trim();
+      row.dataset.origLoc = locCell.textContent.trim();
+      row.dataset.origBarcode = barcodeCell.textContent.trim();
+
+      areaCell.innerHTML = `<input type="text" class="inline-area-input text-xs font-sans font-semibold px-2 py-1 border border-blue-400 rounded text-slate-900 bg-white w-full focus:outline-none focus:ring-1 focus:ring-blue-500" value="${row.dataset.origArea}" />`;
+      locCell.innerHTML = `<input type="number" class="inline-loc-input text-xs font-mono font-bold px-2 py-1 border border-blue-400 rounded text-slate-900 bg-white w-20 text-center focus:outline-none focus:ring-1 focus:ring-blue-500" value="${row.dataset.origLoc}" />`;
+      barcodeCell.innerHTML = `<input type="text" class="inline-barcode-input text-xs font-mono font-bold px-2 py-1 border border-blue-400 rounded text-slate-900 bg-white w-full focus:outline-none focus:ring-1 focus:ring-blue-500" value="${row.dataset.origBarcode}" />`;
+
+      actionsCell.innerHTML = `
+        <div class="flex items-center justify-center gap-1">
+          <button type="button" onclick="saveSetupInlineEdit(this)" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[10px] font-sans font-bold shadow-xs transition-colors">
+            Save
+          </button>
+          <button type="button" onclick="cancelSetupInlineEdit(this)" class="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded text-[10px] font-sans font-medium transition-colors">
+            Cancel
+          </button>
+        </div>
+      `;
+    }
+
+    function saveSetupInlineEdit(btn) {
+      const row = btn.closest('tr');
+      row.classList.remove('editing-mode');
+
+      const areaCell = row.querySelector('.area-cell');
+      const locCell = row.querySelector('.loc-cell');
+      const barcodeCell = row.querySelector('.loc-barcode-cell');
+      const actionsCell = row.querySelector('.actions-cell');
+
+      const newArea = areaCell.querySelector('.inline-area-input').value.trim();
+      const newLoc = locCell.querySelector('.inline-loc-input').value.trim();
+      const newBarcode = barcodeCell.querySelector('.inline-barcode-input').value.trim();
+
+      areaCell.textContent = newArea;
+      locCell.textContent = newLoc;
+      barcodeCell.textContent = newBarcode;
+
+      actionsCell.innerHTML = `
+        <div class="flex items-center justify-center gap-1">
+          <button type="button" onclick="enableSetupInlineEdit(this)" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-sans font-semibold transition-colors shadow-2xs">
+            Inline Edit
+          </button>
+          <button type="button" onclick="deleteSetupLocation(this)" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-[10px] font-sans font-semibold border border-rose-200 transition-colors">
+            Delete
+          </button>
+        </div>
+      `;
+
+      showToast(`Location #${newLoc} updated successfully!`, 'success');
+    }
+
+    function cancelSetupInlineEdit(btn) {
+      const row = btn.closest('tr');
+      row.classList.remove('editing-mode');
+
+      const areaCell = row.querySelector('.area-cell');
+      const locCell = row.querySelector('.loc-cell');
+      const barcodeCell = row.querySelector('.loc-barcode-cell');
+      const actionsCell = row.querySelector('.actions-cell');
+
+      areaCell.textContent = row.dataset.origArea;
+      locCell.textContent = row.dataset.origLoc;
+      barcodeCell.textContent = row.dataset.origBarcode;
+
+      actionsCell.innerHTML = `
+        <div class="flex items-center justify-center gap-1">
+          <button type="button" onclick="enableSetupInlineEdit(this)" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-sans font-semibold transition-colors shadow-2xs">
+            Inline Edit
+          </button>
+          <button type="button" onclick="deleteSetupLocation(this)" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-[10px] font-sans font-semibold border border-rose-200 transition-colors">
+            Delete
+          </button>
+        </div>
+      `;
+    }
+
+    function filterLocationSetupTable() {
+      const query = document.getElementById('loc-search-input')?.value.toLowerCase().trim() || '';
+      const rows = document.querySelectorAll('#generated-locations-tbody tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(query)) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    }
+
+    // Live Server Clock
+    function updateClock() {
+      const now = new Date();
+      const str = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' +
+        now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const el = document.getElementById('live-clock');
+      if (el) el.textContent = str;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Toast Message
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast-notification');
+      const text = document.getElementById('toast-message');
+      const icon = document.getElementById('toast-icon');
+      if (!toast || !text) return;
+      text.textContent = msg;
+      icon.textContent = type === 'success' ? '✓' : (type === 'info' ? 'ℹ' : '✕');
+      icon.className = type === 'success' ? 'text-emerald-600 font-bold' : 'text-amber-600 font-bold';
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3500);
+    }
+
+    // Refresh Data simulation
+    function handleRefreshData() {
+      const icon = document.getElementById('refresh-icon');
+      if (icon) icon.classList.add('animate-spin');
+      setTimeout(() => {
+        if (icon) icon.classList.remove('animate-spin');
+        showToast('Sync Refreshed! 4 scanner devices active & updated.', 'success');
+      }, 1000);
+    }
+
+    // Accordion Toggle Function
+    function toggleLocationAccordion(btn) {
+      const row = btn.closest('tr');
+      const accordionRow = row.nextElementSibling;
+      const chevron = btn.querySelector('.chevron-icon');
+
+      if (accordionRow && accordionRow.classList.contains('accordion-details-row')) {
+        const isHidden = accordionRow.classList.contains('hidden');
+        if (isHidden) {
+          accordionRow.classList.remove('hidden');
+          if (chevron) chevron.classList.add('rotate-180');
+          btn.classList.add('bg-blue-600', 'text-white');
+        } else {
+          accordionRow.classList.add('hidden');
+          if (chevron) chevron.classList.remove('rotate-180');
+          btn.classList.remove('bg-blue-600', 'text-white');
+        }
+      }
+    }
+
+    // INLINE EDIT FUNCTIONALITY
+    function enableInlineEdit(btn) {
+      const row = btn.closest('tr');
+      if (row.classList.contains('editing-mode')) return;
+
+      row.classList.add('editing-mode');
+
+      const userCell = row.querySelector('.user-cell');
+      const locCell = row.querySelector('.loc-cell');
+      const barcodeCell = row.querySelector('.loc-barcode-cell');
+      const qtyCell = row.querySelector('.qty-cell');
+      const statusCell = row.querySelector('.status-cell');
+      const actionsCell = row.querySelector('.actions-cell');
+
+      const currentUserName = userCell.textContent.trim();
+      const currentLocNum = locCell.textContent.trim();
+      const currentBarcode = barcodeCell ? barcodeCell.textContent.trim() : '';
+      const currentQty = qtyCell.textContent.trim();
+      const currentStatus = row.getAttribute('data-status');
+
+      // Store original values for cancel action
+      row.dataset.origUser = currentUserName;
+      row.dataset.origLoc = currentLocNum;
+      row.dataset.origBarcode = currentBarcode;
+      row.dataset.origQty = currentQty;
+      row.dataset.origStatus = currentStatus;
+
+      userCell.innerHTML = `<input type="text" class="inline-user-input text-xs font-bold px-1.5 py-0.5 border border-blue-400 rounded text-slate-900 bg-white w-24 focus:outline-none focus:ring-1 focus:ring-blue-500" value="${currentUserName}" />`;
+      locCell.innerHTML = `<input type="number" class="inline-loc-input text-xs font-mono font-bold px-1.5 py-0.5 border border-blue-400 rounded text-slate-900 bg-white w-20 text-center focus:outline-none focus:ring-1 focus:ring-blue-500" value="${currentLocNum}" />`;
+      if (barcodeCell) {
+        barcodeCell.innerHTML = `<input type="text" class="inline-barcode-input text-xs font-mono font-bold px-1.5 py-0.5 border border-blue-400 rounded text-slate-900 bg-white w-28 text-center focus:outline-none focus:ring-1 focus:ring-blue-500" value="${currentBarcode}" />`;
+      }
+      qtyCell.innerHTML = `<input type="number" class="inline-qty-input text-xs font-mono font-bold px-1.5 py-0.5 border border-blue-400 rounded text-slate-900 bg-white w-16 text-right focus:outline-none focus:ring-1 focus:ring-blue-500" value="${currentQty}" />`;
+
+      statusCell.innerHTML = `
+        <select class="inline-status-select text-xs font-bold px-1 py-0.5 border border-blue-400 rounded text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+          <option value="Complete" ${currentStatus === 'Complete' ? 'selected' : ''}>Complete</option>
+          <option value="Waiting" ${currentStatus === 'Waiting' ? 'selected' : ''}>Waiting</option>
+        </select>
+      `;
+
+      actionsCell.innerHTML = `
+        <div class="flex items-center justify-center gap-1">
+          <button type="button" onclick="saveInlineEdit(this)" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[10px] font-sans font-bold shadow-xs transition-colors">
+            Save
+          </button>
+          <button type="button" onclick="cancelInlineEdit(this)" class="px-2 py-1 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded text-[10px] font-sans font-medium transition-colors">
+            Cancel
+          </button>
+        </div>
+      `;
+    }
+
+    function saveInlineEdit(btn) {
+      const row = btn.closest('tr');
+      row.classList.remove('editing-mode');
+
+      const userCell = row.querySelector('.user-cell');
+      const locCell = row.querySelector('.loc-cell');
+      const barcodeCell = row.querySelector('.loc-barcode-cell');
+      const qtyCell = row.querySelector('.qty-cell');
+      const statusCell = row.querySelector('.status-cell');
+      const actionsCell = row.querySelector('.actions-cell');
+
+      const newUserName = userCell.querySelector('.inline-user-input').value.trim();
+      const newLocNum = locCell.querySelector('.inline-loc-input').value.trim();
+      const newBarcode = barcodeCell && barcodeCell.querySelector('.inline-barcode-input') ? barcodeCell.querySelector('.inline-barcode-input').value.trim() : (row.dataset.origBarcode || '');
+      const newQty = qtyCell.querySelector('.inline-qty-input').value.trim();
+      const newStatus = statusCell.querySelector('.inline-status-select').value;
+
+      row.setAttribute('data-status', newStatus);
+
+      userCell.textContent = newUserName;
+      locCell.textContent = newLocNum;
+      if (barcodeCell) barcodeCell.textContent = newBarcode;
+      qtyCell.textContent = newQty;
+
+      if (newStatus === 'Complete') {
+        row.className = 'bg-emerald-50/70 hover:bg-emerald-100/60 transition-colors location-row text-slate-900 border-b border-slate-200';
+        statusCell.innerHTML = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Complete</span>';
+      } else {
+        row.className = 'bg-amber-50/70 hover:bg-amber-100/60 transition-colors location-row text-slate-900 border-b border-slate-200';
+        statusCell.innerHTML = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Waiting</span>';
+      }
+
+      // Update paired accordion header if present
+      const accordionRow = row.nextElementSibling;
+      if (accordionRow && accordionRow.classList.contains('accordion-details-row')) {
+        const accordLoc = accordionRow.querySelector('.accord-loc-num');
+        const accordUser = accordionRow.querySelector('.accord-user-name');
+        const accordQty = accordionRow.querySelector('.accord-qty-text');
+        if (accordLoc) accordLoc.textContent = newLocNum;
+        if (accordUser) accordUser.textContent = newUserName;
+        if (accordQty) accordQty.textContent = newQty;
+      }
+
+      actionsCell.innerHTML = `
+        <div class="flex items-center justify-center gap-1.5">
+          <button type="button" onclick="enableInlineEdit(this)" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-sans font-semibold transition-colors shadow-2xs">
+            Inline Edit
+          </button>
+        </div>
+      `;
+
+      showToast(`Location #${newLocNum} updated inline successfully!`, 'success');
+      updateTableStats();
+    }
+
+    function cancelInlineEdit(btn) {
+      const row = btn.closest('tr');
+      row.classList.remove('editing-mode');
+
+      const userCell = row.querySelector('.user-cell');
+      const locCell = row.querySelector('.loc-cell');
+      const barcodeCell = row.querySelector('.loc-barcode-cell');
+      const qtyCell = row.querySelector('.qty-cell');
+      const statusCell = row.querySelector('.status-cell');
+      const actionsCell = row.querySelector('.actions-cell');
+
+      const origUser = row.dataset.origUser;
+      const origLoc = row.dataset.origLoc;
+      const origBarcode = row.dataset.origBarcode;
+      const origQty = row.dataset.origQty;
+      const origStatus = row.dataset.origStatus;
+
+      userCell.textContent = origUser;
+      locCell.textContent = origLoc;
+      if (barcodeCell) barcodeCell.textContent = origBarcode;
+      qtyCell.textContent = origQty;
+
+      if (origStatus === 'Complete') {
+        statusCell.innerHTML = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Complete</span>';
+      } else {
+        statusCell.innerHTML = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Waiting</span>';
+      }
+
+      actionsCell.innerHTML = `
+        <div class="flex items-center justify-center gap-1.5">
+          <button type="button" onclick="enableInlineEdit(this)" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-sans font-semibold transition-colors shadow-2xs">
+            Inline Edit
+          </button>
+        </div>
+      `;
+    }
+
+    // ACCORDION PRODUCT ROW INLINE EDITING
+    function enableAccordInlineEdit(btn) {
+      const row = btn.closest('tr');
+      if (row.classList.contains('editing-mode')) return;
+      row.classList.add('editing-mode');
+
+      const skuCell = row.querySelector('.accord-sku-cell');
+      const barcodeCell = row.querySelector('.accord-barcode-cell');
+      const descCell = row.querySelector('.accord-desc-cell');
+      const qtyCell = row.querySelector('.accord-qty-cell');
+      const actionsCell = row.querySelector('.accord-actions-cell');
+
+      row.dataset.origSku = skuCell.textContent.trim();
+      row.dataset.origBarcode = barcodeCell.textContent.trim();
+      row.dataset.origDesc = descCell.textContent.trim();
+      row.dataset.origQty = qtyCell.textContent.trim();
+
+      skuCell.innerHTML = `<input type="text" class="accord-sku-input text-xs font-semibold px-1.5 py-0.5 border border-blue-400 rounded text-blue-700 bg-white w-28 focus:outline-none focus:ring-1 focus:ring-blue-500" value="${row.dataset.origSku}" />`;
+      barcodeCell.innerHTML = `<input type="text" class="accord-barcode-input text-xs font-mono px-1.5 py-0.5 border border-blue-400 rounded text-slate-800 bg-white w-32 focus:outline-none focus:ring-1 focus:ring-blue-500" value="${row.dataset.origBarcode}" />`;
+      descCell.innerHTML = `<input type="text" class="accord-desc-input text-xs font-sans px-1.5 py-0.5 border border-blue-400 rounded text-slate-900 bg-white w-full min-w-[160px] focus:outline-none focus:ring-1 focus:ring-blue-500" value="${row.dataset.origDesc}" />`;
+      qtyCell.innerHTML = `<input type="number" class="accord-qty-input text-xs font-mono font-bold px-1.5 py-0.5 border border-blue-400 rounded text-emerald-700 bg-white w-16 text-right focus:outline-none focus:ring-1 focus:ring-blue-500" value="${row.dataset.origQty}" />`;
+
+      actionsCell.innerHTML = `
+        <div class="flex items-center justify-center gap-1">
+          <button type="button" onclick="saveAccordInlineEdit(this)" class="px-2 py-0.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[10px] font-sans font-bold shadow-2xs transition-colors">
+            Save
+          </button>
+          <button type="button" onclick="cancelAccordInlineEdit(this)" class="px-2 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded text-[10px] font-sans font-medium transition-colors">
+            Cancel
+          </button>
+        </div>
+      `;
+    }
+
+    function saveAccordInlineEdit(btn) {
+      const row = btn.closest('tr');
+      row.classList.remove('editing-mode');
+
+      const skuCell = row.querySelector('.accord-sku-cell');
+      const barcodeCell = row.querySelector('.accord-barcode-cell');
+      const descCell = row.querySelector('.accord-desc-cell');
+      const qtyCell = row.querySelector('.accord-qty-cell');
+      const actionsCell = row.querySelector('.accord-actions-cell');
+
+      const newSku = skuCell.querySelector('.accord-sku-input').value.trim();
+      const newBarcode = barcodeCell.querySelector('.accord-barcode-input').value.trim();
+      const newDesc = descCell.querySelector('.accord-desc-input').value.trim();
+      const newQty = qtyCell.querySelector('.accord-qty-input').value.trim();
+
+      skuCell.textContent = newSku;
+      barcodeCell.textContent = newBarcode;
+      descCell.textContent = newDesc;
+      qtyCell.textContent = newQty;
+
+      actionsCell.innerHTML = `
+        <button type="button" onclick="enableAccordInlineEdit(this)" class="px-2 py-0.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-sans font-semibold transition-colors shadow-2xs">
+          Inline Edit
+        </button>
+      `;
+
+      showToast(`Product ${newSku} updated inline successfully!`, 'success');
+    }
+
+    function cancelAccordInlineEdit(btn) {
+      const row = btn.closest('tr');
+      row.classList.remove('editing-mode');
+
+      const skuCell = row.querySelector('.accord-sku-cell');
+      const barcodeCell = row.querySelector('.accord-barcode-cell');
+      const descCell = row.querySelector('.accord-desc-cell');
+      const qtyCell = row.querySelector('.accord-qty-cell');
+      const actionsCell = row.querySelector('.accord-actions-cell');
+
+      skuCell.textContent = row.dataset.origSku;
+      barcodeCell.textContent = row.dataset.origBarcode;
+      descCell.textContent = row.dataset.origDesc;
+      qtyCell.textContent = row.dataset.origQty;
+
+      actionsCell.innerHTML = `
+        <button type="button" onclick="enableAccordInlineEdit(this)" class="px-2 py-0.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-sans font-semibold transition-colors shadow-2xs">
+          Inline Edit
+        </button>
+      `;
+    }
+
+    // Create Locations Range
+    function handleCreateLocations() {
+      const selectedArea = document.getElementById('loc-area-select')?.value || ((JOB.areas[0] || {}).name || 'Area 1');
+      const startNum = parseInt(document.getElementById('loc-start-num').value, 10);
+      const endNum = parseInt(document.getElementById('loc-end-num').value, 10);
+
+      if (isNaN(startNum) || isNaN(endNum) || endNum < startNum) {
+        showToast('Please enter a valid start and end location range!', 'error');
+        return;
+      }
+
+      const tbody = document.getElementById('location-tbody');
+      const sampleDevices = [
+        '195B2FF60701080B15-02150B0E1804',
+        '195B2FF60701082E0A-0E020B0D1809',
+        '195B2FF60701080E9-0802050E009'
+      ];
+      const sampleUsers = ['UMAIR', 'MUZ', 'WAQ', 'SH'];
+
+      let countAdded = 0;
+      for (let i = startNum; i <= endNum; i++) {
+        countAdded++;
+        const randomDevice = sampleDevices[i % sampleDevices.length];
+        const randomUser = sampleUsers[i % sampleUsers.length];
+        const randomQty = Math.floor(Math.random() * 80) + 20;
+
+        const tr = document.createElement('tr');
+        tr.className = 'bg-emerald-50/70 hover:bg-emerald-100/60 transition-colors location-row text-slate-900 border-b border-slate-200';
+        tr.setAttribute('data-status', 'Complete');
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 text-center border-r border-slate-200">
+            <button type="button" onclick="toggleLocationAccordion(this)" class="w-6 h-6 inline-flex items-center justify-center rounded bg-emerald-100 hover:bg-emerald-200 text-emerald-800 transition-colors" title="View Scanned Products at this Location">
+              <svg class="chevron-icon transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          </td>
+          <td class="py-2.5 px-3 font-semibold border-r border-slate-200 truncate max-w-[200px] device-cell text-slate-800">${randomDevice.substring(0, 22)}...</td>
+          <td class="py-2.5 px-3 font-bold border-r border-slate-200 user-cell text-slate-900">${randomUser}</td>
+          <td class="py-2.5 px-3 text-center font-bold border-r border-slate-200 loc-cell text-slate-900">${i}</td>
+          <td class="py-2.5 px-3 text-center font-mono font-bold border-r border-slate-200 loc-barcode-cell text-slate-800">LOC-BAR-${i}</td>
+          <td class="py-2.5 px-3 text-center border-r border-slate-200 status-cell">
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Complete</span>
+          </td>
+          <td class="py-2.5 px-3 text-right font-bold border-r border-slate-200 qty-cell text-emerald-700">${randomQty}</td>
+          <td class="py-2.5 px-3 border-r border-slate-200 text-slate-600">27/07/2026 17:45</td>
+          <td class="py-2.5 px-3 text-center border-r border-slate-200">
+            <input type="checkbox" checked class="h-3.5 w-3.5 rounded text-blue-600 accent-blue-600" />
+          </td>
+          <td class="py-2.5 px-3 text-center border-r border-slate-200">
+            <input type="checkbox" class="h-3.5 w-3.5 rounded text-blue-600" />
+          </td>
+          <td class="py-2.5 px-3 text-center">
+            <input type="checkbox" class="h-3.5 w-3.5 rounded text-blue-600" />
+          </td>
+        `;
+
+        const accordTr = document.createElement('tr');
+        accordTr.className = 'accordion-details-row hidden bg-blue-50/40 text-slate-800 border-b border-slate-200';
+        accordTr.innerHTML = `
+          <td colspan="11" class="p-3.5">
+            <div class="bg-white border border-blue-200/90 rounded-xl p-2.5 space-y-2 shadow-xs">
+              <div class="flex flex-wrap items-center justify-between text-[11px] border-b border-slate-100 pb-1.5">
+                <div class="flex items-center gap-2 text-blue-700 font-bold">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Scanned Products at Location #<span class="accord-loc-num">${i}</span></span>
+                  <span class="text-slate-500 font-normal font-sans">(<span class="accord-qty-text">${randomQty}</span> total items scanned)</span>
+                </div>
+                <div class="text-[10px] font-mono text-slate-500">
+                  Operator: <strong class="text-slate-800 font-sans accord-user-name">${randomUser}</strong> &bull; Device ID: <span class="text-slate-700 font-mono">${randomDevice.substring(0, 18)}</span>
+                </div>
+              </div>
+              <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-xs text-left font-mono border border-slate-200 rounded">
+                  <thead>
+                    <tr class="text-[10px] text-slate-700 font-bold uppercase tracking-wider border-b border-slate-200 bg-slate-100 select-none">
+                      <th class="py-2 px-3 border-r border-slate-200 w-10">#</th>
+                      <th class="py-2 px-3 border-r border-slate-200">SKU CODE</th>
+                      <th class="py-2 px-3 border-r border-slate-200">BARCODE</th>
+                      <th class="py-2 px-3 border-r border-slate-200">PRODUCT DESCRIPTION</th>
+                      <th class="py-2 px-3 border-r border-slate-200 text-right">SCANNED QTY</th>
+                      <th class="py-2 px-3 border-r border-slate-200 text-right">SCAN TIME</th>
+                      <th class="py-2 px-3 text-center no-print w-28">ACTIONS</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200 text-[11px] bg-white">
+                    <tr class="accord-item-row hover:bg-slate-50 border-b border-slate-200">
+                      <td class="py-2 px-3 text-slate-400 border-r border-slate-200">1</td>
+                      <td class="py-2 px-3 font-semibold text-blue-700 border-r border-slate-200 accord-sku-cell">SKU-AUTO-${i}</td>
+                      <td class="py-2 px-3 text-slate-600 border-r border-slate-200 accord-barcode-cell">89012345${i}</td>
+                      <td class="py-2 px-3 text-slate-800 font-sans font-medium border-r border-slate-200 accord-desc-cell">Scanned Master SKU - Item Lot #${i}</td>
+                      <td class="py-2 px-3 text-right font-bold text-emerald-700 border-r border-slate-200 accord-qty-cell">${randomQty}</td>
+                      <td class="py-2 px-3 text-right text-slate-500 border-r border-slate-200">17:45:00</td>
+                      <td class="py-2 px-3 text-center no-print accord-actions-cell">
+                        <button type="button" onclick="enableAccordInlineEdit(this)" class="px-2 py-0.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-sans font-semibold transition-colors shadow-2xs">
+                          Inline Edit
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+        tbody.appendChild(accordTr);
+      }
+
+      showToast(`Successfully created ${countAdded} location records for ${selectedArea} (${startNum} → ${endNum})!`, 'success');
+      updateTableStats();
+    }
+
+    // Filter Location Table
+    function filterLocationTable() {
+      const search = document.getElementById('table-search-input').value.toLowerCase();
+      const statusFilter = document.querySelector('input[name="table-status-filter"]:checked').value;
+      const rows = document.querySelectorAll('.location-row');
+
+      let visibleCount = 0;
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const rowStatus = row.getAttribute('data-status');
+
+        const matchesSearch = text.includes(search);
+        const matchesStatus = (statusFilter === 'all') || (rowStatus === statusFilter);
+
+        if (matchesSearch && matchesStatus) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+          const accordionRow = row.nextElementSibling;
+          if (accordionRow && accordionRow.classList.contains('accordion-details-row')) {
+            accordionRow.classList.add('hidden');
+          }
+        }
+      });
+
+      const rowCountEl = document.getElementById('table-row-count-text');
+      if (rowCountEl) rowCountEl.textContent = `Showing ${visibleCount} Locations`;
+    }
+
+    function updateTableStats() {
+      const rows = document.querySelectorAll('.location-row');
+      let completeCount = 0;
+      let waitingCount = 0;
+
+      rows.forEach(row => {
+        const st = row.getAttribute('data-status');
+        if (st === 'Complete') completeCount++;
+        else waitingCount++;
+      });
+
+      if (document.getElementById('stat-complete')) document.getElementById('stat-complete').textContent = completeCount;
+      if (document.getElementById('stat-waiting')) document.getElementById('stat-waiting').textContent = waitingCount;
+    }
+
+    // Print Handlers
+    function triggerGeneralPrint() {
+      window.print();
+    }
+
+    function printLocationRow(btn) {
+      const row = btn.closest('tr');
+      const locNum = row.querySelector('.loc-cell')?.textContent.trim() || 'N/A';
+      const userName = row.querySelector('.user-cell')?.textContent.trim() || 'N/A';
+      const qty = row.querySelector('.qty-cell')?.textContent.trim() || '0';
+      alert(`Print Preview for Location #${locNum}:\nOperator: ${userName}\nScanned Items: ${qty}\nStatus: Complete`);
+    }
+
+    function printSelectedLocation() {
+      showToast('Sent location summary report to printing queue.', 'success');
+    }
+
+    function reloadColumns() {
+      showToast('Table columns reset to default view layout.', 'info');
+    }
+
+    // Hardware Actions
+    function triggerHardwareSync() {
+      showToast('Triggered manual ActiveSync hardware polling...', 'info');
+    }
+
+    function confirmDeviceSync(deviceId) {
+      if (confirm(`Are you sure you want to sync Device ${deviceId}?`)) {
+        showToast(`Sync initiated for Device ${deviceId}!`, 'success');
+      }
+    }
+
+    function confirmDeviceClear(deviceId) {
+      if (confirm(`Are you sure you want to clear data for Device ${deviceId}?\nThis action cannot be undone.`)) {
+        showToast(`Data cleared for Device ${deviceId}!`, 'info');
+      }
+    }
+
+    function confirmSendLookupToAll() {
+      if (confirm('Send lookup master file to all 4 connected handheld devices?')) {
+        showToast('Lookup master file sent to all connected handheld devices!', 'success');
+      }
+    }
+
+    function sendLookupFiles() {
+      showToast('Lookup master files sent to connected handheld scanners.', 'success');
+    }
+
+    function toggleStocktakeAccordion(bodyId, headerEl) {
+      const body = document.getElementById(bodyId);
+      const chevron = headerEl.querySelector('.accord-chevron');
+      if (!body) return;
+      body.classList.toggle('hidden');
+      if (chevron) chevron.classList.toggle('rotate-180');
+    }
+
+    function clearConsoleLog() {
+      const el = document.getElementById('sec-terminal-logs-body');
+      if (el) {
+        el.innerHTML = '<div class="text-slate-500">[17:46:00] LOGS_CLEARED: ActiveSync log buffer reset by Admin.</div>';
+      }
+      showToast('Sync data logs cleared.', 'info');
+    }
+
+    // File Import Modals
+    function openImportModal(mode) {
+      document.getElementById('import-modal-title').textContent = 'Import Device File';
+      document.getElementById('import-file-modal').classList.remove('hidden');
+    }
+
+    function closeImportModal() {
+      document.getElementById('import-file-modal').classList.add('hidden');
+    }
+
+    function handleFileSelected(input) {
+      if (input.files && input.files[0]) {
+        const fileDiv = document.getElementById('file-selection-name');
+        fileDiv.textContent = `Selected: ${input.files[0].name} (${(input.files[0].size / 1024).toFixed(1)} KB)`;
+        fileDiv.classList.remove('hidden');
+      }
+    }
+
+    function submitImportFile() {
+      closeImportModal();
+      showToast('Device data file imported & reconciled with stock master!', 'success');
+    }
+
+    function openCompleteStocktakeModal() {
+      if (confirm('Complete Stocktake Session ' + JOB.id + '?\nAll location balances will be locked for final reporting.')) {
+        showToast('Stock Take ' + JOB.id + ' marked as Complete!', 'success');
+      }
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // IMPORT / EXPORT TAB DATA ENGINE & EVENT HANDLERS
+    // ══════════════════════════════════════════════════════════
+    function toggleCurrentDataAccordion(btn) {
+      const row = btn.closest('tr');
+      const detailRow = row.nextElementSibling;
+      if (!detailRow || !detailRow.classList.contains('current-data-detail-row')) return;
+      const isHidden = detailRow.classList.contains('hidden');
+      detailRow.classList.toggle('hidden');
+      const chevron = btn.querySelector('.current-data-chevron');
+      if (chevron) chevron.classList.toggle('rotate-180', isHidden);
+    }
+
+    function toggleImportedDataAccordion(btn) {
+      const row = btn.closest('tr');
+      const detailRow = row.nextElementSibling;
+      if (!detailRow || !detailRow.classList.contains('imported-data-detail-row')) return;
+      const isHidden = detailRow.classList.contains('hidden');
+      detailRow.classList.toggle('hidden');
+      const chevron = btn.querySelector('.imported-data-chevron');
+      if (chevron) chevron.classList.toggle('rotate-180', isHidden);
+    }
+
+    function filterCurrentDataTable() {
+      const query = (document.getElementById('current-data-search')?.value || '').toLowerCase();
+      const groupFilter = document.getElementById('current-data-group-filter')?.value || 'all';
+      const rows = document.querySelectorAll('#current-data-tbody tr.current-data-row');
+      let visibleItemCount = 0;
+
+      rows.forEach(row => {
+        const detailRow = row.nextElementSibling;
+        const text = row.textContent.toLowerCase() + ' ' + (detailRow ? detailRow.textContent.toLowerCase() : '');
+        const group = row.getAttribute('data-group') || 'None';
+        const matchesQuery = !query || text.includes(query);
+        const matchesGroup = groupFilter === 'all' || group === groupFilter;
+        const matches = matchesQuery && matchesGroup;
+
+        row.classList.toggle('hidden', !matches);
+        if (detailRow && !matches) detailRow.classList.add('hidden');
+
+        if (matches) {
+          visibleItemCount += detailRow?.querySelectorAll(':scope tbody tr').length || 0;
+        }
+      });
+
+      const badge = document.getElementById('current-data-count-badge');
+      if (badge) badge.textContent = `${visibleItemCount} Items`;
+    }
+
+    function filterImportedDataTable() {
+      const query = (document.getElementById('imported-data-search')?.value || '').toLowerCase();
+      const rows = document.querySelectorAll('#imported-data-tbody tr.imported-data-row');
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const detailRow = row.nextElementSibling;
+        const text = row.textContent.toLowerCase() + ' ' + (detailRow ? detailRow.textContent.toLowerCase() : '');
+        const matches = !query || text.includes(query);
+        row.classList.toggle('hidden', !matches);
+        if (detailRow && !matches) detailRow.classList.add('hidden');
+        if (matches) visibleCount++;
+      });
+
+      const badge = document.getElementById('imported-data-count-badge');
+      if (badge) badge.textContent = `Staging Buffer (${visibleCount} Batches)`;
+    }
+
+    function toggleSelectAllCurrentRows(masterChk) {
+      document.querySelectorAll('#current-data-tbody .current-row-chk').forEach(chk => {
+        chk.checked = masterChk.checked;
+      });
+    }
+
+    function toggleSelectAllImportedRows(masterChk) {
+      document.querySelectorAll('#imported-data-tbody .imported-row-chk').forEach(chk => {
+        chk.checked = masterChk.checked;
+      });
+    }
+
+    function handleMergeData() {
+      const stagingRows = document.querySelectorAll('#imported-data-tbody tr.imported-data-row');
+      if (stagingRows.length === 0) {
+        showToast('No imported staging data available to merge', 'info');
+        return;
+      }
+
+      const currentTbody = document.getElementById('current-data-tbody');
+      let mergedCount = 0;
+
+      stagingRows.forEach(row => {
+        const loc = row.getAttribute('data-location') || row.querySelector('button span')?.textContent.trim() || '';
+        const area = row.children[1]?.textContent.trim() || 'Unassigned';
+        const qty = row.children[3]?.textContent.trim() || '0';
+        const group = row.children[4]?.textContent.trim() || 'None';
+
+        const stagingDetailRow = row.nextElementSibling;
+        const itemRows = stagingDetailRow?.classList.contains('imported-data-detail-row')
+          ? Array.from(stagingDetailRow.querySelectorAll('tbody tr'))
+          : [];
+        const itemsHtml = itemRows.map(tr => tr.outerHTML.replace(/text-purple-700/g, 'text-emerald-700')).join('\n');
+
+        let locRow = currentTbody.querySelector(`tr.current-data-row[data-location="${loc}"]`);
+
+        if (locRow) {
+          // Existing location: append the staged items under its detail table and bump the aggregate qty
+          const detailRow = locRow.nextElementSibling;
+          const detailTbody = detailRow?.querySelector('tbody');
+          if (detailTbody) detailTbody.insertAdjacentHTML('beforeend', itemsHtml);
+
+          const qtyCell = locRow.children[3];
+          qtyCell.textContent = (parseInt(qtyCell.textContent) || 0) + (parseInt(qty) || 0);
+          locRow.classList.add('bg-emerald-50/40');
+        } else {
+          // New location: create a fresh location row + its detail table seeded with the staged items
+          locRow = document.createElement('tr');
+          locRow.className = 'hover:bg-slate-50 transition-colors current-data-row bg-emerald-50/40';
+          locRow.setAttribute('data-group', group);
+          locRow.setAttribute('data-location', loc);
+          locRow.innerHTML = `
+            <td class="py-1.5 px-3 text-center border-r border-slate-200">
+              <input type="checkbox" class="current-row-chk h-3.5 w-3.5 rounded text-blue-600" />
+            </td>
+            <td class="py-1.5 px-3 font-sans font-medium text-slate-700 border-r border-slate-200">${area}</td>
+            <td class="py-1.5 px-3 border-r border-slate-200">
+              <button type="button" onclick="toggleCurrentDataAccordion(this)" class="flex items-center gap-1.5 font-bold text-slate-900 hover:text-blue-700 transition-colors">
+                <svg class="current-data-chevron shrink-0 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+                <span>${loc}</span>
+              </button>
+            </td>
+            <td class="py-1.5 px-3 text-right font-bold text-emerald-700 border-r border-slate-200">${qty}</td>
+            <td class="py-1.5 px-3 font-sans font-medium text-slate-700">${group}</td>
+          `;
+
+          const detailRow = document.createElement('tr');
+          detailRow.className = 'current-data-detail-row hidden bg-slate-50/60';
+          detailRow.innerHTML = `
+            <td class="py-0 px-0" colspan="5">
+              <table class="w-full text-xs text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-100 text-slate-500 font-bold text-[10px] uppercase tracking-wider border-b border-slate-200">
+                    <th class="py-1 pl-11 pr-3 border-r border-slate-200 font-bold">Device ID</th>
+                    <th class="py-1 px-3 border-r border-slate-200 font-bold">SKU Code</th>
+                    <th class="py-1 px-3 border-r border-slate-200 font-bold">Barcode</th>
+                    <th class="py-1 px-3 border-r border-slate-200 font-bold">Product Description</th>
+                    <th class="py-1 px-3 text-right font-bold">Qty</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">${itemsHtml}</tbody>
+              </table>
+            </td>
+          `;
+
+          currentTbody.appendChild(locRow);
+          currentTbody.appendChild(detailRow);
+        }
+
+        stagingDetailRow?.remove();
+        row.remove();
+        mergedCount++;
+      });
+
+      filterCurrentDataTable();
+      filterImportedDataTable();
+      showToast(`Merged ${mergedCount} staging batch(es) into Current Data Directory!`, 'success');
+    }
+
+    function handleExportData() {
+      const locRows = document.querySelectorAll('#current-data-tbody tr.current-data-row:not(.hidden)');
+      let itemCount = 0;
+      locRows.forEach(row => {
+        const detailRow = row.nextElementSibling;
+        itemCount += detailRow?.querySelectorAll(':scope tbody tr').length || 0;
+      });
+      showToast(`Exporting ${itemCount} scanned items across ${locRows.length} locations to CSV format...`, 'success');
+    }
+  </script>
+
+
+  <script>
+  // ══════════════════════════════════════════════════════════
+  // RUNTIME RENDER — real stocktake data (assets/js/data.js), selected with ?job=JOB-xxxx-nnn
+  // ══════════════════════════════════════════════════════════
+  var JOB = (function () {
+    var id = new URLSearchParams(location.search).get('job') || 'ST-2026-001';
+    return STOCK.jobs.find(function (j) { return j.id === id; }) || STOCK.jobs[0];
+  })();
+  var LOCS = STOCK.locations[JOB.id];
+  var NOF = ((STOCK.reports[JOB.id] || {}).notonfile) || [];
+
+  (function () {
+    var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+    var fmt = function (n) { return Number(n).toLocaleString('en-GB'); };
+    var $ = function (id) { return document.getElementById(id); };
+    var totalQty = LOCS.reduce(function (a, l) { return a + l.qty; }, 0);
+    var nofQty = NOF.reduce(function (a, r) { return a + r[3]; }, 0);
+    var devices = [];
+    LOCS.forEach(function (l) { if (devices.indexOf(l.device) < 0) devices.push(l.device); });
+    var deviceName = function (id) { var d = STOCK.devices.find(function (x) { return x.id === id; }); return d ? d.counter : ''; };
+
+    document.title = JOB.title + ' — Admin Panel';
+    $('page-heading').textContent = JOB.client;
+    $('job-subtitle').textContent = JOB.title + ' Monitor & Control';
+
+    // --- Location Setup tab -------------------------------------------------
+    var sel = $('loc-area-select');
+    JOB.areas.forEach(function (a) { var o = document.createElement('option'); o.value = a.name; o.textContent = a.name; sel.appendChild(o); });
+    var nums = LOCS.map(function (l) { return parseInt(l.loc, 10); });
+    var maxNum = Math.max.apply(null, nums);
+    $('loc-start-num').value = maxNum + 1;
+    $('loc-end-num').value = maxNum + 15;
+    var setupBody = $('generated-locations-tbody');
+    var setupHtml = LOCS.map(function (l, i) {
+      return '<tr class="hover:bg-slate-50/80 transition-colors location-row text-slate-900 border-b border-slate-200">' +
+        '<td class="py-2.5 px-4 text-center font-mono text-slate-500 border-r border-slate-200 row-num-cell">' + (i + 1) + '</td>' +
+        '<td class="py-2.5 px-4 font-sans font-medium border-r border-slate-200 area-cell text-slate-800">' + esc(l.area) + '</td>' +
+        '<td class="py-2.5 px-4 text-center font-bold border-r border-slate-200 loc-cell text-slate-900">' + l.loc + '</td>' +
+        '<td class="py-2.5 px-4 font-bold border-r border-slate-200 loc-barcode-cell text-slate-800">LOC-BAR-' + l.loc + '</td>' +
+        '<td class="py-2.5 px-4 text-center border-r border-slate-200 status-cell"><span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Active</span></td>' +
+        '<td class="py-2.5 px-4 text-center no-print actions-cell"><div class="flex items-center justify-center gap-1">' +
+        '<button type="button" onclick="enableSetupInlineEdit(this)" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-sans font-semibold transition-colors shadow-2xs">Inline Edit</button>' +
+        '<button type="button" onclick="deleteSetupLocation(this)" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-[10px] font-sans font-semibold border border-rose-200 transition-colors">Delete</button>' +
+        '</div></td></tr>';
+    }).join('');
+    setupBody.insertAdjacentHTML('beforeend', setupHtml);
+    $('generated-locations-empty-row').classList.add('hidden');
+    if (typeof updateGeneratedLocationsCount === 'function') updateGeneratedLocationsCount();
+
+    // --- Job statistics -----------------------------------------------------
+    $('stat-complete').textContent = fmt(LOCS.filter(function (l) { return l.status === 'Complete'; }).length);
+    $('stat-waiting').textContent = fmt(LOCS.filter(function (l) { return l.status !== 'Complete'; }).length);
+    $('stat-total-items').textContent = fmt(totalQty);
+    $('stat-nof-qty').textContent = fmt(nofQty);
+    $('stat-nof-total').textContent = fmt(totalQty);
+    $('foot-complete').textContent = fmt(LOCS.filter(function (l) { return l.status === 'Complete'; }).length);
+    $('foot-waiting').textContent = fmt(LOCS.filter(function (l) { return l.status !== 'Complete'; }).length);
+
+    // --- Terminal log -------------------------------------------------------
+    var last = LOCS[LOCS.length - 1];
+    var hh = function (t) { return t.split(' ')[1]; };
+    var logs = [['text-slate-500', '[' + hh(LOCS[0].time).replace(/:\d+$/, ':00') + '] SYS_INIT: ActiveSync listening on port 8082...']];
+    devices.forEach(function (d) { logs.push(['text-emerald-700 font-medium', 'CONNECT: Device ' + d + ' online.']); });
+    LOCS.slice(-3).forEach(function (l) { logs.push(['text-blue-700 font-medium', '[' + hh(l.time) + '] SYNC_PKT: Loc ' + l.loc + ' -> ' + fmt(l.qty) + ' items. Complete.']); });
+    if (NOF.length) NOF.forEach(function (r) { logs.push(['text-amber-700 font-medium', 'WARN_BARCODE: ' + r[1] + ' not on file (Loc ' + r[2] + ')']); });
+    logs.push(['text-slate-800 font-medium', 'AUDIT: Workspace ' + JOB.id + ' — ' + LOCS.length + ' locations, ' + fmt(totalQty) + ' units.']);
+    $('sec-terminal-logs-body').innerHTML = logs.map(function (r) { return '<div class="' + r[0] + '">' + esc(r[1]) + '</div>'; }).join('');
+
+    // --- Connected devices --------------------------------------------------
+    $('devices-stream-tbody').innerHTML = devices.map(function (d) {
+      var mine = LOCS.filter(function (l) { return l.device === d; });
+      var q = mine.reduce(function (a, l) { return a + l.qty; }, 0);
+      var lastL = mine[mine.length - 1];
+      var stamp = JOB.client.replace(/ - .*/, '') + ' ' + lastL.time.split(' ')[0] + ' ' + lastL.time.split(' ')[1] + ':00';
+      return '<tr class="hover:bg-slate-50">' +
+        '<td class="py-1 px-2.5 text-slate-800 font-semibold truncate max-w-[150px]" title="' + d + '">' + d + '</td>' +
+        '<td class="py-1 px-2.5 text-blue-700 font-bold">' + deviceName(d) + '</td>' +
+        '<td class="py-1 px-2.5 text-slate-600 truncate">' + esc(stamp) + '</td>' +
+        '<td class="py-1 px-2.5 text-center text-slate-800 font-bold">' + mine[0].loc + (mine.length > 1 ? '–' + lastL.loc : '') + '</td>' +
+        '<td class="py-1 px-2.5 text-right text-emerald-700 font-bold">' + fmt(q) + '</td>' +
+        '<td class="py-1 px-2.5 text-center"><span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 font-sans"><span class="w-1 h-1 rounded-full bg-emerald-500"></span>Connected</span></td>' +
+        '<td class="py-1 px-2.5 text-center no-print"><div class="flex items-center justify-center gap-1">' +
+        '<button type="button" onclick="confirmDeviceSync(\'' + d + '\')" class="px-2 py-0.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10.5px] font-semibold transition-colors shadow-2xs">Sync</button>' +
+        '<button type="button" onclick="confirmDeviceClear(\'' + d + '\')" class="px-2 py-0.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-[10.5px] font-semibold border border-rose-200 transition-colors">Clear Data</button>' +
+        '</div></td></tr>';
+    }).join('');
+
+    // --- Location progress directory (accordion detail is filled on first open) ---
+    var CHEV = '<svg class="chevron-icon transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>';
+    var noDesc = '<span class="text-slate-400 italic font-normal">No description on file</span>';
+    $('location-tbody').innerHTML = LOCS.map(function (l, i) {
+      var done = l.status === 'Complete';
+      var rowCls = done ? 'hover:bg-slate-50' : 'bg-amber-50/70 hover:bg-amber-100/60';
+      var btnCls = done ? 'bg-slate-100 hover:bg-slate-200 text-slate-700' : 'bg-amber-100 hover:bg-amber-200 text-amber-900';
+      var pill = done ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300';
+      return '<tr class="' + rowCls + ' transition-colors location-row text-slate-900 border-b border-slate-200" data-status="' + l.status + '" data-idx="' + i + '">' +
+        '<td class="py-2.5 px-3 text-center border-r border-slate-200"><button type="button" onclick="toggleLocationAccordion(this)" class="w-6 h-6 inline-flex items-center justify-center rounded ' + btnCls + ' transition-colors" title="View Scanned Products at this Location">' + CHEV + '</button></td>' +
+        '<td class="py-1.5 px-2.5 font-semibold border-r border-slate-200 truncate max-w-[200px] device-cell text-slate-800" title="' + l.device + '">' + l.device + '</td>' +
+        '<td class="py-1.5 px-2.5 font-bold border-r border-slate-200 user-cell text-slate-900">' + l.user + '</td>' +
+        '<td class="py-1.5 px-2.5 text-center font-bold border-r border-slate-200 loc-cell text-slate-900">' + l.loc + '</td>' +
+        '<td class="py-1.5 px-2.5 text-center font-mono font-bold border-r border-slate-200 loc-barcode-cell text-slate-800">LOC-BAR-' + l.loc + '</td>' +
+        '<td class="py-1.5 px-2.5 text-center border-r border-slate-200 status-cell"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ' + pill + ' border">' + l.status + '</span></td>' +
+        '<td class="py-1.5 px-2.5 text-right font-bold border-r border-slate-200 qty-cell text-emerald-700">' + fmt(l.qty) + '</td>' +
+        '<td class="py-1.5 px-2.5 border-r border-slate-200 text-slate-600">' + l.time + '</td>' +
+        '<td class="py-1.5 px-2.5 text-center border-r border-slate-200"><input type="checkbox" class="h-3.5 w-3.5 rounded text-blue-600" /></td>' +
+        '<td class="py-1.5 px-2.5 text-center border-r border-slate-200"><input type="checkbox" class="h-3.5 w-3.5 rounded text-blue-600" /></td>' +
+        '<td class="py-1.5 px-2.5 text-center"><input type="checkbox" class="h-3.5 w-3.5 rounded text-blue-600" /></td></tr>' +
+        '<tr class="accordion-details-row hidden bg-blue-50/40 text-slate-800 border-b border-slate-200" data-idx="' + i + '"><td colspan="11" class="p-3.5"></td></tr>';
+    }).join('');
+
+    window.__fillAccordion = function (accRow) {
+      if (accRow.dataset.filled) return;
+      var l = LOCS[+accRow.dataset.idx];
+      var items = l.lines.map(function (ln, k) {
+        return '<tr class="accord-item-row hover:bg-slate-50 border-b border-slate-200">' +
+          '<td class="py-2 px-3 text-slate-400 border-r border-slate-200">' + (k + 1) + '</td>' +
+          '<td class="py-2 px-3 font-semibold text-blue-700 border-r border-slate-200 accord-sku-cell">' + esc(ln[0]) + '</td>' +
+          '<td class="py-2 px-3 text-slate-600 border-r border-slate-200 accord-barcode-cell">' + (ln[1] ? esc(ln[1]) : '—') + '</td>' +
+          '<td class="py-2 px-3 text-slate-800 font-sans font-medium border-r border-slate-200 accord-desc-cell">' + (ln[2] ? esc(ln[2]) : noDesc) + '</td>' +
+          '<td class="py-2 px-3 text-right font-bold text-emerald-700 border-r border-slate-200 accord-qty-cell">' + ln[3] + '</td>' +
+          '<td class="py-2 px-3 text-right text-slate-500 border-r border-slate-200">—</td>' +
+          '<td class="py-2 px-3 text-center no-print accord-actions-cell"><button type="button" onclick="enableAccordInlineEdit(this)" class="px-2 py-0.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold transition-colors shadow-2xs">Inline Edit</button></td></tr>';
+      }).join('');
+      accRow.firstElementChild.innerHTML =
+        '<div class="bg-white border border-blue-200/90 rounded-xl p-2.5 space-y-2 shadow-xs">' +
+        '<div class="flex flex-wrap items-center justify-between text-[11px] border-b border-slate-100 pb-1.5">' +
+        '<div class="flex items-center gap-2 text-blue-700 font-bold"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>' +
+        '<span>Scanned Products at Location #<span class="accord-loc-num">' + l.loc + '</span></span>' +
+        '<span class="text-slate-500 font-normal font-sans">(<span class="accord-qty-text">' + fmt(l.qty) + '</span> total items scanned &bull; ' + l.lines.length + ' lines)</span></div>' +
+        '<div class="text-[10px] font-mono text-slate-500">Operator: <strong class="text-slate-800 font-sans accord-user-name">' + l.user + '</strong> &bull; Device ID: <span class="text-slate-700 font-mono">' + l.device + '</span></div></div>' +
+        '<div class="overflow-x-auto custom-scrollbar"><table class="w-full text-xs text-left font-mono border border-slate-200 rounded"><thead><tr class="text-[10px] text-slate-700 font-bold uppercase tracking-wider border-b border-slate-200 bg-slate-100 select-none">' +
+        '<th class="py-2 px-3 border-r border-slate-200 w-10">#</th><th class="py-2 px-3 border-r border-slate-200">SKU CODE</th><th class="py-2 px-3 border-r border-slate-200">BARCODE</th><th class="py-2 px-3 border-r border-slate-200">PRODUCT DESCRIPTION</th><th class="py-2 px-3 border-r border-slate-200 text-right">SCANNED QTY</th><th class="py-2 px-3 border-r border-slate-200 text-right">SCAN TIME</th><th class="py-2 px-3 text-center no-print w-28">ACTIONS</th></tr></thead>' +
+        '<tbody class="divide-y divide-slate-200 text-[11px] bg-white">' + items + '</tbody></table></div></div>';
+      accRow.dataset.filled = '1';
+    };
+    var _orig = window.toggleLocationAccordion;
+    window.toggleLocationAccordion = function (btn) {
+      var acc = btn.closest('tr').nextElementSibling;
+      if (acc && acc.classList.contains('accordion-details-row')) window.__fillAccordion(acc);
+      _orig(btn);
+    };
+    if (typeof filterLocationTable === 'function') filterLocationTable();
+
+    // --- Current Data (merged job data) ------------------------------------
+    var groups = [];
+    LOCS.forEach(function (l) { if (groups.indexOf(l.group) < 0) groups.push(l.group); });
+    var gsel = $('current-data-group-filter');
+    groups.forEach(function (g) { var o = document.createElement('option'); o.value = g; o.textContent = g; gsel.appendChild(o); });
+    var CCHEV = '<svg class="current-data-chevron shrink-0 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>';
+    var itemCount = 0;
+    $('current-data-tbody').innerHTML = LOCS.map(function (l) {
+      itemCount += l.lines.length;
+      var det = l.lines.map(function (ln) {
+        return '<tr><td class="py-1.5 pl-11 pr-3 text-slate-600 border-r border-slate-200 truncate max-w-[200px]">' + l.device + '</td>' +
+          '<td class="py-1.5 px-3 font-semibold text-blue-700 border-r border-slate-200">' + esc(ln[0]) + '</td>' +
+          '<td class="py-1.5 px-3 text-slate-600 border-r border-slate-200">' + (ln[1] ? esc(ln[1]) : '—') + '</td>' +
+          '<td class="py-1.5 px-3 text-slate-700 font-sans border-r border-slate-200">' + (ln[2] ? esc(ln[2]) : noDesc) + '</td>' +
+          '<td class="py-1.5 px-3 text-right font-bold text-emerald-700">' + ln[3] + '</td></tr>';
+      }).join('');
+      return '<tr class="hover:bg-slate-50 transition-colors current-data-row" data-group="' + esc(l.group) + '" data-location="' + l.loc + '">' +
+        '<td class="py-1.5 px-3 text-center border-r border-slate-200"><input type="checkbox" class="current-row-chk h-3.5 w-3.5 rounded text-blue-600" /></td>' +
+        '<td class="py-1.5 px-3 font-sans font-medium text-slate-700 border-r border-slate-200">' + esc(l.area) + '</td>' +
+        '<td class="py-1.5 px-3 border-r border-slate-200"><button type="button" onclick="toggleCurrentDataAccordion(this)" class="flex items-center gap-1.5 font-bold text-slate-900 hover:text-blue-700 transition-colors">' + CCHEV + '<span>' + l.loc + '</span></button></td>' +
+        '<td class="py-1.5 px-3 text-right font-bold text-emerald-700 border-r border-slate-200">' + fmt(l.qty) + '</td>' +
+        '<td class="py-1.5 px-3 font-sans font-medium text-slate-700">' + esc(l.group) + '</td></tr>' +
+        '<tr class="current-data-detail-row hidden bg-slate-50/60"><td class="py-0 px-0" colspan="5"><table class="w-full text-xs text-left border-collapse"><thead><tr class="bg-slate-100 text-slate-500 font-bold text-[10px] uppercase tracking-wider border-b border-slate-200">' +
+        '<th class="py-1 pl-11 pr-3 border-r border-slate-200 font-bold">Device ID</th><th class="py-1 px-3 border-r border-slate-200 font-bold">SKU Code</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Barcode</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Product Description</th><th class="py-1 px-3 text-right font-bold">Qty</th></tr></thead>' +
+        '<tbody class="divide-y divide-slate-100">' + det + '</tbody></table></td></tr>';
+    }).join('');
+    $('current-data-count-badge').textContent = fmt(itemCount) + ' Items';
+
+    // --- Imported data staging buffer --------------------------------------
+    $('imported-data-tbody').innerHTML = '<tr><td colspan="5" class="py-6 px-3 text-center text-slate-400 font-sans text-xs">No device files waiting in the staging buffer — use “Import Device File” or “Import Laptop File”.</td></tr>';
+    var ib = $('imported-data-count-badge'); if (ib) ib.textContent = 'Staging Buffer (0 Batches)';
+  })();
+  </script>
+
+  <script>
+  // ══════════════════════════════════════════════════════════
+  // FILE IMPORT / EXPORT for when data did not arrive over the local network
+  //  - Device file : handheld dump (BBBB header, "FFFF<loc> <lines> <qty>", then "<loc><barcode> <qty>")
+  //  - Laptop file : the CSV made by "Export Data" on another laptop (full job data, all locations)
+  // Both land in the Imported Data staging table; "Merge Data" adds them to Current Data.
+  // ══════════════════════════════════════════════════════════
+  (function () {
+    var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+    var $ = function (id) { return document.getElementById(id); };
+    var mode = 'device';
+    var NODESC = '<span class="text-slate-400 italic">No description on file</span>';
+
+    function areaOf(loc) {
+      var n = parseInt(loc, 10);
+      var a = JOB.areas.find(function (x) { return n >= parseInt(x.from, 10) && n <= parseInt(x.to, 10); });
+      return a ? { name: a.name, group: a.group } : { name: 'Unassigned', group: 'None' };
+    }
+
+    // line = [sku, barcode, description, qty, deviceId]
+    function parseDeviceFile(text) {
+      var locs = {}, order = [], cur = null, n = 0;
+      var dev = (/[0-9A-F]{16,20}/.exec(text.slice(0, 600)) || ['From file'])[0];
+      text.split(/\r?\n/).forEach(function (raw) {
+        var l = raw.replace(/\s+$/, ''), m;
+        if (!l.trim()) return;
+        if ((m = /^FFFF(\d{4})\s+\d+\s+\d+$/.exec(l))) { cur = m[1]; if (!locs[cur]) { locs[cur] = { lines: [] }; order.push(cur); } return; }
+        if (/^(BBBB|\s+TD|\s+SD|\s+ST)/.test(l)) return;
+        if ((m = /^(\d{4})(\d+?)\s+(\d+)$/.exec(l)) && (!cur || m[1] === cur)) {
+          if (!locs[m[1]]) { locs[m[1]] = { lines: [] }; order.push(m[1]); }
+          locs[m[1]].lines.push([m[2], m[2], '', parseInt(m[3], 10), dev]); n++;
+        }
+      });
+      return n ? { locs: locs, order: order } : { error: 'No scan lines recognised' };
+    }
+
+    function csvRow(line) {
+      var out = [], cur = '', q = false;
+      for (var i = 0; i < line.length; i++) {
+        var c = line[i];
+        if (q) { if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (c === '"') q = false; else cur += c; }
+        else if (c === '"') q = true; else if (c === ',') { out.push(cur); cur = ''; } else cur += c;
+      }
+      out.push(cur); return out;
+    }
+
+    // Laptop file header: Area,Location,Group,Device ID,Product Code,Barcode,Description,Qty
+    function parseLaptopFile(text) {
+      var rows = text.split(/\r?\n/).filter(function (l) { return l.trim(); }).map(csvRow);
+      var head = rows.shift() || [];
+      if (head[0] !== 'Area' || head[1] !== 'Location' || head[7] !== 'Qty') return { error: 'Not a laptop stock take file' };
+      var locs = {}, order = [];
+      rows.forEach(function (r) {
+        var loc = r[1]; if (!loc) return;
+        if (!locs[loc]) { locs[loc] = { area: r[0], group: r[2], lines: [] }; order.push(loc); }
+        locs[loc].lines.push([r[4], r[5], r[6], parseInt(r[7], 10) || 0, r[3]]);
+      });
+      return order.length ? { locs: locs, order: order } : { error: 'No locations found' };
+    }
+
+    function stageLocation(loc, info, fileName) {
+      var tbody = $('imported-data-tbody');
+      var placeholder = tbody.querySelector('tr:not(.imported-data-row):not(.imported-data-detail-row)');
+      if (placeholder) placeholder.remove();
+      var existing = tbody.querySelector('tr.imported-data-row[data-location="' + loc + '"]');
+      if (existing) { existing.nextElementSibling.remove(); existing.remove(); }
+      var dupInJob = !!document.querySelector('#current-data-tbody tr.current-data-row[data-location="' + loc + '"]');
+      var qty = info.lines.reduce(function (a, r) { return a + r[3]; }, 0);
+      var ar = info.area ? { name: info.area, group: info.group || 'None' } : areaOf(loc);
+      var flag = dupInJob ? ' <span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold font-sans bg-amber-100 text-amber-800 border border-amber-300" title="This location already exists in the job data">Duplicate</span>' : '';
+      var items = info.lines.map(function (r) {
+        return '<tr><td class="py-1.5 pl-11 pr-3 text-slate-600 border-r border-slate-200 truncate max-w-[200px]">' + esc(r[4]) + '</td>' +
+          '<td class="py-1.5 px-3 font-semibold text-blue-700 border-r border-slate-200">' + esc(r[0]) + '</td>' +
+          '<td class="py-1.5 px-3 text-slate-600 border-r border-slate-200">' + esc(r[1]) + '</td>' +
+          '<td class="py-1.5 px-3 text-slate-700 font-sans border-r border-slate-200">' + (r[2] ? esc(r[2]) : NODESC) + '</td>' +
+          '<td class="py-1.5 px-3 text-right font-bold text-purple-700">' + r[3] + '</td></tr>';
+      }).join('');
+      tbody.insertAdjacentHTML('beforeend',
+        '<tr class="hover:bg-purple-50/50 transition-colors imported-data-row" data-location="' + loc + '">' +
+        '<td class="py-1.5 px-3 text-center border-r border-slate-200"><input type="checkbox" class="imported-row-chk h-3.5 w-3.5 rounded text-blue-600" /></td>' +
+        '<td class="py-1.5 px-3 font-sans font-medium text-slate-700 border-r border-slate-200">' + esc(ar.name) + '</td>' +
+        '<td class="py-1.5 px-3 border-r border-slate-200"><button type="button" onclick="toggleImportedDataAccordion(this)" class="flex items-center gap-1.5 font-bold text-purple-900 hover:text-purple-700 transition-colors" title="Source file: ' + esc(fileName) + '">' +
+        '<svg class="imported-data-chevron shrink-0 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg><span>' + loc + '</span></button>' + flag + '</td>' +
+        '<td class="py-1.5 px-3 text-right font-bold text-purple-700 border-r border-slate-200">' + qty + '</td>' +
+        '<td class="py-1.5 px-3 font-sans font-medium text-slate-700">' + esc(ar.group) + '</td></tr>' +
+        '<tr class="imported-data-detail-row hidden bg-purple-50/30"><td class="py-0 px-0" colspan="5"><table class="w-full text-xs text-left border-collapse"><thead><tr class="bg-slate-100 text-slate-500 font-bold text-[10px] uppercase tracking-wider border-b border-slate-200">' +
+        '<th class="py-1 pl-11 pr-3 border-r border-slate-200 font-bold">Device ID</th><th class="py-1 px-3 border-r border-slate-200 font-bold">SKU Code</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Barcode</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Product Description</th><th class="py-1 px-3 text-right font-bold">Qty</th></tr></thead>' +
+        '<tbody class="divide-y divide-slate-100">' + items + '</tbody></table></td></tr>');
+      return { qty: qty, dup: dupInJob };
+    }
+
+    window.importFiles = function (files, kind) {
+      files = Array.prototype.slice.call(files || []);
+      if (!files.length) { showToast('Choose a file first', 'info'); return Promise.resolve(); }
+      var parse = kind === 'laptop' ? parseLaptopFile : parseDeviceFile;
+      return Promise.all(files.map(function (f) { return f.text().then(function (t) { return { name: f.name, res: parse(t) }; }); })).then(function (results) {
+        var locCount = 0, units = 0, dups = 0, bad = [];
+        results.forEach(function (r) {
+          if (r.res.error) { bad.push(r.name); return; }
+          r.res.order.forEach(function (loc) { var o = stageLocation(loc, r.res.locs[loc], r.name); locCount++; units += o.qty; if (o.dup) dups++; });
+        });
+        if (typeof filterImportedDataTable === 'function') filterImportedDataTable();
+        var msg = locCount + ' location(s), ' + units.toLocaleString('en-GB') + ' units staged' + (dups ? ' — ' + dups + ' duplicate(s) flagged' : '') + (bad.length ? ' — not recognised: ' + bad.join(', ') : '');
+        showToast(msg, bad.length && !locCount ? 'error' : 'success');
+        var t = $('imported-data-table'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    };
+
+    // one small dialog, two modes
+    window.openImportModal = function (m) {
+      mode = m === 'laptop' ? 'laptop' : 'device';
+      $('import-modal-title').textContent = mode === 'laptop' ? 'Import Laptop File' : 'Import Device File';
+      var input = $('modal-file-input');
+      input.accept = mode === 'laptop' ? '.csv' : '.txt,.dat,.csv';
+      input.value = ''; $('file-selection-name').classList.add('hidden');
+      var hint = document.querySelector('#import-file-modal label[for="modal-file-input"] span:last-child');
+      var lead = document.querySelector('#import-file-modal label[for="modal-file-input"] span:nth-of-type(1)');
+      if (lead) lead.textContent = mode === 'laptop' ? 'Click to select the stock take file from the other laptop' : 'Click to select handheld device file(s)';
+      if (hint) hint.textContent = mode === 'laptop' ? 'The CSV made by “Export Data” on the other laptop' : 'For a handheld that could not sync over the local network • DAT, TXT, CSV';
+      $('import-file-modal').classList.remove('hidden');
+    };
+    window.submitImportFile = function () {
+      var input = $('modal-file-input');
+      if (!input.files || !input.files.length) { showToast('Choose a file first', 'info'); return; }
+      closeImportModal();
+      importFiles(input.files, mode).then(function () { input.value = ''; $('file-selection-name').classList.add('hidden'); });
+    };
+
+    // Export Data → the laptop file other laptops import
+    window.handleExportData = function () {
+      var q = function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; };
+      var lines = [['Area', 'Location', 'Group', 'Device ID', 'Product Code', 'Barcode', 'Description', 'Qty'].join(',')];
+      var n = 0, locs = 0;
+      document.querySelectorAll('#current-data-tbody tr.current-data-row:not(.hidden)').forEach(function (row) {
+        var d = row.nextElementSibling; locs++;
+        d.querySelectorAll(':scope tbody tr').forEach(function (tr) {
+          var c = tr.children; var desc = c[3].textContent.trim(); if (desc === 'No description on file') desc = '';
+          lines.push([row.children[1].textContent.trim(), row.dataset.location, row.dataset.group, c[0].textContent.trim(), c[1].textContent.trim(), c[2].textContent.trim(), desc, c[4].textContent.trim()].map(q).join(',')); n++;
+        });
+      });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' }));
+      a.download = JOB.id + '_laptop_file.csv';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
+      showToast('Laptop file saved: ' + n.toLocaleString('en-GB') + ' scan lines across ' + locs + ' locations', 'success');
+    };
+
+    var _merge = window.handleMergeData;
+    window.handleMergeData = function () {
+      var dups = Array.prototype.slice.call(document.querySelectorAll('#imported-data-tbody tr.imported-data-row')).filter(function (r) { return r.querySelector('.bg-amber-100'); }).map(function (r) { return r.dataset.location; });
+      if (dups.length && !confirm('Location(s) ' + dups.join(', ') + ' already exist in the stock take data.\nMerging adds these scans on top of the existing counts (a duplicate). Continue?')) return;
+      _merge();
+      var tb = $('imported-data-tbody');
+      if (!tb.querySelector('tr')) tb.innerHTML = '<tr><td colspan="5" class="py-6 px-3 text-center text-slate-400 font-sans text-xs">Nothing waiting — use “Import Device File” or “Import Laptop File”.</td></tr>';
+    };
+  })();
+  </script>
+</body>
+
+</html>

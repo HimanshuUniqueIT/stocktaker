@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Manage Areas and Locations for a Stock Take — Admin Panel" />
+  <title>Areas &amp; Locations — Admin Panel</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/js/data.js"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] } } }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+
+<body class="h-screen flex overflow-hidden font-sans antialiased bg-[var(--color-background)]">
+
+  <!-- ══════ SIDEBAR ══════ -->
+  <aside id="sidebar" aria-label="Main navigation"
+    class="hidden lg:flex flex-col w-64 shrink-0 h-full
+           bg-[var(--color-sidebar-bg)] border-r border-[var(--color-sidebar-border)]">
+
+    <div class="flex items-center justify-center h-16 px-6 shrink-0 border-b border-[var(--color-border)]">
+      <img src="assets/images/logo-icon.png" alt="IH Stocktaker Ltd" class="h-11 w-auto object-contain" />
+    </div>
+
+    <nav class="flex-1 overflow-y-auto py-4 px-3" aria-label="Sidebar navigation">
+      <ul role="list" class="space-y-0.5">
+
+        <!-- Dashboard -->
+        <li>
+          <a href="dashboard.html"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+            Dashboard
+          </a>
+        </li>
+
+        <!-- Clients -->
+        <li>
+          <a href="clients-list.html"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Clients
+          </a>
+        </li>
+
+        <!-- Devices -->
+        <li>
+          <a href="devices-list.html"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <rect x="5" y="2" width="14" height="20" rx="3" ry="3"/>
+              <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/>
+              <path d="M9 7h6M9 11h6"/>
+            </svg>
+            Devices
+          </a>
+        </li>
+
+        <!-- Jobs ACTIVE -->
+        <li>
+          <a href="jobs-list.html" aria-current="page"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold
+                   bg-[var(--color-nav-active-bg)] text-[var(--color-nav-active-text)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            Stock Takes
+          </a>
+        </li>
+
+        <!-- Client Report -->
+        <li>
+          <a href="reports.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            Client Report
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+
+    <div class="shrink-0 border-t border-[var(--color-border)] px-4 py-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="flex items-center justify-center w-9 h-9 rounded-full shrink-0
+                     bg-[var(--color-primary-light)] text-[var(--color-primary)]" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </span>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-[var(--color-text-primary)] truncate">Admin User</p>
+          <p class="text-xs text-[var(--color-text-muted)] truncate">Administrator</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <!-- End Sidebar -->
+
+  <!-- ══════ RIGHT PANEL ══════ -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- Header -->
+    <header id="main-header" role="banner"
+      class="flex items-center shrink-0 h-16 px-4 sm:px-6
+             bg-[var(--color-surface)] border-b border-[var(--color-border)]">
+      <button id="mobile-menu-btn" type="button" aria-label="Open navigation menu"
+        class="lg:hidden flex items-center justify-center w-10 h-10 mr-3 -ml-1 rounded-lg
+               text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+               transition-colors duration-150">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
+          STOCK TAKE HIERARCHY
+        </span>
+        <span class="text-xs text-slate-400 hidden sm:inline">&bull;</span>
+        <span class="text-xs text-slate-500 font-mono hidden sm:inline">Stock Take ➔ Area ➔ Location</span>
+      </div>
+
+      <div class="flex-1 min-w-0"></div>
+
+      <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+        <button id="notification-btn" type="button" aria-label="View notifications"
+          class="flex items-center justify-center w-10 h-10 rounded-lg
+                 text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                 transition-colors duration-150">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </button>
+        <button id="user-menu-btn" type="button" aria-label="Open user menu"
+          class="flex items-center gap-2 px-3 h-10 rounded-lg text-sm font-medium
+                 text-[var(--color-text-primary)] hover:bg-[var(--color-nav-hover-bg)]
+                 transition-colors duration-150">
+          <span class="flex items-center justify-center w-7 h-7 rounded-full shrink-0
+                       bg-[var(--color-primary-light)] text-[var(--color-primary)]" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </span>
+          <span class="hidden sm:block truncate max-w-[120px]">Admin User</span>
+          <svg class="hidden sm:block shrink-0" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main (scrollable) -->
+    <main id="main-content" class="flex-1 overflow-y-auto flex flex-col min-w-0" aria-label="Main content">
+      <section class="flex-1 p-4 sm:p-6 lg:p-8 space-y-6" aria-labelledby="page-heading">
+
+        <!-- ══════ TOP BREADCRUMB & JOB BANNER ══════ -->
+        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+          <div>
+            <nav aria-label="Breadcrumb" class="mb-2">
+              <ol class="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)]">
+                <li><a href="jobs-list.html" class="hover:text-[var(--color-primary)] transition-colors">Stock Takes</a></li>
+                <li aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                       stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </li>
+                <li><a id="crumb-job" href="job-details.html" class="hover:text-[var(--color-primary)] transition-colors">Stock Take</a></li>
+                <li aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                       stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </li>
+                <li class="text-[var(--color-text-primary)] font-medium" aria-current="page">Areas & Locations</li>
+              </ol>
+            </nav>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <h1 id="page-heading" class="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)] leading-tight">
+                Areas & Locations Management
+              </h1>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200"><span id="hdr-job-id"></span></span>
+            </div>
+            <p id="hdr-meta" class="mt-1 text-xs sm:text-sm text-[var(--color-text-secondary)]"></p>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <a id="back-to-job" href="job-details.html"
+              class="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-xs transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Back to Stock Take Details
+            </a>
+
+            <button type="button" onclick="openImportModal()"
+              class="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold shadow-xs transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Import CSV
+            </button>
+
+            <button type="button" onclick="openLocationModal()"
+              class="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 text-xs font-semibold shadow-xs transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              + Add Location
+            </button>
+
+            <button type="button" onclick="openAreaModal()"
+              class="inline-flex items-center gap-1.5 px-4 h-9 rounded-lg bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white text-xs font-semibold shadow-xs transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              + Add Area
+            </button>
+          </div>
+        </div>
+
+        <!-- ══════ KPI STATS ROW (HIERARCHY OVERVIEW) ══════ -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Total Areas -->
+          <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-xs flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Areas</p>
+              <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-total-areas">0</h3>
+              <p class="text-[11px] text-slate-500 mt-0.5" id="kpi-areas-sub"></p>
+            </div>
+            <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+          </div>
+
+          <!-- Total Locations -->
+          <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-xs flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Audit Locations</p>
+              <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-total-locations">0</h3>
+              <p class="text-[11px] text-slate-500 mt-0.5">Location tickets in this stock take</p>
+            </div>
+            <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+          </div>
+
+          <!-- Audit Completed Locations -->
+          <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-xs flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Scanned / Completed</p>
+              <h3 class="text-2xl font-bold text-emerald-700 mt-1" id="kpi-completed"></h3>
+              <p class="text-[11px] text-emerald-600 font-semibold mt-0.5" id="kpi-completed-sub"></p>
+            </div>
+            <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+          </div>
+
+          <!-- Total Scanned Stock In Locations -->
+          <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-xs flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Physical Items Scanned</p>
+              <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-units"></h3>
+              <p class="text-[11px] text-slate-500 mt-0.5" id="kpi-units-sub"></p>
+            </div>
+            <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════ SEARCH & FILTER BAR ══════ -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div class="flex-1 flex flex-wrap items-center gap-3">
+            <!-- Search -->
+            <div class="relative min-w-[240px] flex-1 max-w-sm">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </span>
+              <input type="text" id="location-search-input" placeholder="Search Location code, rack, or scanner device..."
+                class="w-full h-9 pl-9 pr-3 rounded-lg border border-slate-300 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" />
+            </div>
+
+            <!-- Area Filter -->
+            <div class="flex items-center gap-2">
+              <label for="filter-area-select" class="text-xs font-semibold text-slate-600 shrink-0">Filter Area:</label>
+              <select id="filter-area-select" onchange="applyFilters()"
+                class="h-9 pl-2.5 pr-8 rounded-lg border border-slate-300 text-xs font-medium text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"></select>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="flex items-center gap-2">
+              <label for="filter-status-select" class="text-xs font-semibold text-slate-600 shrink-0">Status:</label>
+              <select id="filter-status-select" onchange="applyFilters()"
+                class="h-9 pl-2.5 pr-8 rounded-lg border border-slate-300 text-xs font-medium text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]">
+                <option value="all">All Statuses</option>
+                <option value="completed">Completed</option>
+                <option value="in progress">In Progress</option>
+                <option value="pending">Pending</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Quick view toggles -->
+          <div class="flex items-center gap-2 self-end md:self-auto">
+            <button type="button" onclick="toggleAllAccordions(true)" class="text-xs font-semibold text-blue-600 hover:text-blue-800 px-2 py-1">Expand All</button>
+            <span class="text-slate-300">&bull;</span>
+            <button type="button" onclick="toggleAllAccordions(false)" class="text-xs font-semibold text-slate-500 hover:text-slate-700 px-2 py-1">Collapse All</button>
+          </div>
+        </div>
+
+        <!-- ══════ AREAS & LOCATIONS LIST (HIERARCHY ACCORDION) ══════ -->
+        <div id="areas-container" class="space-y-4">
+                </div>
+
+      </section>
+
+      <!-- Footer -->
+      <footer id="main-footer" role="contentinfo"
+        class="shrink-0 border-t border-[var(--color-border)] bg-[var(--color-surface)]
+               px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between
+                    gap-1 sm:gap-0 text-xs text-[var(--color-text-muted)]">
+          <span>© 2026 Admin Panel. All rights reserved.</span>
+          <span>Stock Take Areas & Locations Module</span>
+        </div>
+      </footer>
+    </main>
+
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       MODAL 1: ADD / EDIT AREA MODAL
+  ════════════════════════════════════════════ -->
+  <div id="area-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </span>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900" id="area-modal-title">Add New Area</h3>
+            <p class="text-[11px] text-slate-500">Define warehouse zone for ST-2026-001</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAreaModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-md">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <form id="area-form" onsubmit="handleSaveArea(event)" class="p-6 space-y-4 text-xs">
+        <input type="hidden" id="area-edit-id" value="" />
+        <div>
+          <label for="modal-area-code" class="block font-semibold text-slate-700 mb-1">Area Code / Identifier <span class="text-red-500">*</span></label>
+          <input type="text" id="modal-area-code" required placeholder="e.g. AREA-E, ZONE-5"
+            class="w-full h-10 px-3 rounded-lg border border-slate-300 font-mono text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+        </div>
+        <div>
+          <label for="modal-area-name" class="block font-semibold text-slate-700 mb-1">Area Name / Zone Description <span class="text-red-500">*</span></label>
+          <input type="text" id="modal-area-name" required placeholder="e.g. Zone E - External Overstock Yard"
+            class="w-full h-10 px-3 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+        </div>
+        <div>
+          <label for="modal-area-desc" class="block font-semibold text-slate-700 mb-1">Location Details / Notes</label>
+          <textarea id="modal-area-desc" rows="2" placeholder="e.g. Open ground containers 1-12, weather-resistant goods"
+            class="w-full p-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none"></textarea>
+        </div>
+        <div>
+          <label for="modal-area-worker" class="block font-semibold text-slate-700 mb-1">Assigned Handheld Scanner Device</label>
+          <select id="modal-area-worker" class="w-full h-10 px-3 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white"></select>
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeAreaModal()" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition-colors">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-lg bg-[var(--color-primary)] text-white font-semibold hover:bg-[var(--color-primary-hover)] transition-colors shadow-xs">Save Area</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       MODAL 2: ADD / EDIT LOCATION MODAL
+  ════════════════════════════════════════════ -->
+  <div id="location-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900" id="location-modal-title">Add New Audit Location</h3>
+            <p class="text-[11px] text-slate-500">Rack, shelf, bay, or bin under an Area</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeLocationModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-md">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <form id="location-form" onsubmit="handleSaveLocation(event)" class="p-6 space-y-4 text-xs">
+        <input type="hidden" id="location-edit-id" value="" />
+
+        <div>
+          <label for="modal-loc-parent-area" class="block font-semibold text-slate-700 mb-1">Parent Area <span class="text-red-500">*</span></label>
+          <select id="modal-loc-parent-area" required class="w-full h-10 px-3 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white"></select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="modal-loc-code" class="block font-semibold text-slate-700 mb-1">Location Code <span class="text-red-500">*</span></label>
+            <input type="text" id="modal-loc-code" required placeholder="e.g. LOC-ZA-04"
+              class="w-full h-10 px-3 rounded-lg border border-slate-300 font-mono text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+          </div>
+          <div>
+            <label for="modal-loc-barcode" class="block font-semibold text-slate-700 mb-1">Barcode / QR Text</label>
+            <input type="text" id="modal-loc-barcode" placeholder="e.g. BC-88904"
+              class="w-full h-10 px-3 rounded-lg border border-slate-300 font-mono text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label for="modal-loc-desc" class="block font-semibold text-slate-700 mb-1">Location Description / Aisle / Shelf <span class="text-red-500">*</span></label>
+          <input type="text" id="modal-loc-desc" required placeholder="e.g. Aisle 04 • Rack D (Upper Bay)"
+            class="w-full h-10 px-3 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none" />
+        </div>
+
+        <div>
+          <label for="modal-loc-worker" class="block font-semibold text-slate-700 mb-1">Assigned Handheld Scanner Device</label>
+          <select id="modal-loc-worker" class="w-full h-10 px-3 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white"></select>
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeLocationModal()" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition-colors">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-lg bg-[var(--color-primary)] text-white font-semibold hover:bg-[var(--color-primary-hover)] transition-colors shadow-xs">Save Location</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       MODAL 3: BULK IMPORT LOCATIONS CSV
+  ════════════════════════════════════════════ -->
+  <div id="import-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </span>
+          <h3 class="text-sm font-bold text-slate-900">Import Areas & Locations CSV</h3>
+        </div>
+        <button type="button" onclick="closeImportModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-md">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div class="border-2 border-dashed border-slate-300 rounded-xl p-5 text-center bg-slate-50 hover:bg-slate-100/60 transition-colors cursor-pointer" onclick="simulateCSVUpload()">
+          <svg class="mx-auto text-blue-600 mb-2" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          <p class="font-semibold text-slate-800">Click to choose CSV file</p>
+          <p class="text-[11px] text-slate-500 mt-1">Columns: Area_Code, Area_Name, Location_Code, Location_Name, Counter</p>
+        </div>
+
+        <div class="bg-blue-50/70 border border-blue-200 rounded-lg p-3 text-[11px] text-blue-800">
+          <span class="font-bold block mb-1">Expected CSV Sample:</span>
+          <code class="font-mono block text-[10px] text-blue-900">
+            Area 1,"Shop Floor",2001,"Location 2001",UMAIR<br>
+            Area 1,"Shop Floor",2002,"Location 2002",UMAIR
+          </code>
+        </div>
+
+        <div class="flex items-center justify-between pt-2">
+          <button type="button" onclick="alert('Sample template downloaded: areas_locations_sample.csv')" class="text-xs font-semibold text-blue-600 hover:underline">
+            📥 Download Sample CSV Template
+          </button>
+          <button type="button" onclick="closeImportModal()" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 text-xs">
+    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+    <span id="toast-text">Action completed successfully.</span>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    function toggleAreaAccordion(areaId) {
+      const content = document.getElementById(`content-${areaId}`);
+      const arrow = document.getElementById(`arrow-${areaId}`);
+      if (!content) return;
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+      } else {
+        content.classList.add('hidden');
+        if (arrow) arrow.style.transform = 'rotate(-90deg)';
+      }
+    }
+
+    function toggleAllAccordions(expand) {
+      document.querySelectorAll('.area-content').forEach(c => {
+        if (expand) {
+          c.classList.remove('hidden');
+        } else {
+          c.classList.add('hidden');
+        }
+      });
+      document.querySelectorAll('.accordion-arrow').forEach(arr => {
+        arr.style.transform = expand ? 'rotate(0deg)' : 'rotate(-90deg)';
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toast-text');
+      text.textContent = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3500);
+    }
+
+    // Filter and Search logic
+    function applyFilters() {
+      const areaVal = document.getElementById('filter-area-select').value;
+      const statusVal = document.getElementById('filter-status-select').value.toLowerCase();
+      const searchVal = document.getElementById('location-search-input').value.toLowerCase().trim();
+
+      const areaCards = document.querySelectorAll('.area-card');
+
+      areaCards.forEach(card => {
+        const cardAreaId = card.dataset.areaId;
+        const areaMatch = (areaVal === 'all' || cardAreaId === areaVal);
+
+        let hasVisibleLocation = false;
+        const rows = card.querySelectorAll('.location-row');
+
+        rows.forEach(row => {
+          const rowStatus = (row.dataset.status || '').toLowerCase();
+          const rowSearch = (row.dataset.search || '').toLowerCase();
+
+          const statusMatch = (statusVal === 'all' || rowStatus === statusVal);
+          const searchMatch = (!searchVal || rowSearch.includes(searchVal));
+
+          if (areaMatch && statusMatch && searchMatch) {
+            row.style.display = '';
+            hasVisibleLocation = true;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+
+        if (areaMatch && (rows.length === 0 || hasVisibleLocation)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    document.getElementById('location-search-input').addEventListener('input', applyFilters);
+
+    // Modal helpers
+    function openAreaModal() {
+      document.getElementById('area-modal-title').textContent = 'Add New Area';
+      document.getElementById('area-form').reset();
+      document.getElementById('area-edit-id').value = '';
+      document.getElementById('area-modal').classList.remove('hidden');
+    }
+
+    function closeAreaModal() {
+      document.getElementById('area-modal').classList.add('hidden');
+    }
+
+    function editArea(areaId, name, desc, worker) {
+      document.getElementById('area-modal-title').textContent = 'Edit Warehouse Area (' + areaId + ')';
+      document.getElementById('area-edit-id').value = areaId;
+      document.getElementById('modal-area-code').value = areaId;
+      document.getElementById('modal-area-name').value = name;
+      document.getElementById('modal-area-desc').value = desc || '';
+      document.getElementById('modal-area-worker').value = worker || 'Unassigned';
+      document.getElementById('area-modal').classList.remove('hidden');
+    }
+
+    function handleSaveArea(e) {
+      e.preventDefault();
+      const code = document.getElementById('modal-area-code').value.trim();
+      const name = document.getElementById('modal-area-name').value.trim();
+      const worker = document.getElementById('modal-area-worker').value;
+      const editId = document.getElementById('area-edit-id').value;
+
+      closeAreaModal();
+      showToast(`Area "${name}" (${code}) saved successfully!`);
+    }
+
+    function deleteArea(btn, name) {
+      if (confirm(`Are you sure you want to delete ${name} and all its associated locations?`)) {
+        btn.closest('.area-card').remove();
+        showToast(`${name} deleted.`);
+      }
+    }
+
+    function openLocationModal(presetAreaId) {
+      document.getElementById('location-modal-title').textContent = 'Add New Audit Location';
+      document.getElementById('location-form').reset();
+      document.getElementById('location-edit-id').value = '';
+      if (presetAreaId) {
+        document.getElementById('modal-loc-parent-area').value = presetAreaId;
+      }
+      document.getElementById('location-modal').classList.remove('hidden');
+    }
+
+    function closeLocationModal() {
+      document.getElementById('location-modal').classList.add('hidden');
+    }
+
+    function editLocation(locCode, desc, areaId, worker) {
+      document.getElementById('location-modal-title').textContent = 'Edit Audit Location (' + locCode + ')';
+      document.getElementById('location-edit-id').value = locCode;
+      document.getElementById('modal-loc-parent-area').value = areaId;
+      document.getElementById('modal-loc-code').value = locCode;
+      document.getElementById('modal-loc-barcode').value = 'BC-' + locCode.replace(/[^0-9]/g, '');
+      document.getElementById('modal-loc-desc').value = desc;
+      document.getElementById('modal-loc-worker').value = worker;
+      document.getElementById('location-modal').classList.remove('hidden');
+    }
+
+    function handleSaveLocation(e) {
+      e.preventDefault();
+      const locCode = document.getElementById('modal-loc-code').value.trim();
+      const parentArea = document.getElementById('modal-loc-parent-area').value;
+      const desc = document.getElementById('modal-loc-desc').value.trim();
+      const worker = document.getElementById('modal-loc-worker').value;
+
+      closeLocationModal();
+      showToast(`Location ${locCode} saved under ${parentArea}.`);
+    }
+
+    function deleteLocation(btn, locCode) {
+      if (confirm(`Delete location ${locCode}?`)) {
+        btn.closest('tr').remove();
+        showToast(`Location ${locCode} deleted.`);
+      }
+    }
+
+    function printBarcode(locCode) {
+      alert(`Printing Location Barcode & QR Label for [${locCode}] to connected thermal label printer...`);
+    }
+
+    function openImportModal() {
+      document.getElementById('import-modal').classList.remove('hidden');
+    }
+
+    function closeImportModal() {
+      document.getElementById('import-modal').classList.add('hidden');
+    }
+
+    function simulateCSVUpload() {
+      closeImportModal();
+      showToast('Successfully imported ' + LOCS.length + ' locations across ' + JOB.areas.length + ' areas from CSV!');
+    }
+  </script>
+
+  <script>
+  // ── Render real job data (assets/js/data.js), selected with ?job=JOB-xxxx-nnn ──
+  var JOB = (function () {
+    var id = new URLSearchParams(location.search).get('job') || 'ST-2026-001';
+    return STOCK.jobs.find(function (j) { return j.id === id; }) || STOCK.jobs[0];
+  })();
+  var LOCS = STOCK.locations[JOB.id];
+  (function () {
+
+    var ICON_EDIT = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+    var ICON_DEL_AREA = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+    var ICON_CHECK = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+    var ICON_PRINT = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>';
+    var ICON_LOC_EDIT = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+    var ICON_LOC_DEL = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+
+    var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
+    var fmt = function (n) { return Number(n).toLocaleString('en-GB'); };
+    var $ = function (id) { return document.getElementById(id); };
+    var deviceOf = function (id) { return STOCK.devices.find(function (d) { return d.id === id; }); };
+    var total = LOCS.reduce(function (a, l) { return a + l.qty; }, 0);
+    var done = LOCS.filter(function (l) { return l.status === 'Complete'; }).length;
+    var devs = []; LOCS.forEach(function (l) { if (devs.indexOf(l.device) < 0) devs.push(l.device); });
+
+    document.title = 'Areas & Locations — ' + JOB.title + ' — Admin Panel';
+    $('crumb-job').textContent = JOB.id; $('crumb-job').href = 'job-details.html?job=' + JOB.id;
+    $('back-to-job').href = 'job-details.html?job=' + JOB.id;
+    $('hdr-job-id').textContent = JOB.id;
+    $('hdr-meta').innerHTML = 'Stock Take: <span class="font-semibold text-slate-800">' + esc(JOB.title) + '</span> &bull; Client: <span class="font-medium text-slate-700">' + esc(JOB.client) + '</span> &bull; Date: <span class="font-medium text-slate-700">' + JOB.date + '</span>';
+    $('kpi-total-areas').textContent = JOB.areas.length + (JOB.areas.length === 1 ? ' Area' : ' Areas');
+    $('kpi-areas-sub').textContent = JOB.groups ? 'Grouped for the summary & comparison reports' : 'Assigned to ' + JOB.id;
+    $('kpi-total-locations').textContent = LOCS.length + (LOCS.length === 1 ? ' Location' : ' Locations');
+    $('kpi-completed').textContent = done + ' / ' + LOCS.length + ' Locations';
+    $('kpi-completed-sub').textContent = Math.round(done / LOCS.length * 1000) / 10 + '% Locations Audited';
+    $('kpi-units').textContent = fmt(total) + ' Units';
+    $('kpi-units-sub').textContent = 'Across ' + devs.length + (devs.length === 1 ? ' handheld' : ' handhelds');
+
+    var opt = function (v, t) { return '<option value="' + esc(v) + '">' + esc(t) + '</option>'; };
+    var areaKey = function (a, i) { return 'AREA-' + (i + 1); };
+    $('filter-area-select').innerHTML = opt('all', 'All Areas (' + JOB.areas.length + ')') + JOB.areas.map(function (a, i) { return opt(areaKey(a, i), a.name); }).join('');
+    $('modal-loc-parent-area').innerHTML = JOB.areas.map(function (a, i) { return opt(areaKey(a, i), a.name); }).join('');
+    var devOpts = STOCK.devices.map(function (d) { return opt(d.counter, d.name + ' — ' + d.id); }).join('') + opt('Unassigned', 'Leave Unassigned');
+    $('modal-area-worker').innerHTML = devOpts; $('modal-loc-worker').innerHTML = devOpts;
+
+    $('areas-container').innerHTML = JOB.areas.map(function (a, i) {
+      var key = areaKey(a, i);
+      var mine = LOCS.filter(function (l) { return l.area === a.name; });
+      var qty = mine.reduce(function (x, l) { return x + l.qty; }, 0);
+      var complete = mine.filter(function (l) { return l.status === 'Complete'; }).length;
+      var pct = mine.length ? Math.round(complete / mine.length * 100) : 0;
+      var counters = []; mine.forEach(function (l) { if (counters.indexOf(l.user) < 0) counters.push(l.user); });
+      var badge = (a.group && a.group !== 'None') ? a.group : String(i + 1);
+      var range = a.from === a.to ? 'Location ' + a.from : 'Locations ' + a.from + ' – ' + a.to;
+      var rows = mine.map(function (l, k) {
+        var d = deviceOf(l.device);
+        return '<tr class="location-row hover:bg-slate-50 transition-colors" data-status="completed" data-search="' + esc((l.loc + ' ' + l.user + ' ' + l.device + ' ' + a.name).toLowerCase()) + '">' +
+          '<td class="py-3 px-4 text-center text-slate-400 font-medium">' + (k + 1) + '</td>' +
+          '<td class="py-3 px-4"><div class="flex items-center gap-2"><span class="font-mono font-bold text-slate-900">' + l.loc + '</span>' +
+          '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">LOC-BAR-' + l.loc + '</span></div></td>' +
+          '<td class="py-3 px-4"><span class="font-medium text-slate-800 block">Location ' + l.loc + '</span><span class="text-[11px] text-slate-500">' + esc(a.name) + ' &bull; ' + l.lines.length + ' product lines</span></td>' +
+          '<td class="py-3 px-4 text-slate-700"><span class="font-medium text-slate-900 block">' + l.user + '</span><span class="text-[10px] text-slate-500 font-mono">' + (d ? esc(d.name) + ' &bull; ' : '') + l.device + '</span></td>' +
+          '<td class="py-3 px-4 text-center font-mono font-bold text-slate-800">' + fmt(l.qty) + ' items</td>' +
+          '<td class="py-3 px-4 text-center"><span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 inline-flex items-center gap-1">' + ICON_CHECK + 'Completed</span></td>' +
+          '<td class="py-3 px-4 text-right"><div class="inline-flex items-center gap-1">' +
+          '<button type="button" onclick="printBarcode(\'' + l.loc + '\')" title="Print QR/Barcode" class="p-1 rounded hover:bg-slate-100 text-slate-500 hover:text-slate-800">' + ICON_PRINT + '</button>' +
+          '<button type="button" onclick="editLocation(\'' + l.loc + '\', \'Location ' + l.loc + '\', \'' + key + '\', \'' + l.user + '\')" title="Edit" class="p-1 rounded hover:bg-blue-50 text-blue-600">' + ICON_LOC_EDIT + '</button>' +
+          '<button type="button" onclick="deleteLocation(this, \'' + l.loc + '\')" title="Delete" class="p-1 rounded hover:bg-red-50 text-red-600">' + ICON_LOC_DEL + '</button>' +
+          '</div></td></tr>';
+      }).join('');
+      return '<div class="area-card bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs transition-all" data-area-id="' + key + '">' +
+        '<div class="p-4 sm:px-5 bg-slate-50/80 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 cursor-pointer select-none" onclick="toggleAreaAccordion(\'' + key + '\')">' +
+        '<div class="flex items-start sm:items-center gap-3">' +
+        '<button type="button" class="mt-0.5 sm:mt-0 p-1 rounded hover:bg-slate-200 text-slate-500 transition-transform duration-200 accordion-arrow" id="arrow-' + key + '"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>' +
+        '<div class="flex items-center justify-center min-w-9 h-9 px-1.5 rounded-lg bg-blue-100 text-blue-700 font-mono font-bold text-xs shrink-0">' + esc(badge) + '</div>' +
+        '<div><div class="flex flex-wrap items-center gap-2"><h3 class="text-sm font-bold text-slate-900">' + esc(a.name) + '</h3>' +
+        '<span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-slate-200 text-slate-800">' + key + '</span>' +
+        '<span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Completed (' + pct + '%)</span></div>' +
+        '<p class="text-xs text-slate-500 mt-0.5">' + range + ' &bull; Counted by: <strong class="text-slate-700">' + counters.join(', ') + '</strong></p></div></div>' +
+        '<div class="flex items-center gap-4 text-xs shrink-0" onclick="event.stopPropagation()">' +
+        '<div class="text-right hidden sm:block"><span class="font-bold text-slate-800 block">' + fmt(qty) + ' Items</span><span class="text-[11px] text-slate-500">' + mine.length + (mine.length === 1 ? ' Location' : ' Locations') + '</span></div>' +
+        '<div class="w-24 bg-slate-200 rounded-full h-2 overflow-hidden hidden sm:block"><div class="bg-emerald-600 h-full rounded-full" style="width: ' + pct + '%"></div></div>' +
+        '<div class="flex items-center gap-1">' +
+        '<button type="button" onclick="openLocationModal(\'' + key + '\')" class="px-2.5 py-1.5 rounded-md border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold transition-colors">+ Add Location</button>' +
+        '<button type="button" onclick="editArea(\'' + key + '\', \'' + esc(a.name) + '\', \'' + range + '\', \'' + counters[0] + '\')" title="Edit Area" class="p-1.5 rounded-md hover:bg-slate-200 text-slate-600 transition-colors">' + ICON_EDIT + '</button>' +
+        '<button type="button" onclick="deleteArea(this, \'' + esc(a.name) + '\')" title="Delete Area" class="p-1.5 rounded-md hover:bg-red-50 text-red-600 transition-colors">' + ICON_DEL_AREA + '</button>' +
+        '</div></div></div>' +
+        '<div class="area-content overflow-x-auto' + (JOB.areas.length > 1 && mine.length > 20 && i > 0 ? ' hidden' : '') + '" id="content-' + key + '"><table class="w-full text-xs text-left"><thead><tr class="bg-slate-100/70 text-slate-700 font-semibold border-b border-slate-200">' +
+        '<th class="py-2.5 px-4 w-12 text-center">#</th><th class="py-2.5 px-4">Location Ticket / Barcode</th><th class="py-2.5 px-4">Location</th><th class="py-2.5 px-4">Counter &amp; Handheld</th><th class="py-2.5 px-4 text-center">Physical Scans</th><th class="py-2.5 px-4 text-center">Audit Status</th><th class="py-2.5 px-4 text-right">Actions</th></tr></thead>' +
+        '<tbody class="divide-y divide-slate-100 bg-white">' + rows + '</tbody></table></div></div>';
+    }).join('');
+  })();
+  </script>
+</body>
+</html>

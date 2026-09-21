@@ -1,0 +1,67 @@
+/*
+ * variables.css
+ *
+ * Centralized design-token / color-variable file.
+ * Shared by ALL pages: index.html (login) and dashboard.html.
+ *
+ * To retheme the entire application, edit values in this file only.
+ * Do NOT duplicate or override these variables anywhere else.
+ */
+
+:root {
+    /* ── Primary brand color (from IH Stocktaker Ltd logo) ─── */
+    --color-primary:        #0a6fd1;   /* Logo swoosh blue   */
+    --color-primary-hover:  #0857a8;   /* Darker swoosh blue */
+    --color-primary-light:  #e9f2fc;   /* Pale blue tint     */
+
+    /* ── Brand navy (logo "IH" wordmark color) ──────────── */
+    --color-navy:            #0b3063;
+    --color-navy-hover:      #082247;
+    --color-navy-light:      #e7edf6;
+
+    /* ── Page / surface backgrounds ─────────── */
+    --color-background:     #f8fafc;   /* Slate-50  */
+    --color-surface:        #ffffff;   /* White     */
+
+    /* ── Login page ─────────────────────────── */
+    --color-login-bg:       #fafafa;
+
+    /* ── Sidebar ────────────────────────────── */
+    --color-sidebar-bg:     #ffffff;
+    --color-sidebar-border: #e2e8f0;   /* Slate-200 */
+
+    /* ── Active nav item ────────────────────── */
+    --color-nav-active-bg:   #e9f2fc;  /* Pale blue tint     */
+    --color-nav-active-text: #0b3063;  /* Logo navy          */
+    --color-nav-hover-bg:    #f1f5f9;  /* Slate-100 */
+
+    /* ── Typography ─────────────────────────── */
+    --color-text-primary:   #1e293b;   /* Slate-800 */
+    --color-text-secondary: #64748b;   /* Slate-500 */
+    --color-text-muted:     #94a3b8;   /* Slate-400 */
+
+    /* ── Borders ────────────────────────────── */
+    --color-border:         #e2e8f0;   /* Slate-200 */
+    --color-border-light:   #f1f5f9;   /* Slate-100 */
+
+    /* ── Semantic / status colors ───────────── */
+    --color-success:        #16a34a;   /* Green-600  */
+    --color-success-light:  #f0fdf4;   /* Green-50   */
+
+    --color-warning:        #d97706;   /* Amber-600  */
+    --color-warning-light:  #fffbeb;   /* Amber-50   */
+
+    --color-danger:         #dc2626;   /* Red-600    */
+    --color-danger-light:   #fef2f2;   /* Red-50     */
+
+    --color-info:           #0284c7;   /* Sky-600    */
+    --color-info-light:     #f0f9ff;   /* Sky-50     */
+
+    /* ── Shadows ────────────────────────────── */
+    --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+
+    /* ── Sizing tokens (dashboard) ──────────── */
+    --sidebar-width:  256px;
+    --header-height:  64px;
+}

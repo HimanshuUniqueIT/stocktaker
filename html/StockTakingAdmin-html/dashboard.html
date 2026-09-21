@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Admin Panel Dashboard — ERP management interface." />
+  <title>Dashboard — Admin Panel</title>
+
+  <!-- 1. Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/js/data.js"></script>
+
+  <!-- Tailwind config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- 2. Centralized color variables -->
+  <link rel="stylesheet" href="assets/css/variables.css" />
+
+  <!-- 3. Minimal custom styles -->
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+
+<!--
+  Root layout:
+    h-screen + overflow-hidden → locks page to viewport height
+    flex (row) → sidebar | right-panel sit side-by-side
+-->
+<body class="h-screen flex overflow-hidden font-sans antialiased bg-[var(--color-background)]">
+
+
+  <!-- ══════════════════════════════════════════════════
+       SIDEBAR  — full viewport height, desktop only
+  ══════════════════════════════════════════════════ -->
+  <aside
+    id="sidebar"
+    aria-label="Main navigation"
+    class="hidden lg:flex flex-col
+           w-64 shrink-0 h-full
+           bg-[var(--color-sidebar-bg)]
+           border-r border-[var(--color-sidebar-border)]"
+  >
+
+    <!-- Logo area (matches header height) -->
+    <div
+      class="flex items-center justify-center
+             h-16 px-6 shrink-0
+             border-b border-[var(--color-border)]"
+      aria-label="Company logo"
+    >
+      <!--
+        Replace with real logo when ready:
+          <img src="assets/images/logo.png" alt="Company Logo" class="h-8 w-auto object-contain" />
+      -->
+      <img src="assets/images/logo-icon.png" alt="IH Stocktaker Ltd" class="h-11 w-auto object-contain" />
+    </div>
+
+    <!-- Navigation (scrolls if items overflow) -->
+    <nav
+      class="flex-1 overflow-y-auto py-4 px-3"
+      aria-label="Sidebar navigation"
+    >
+      <ul role="list" class="space-y-0.5">
+
+        <!-- Dashboard (ACTIVE) -->
+        <li>
+          <a
+            href="dashboard.html"
+            aria-current="page"
+            class="flex items-center gap-3
+                   px-3 py-2.5 rounded-lg
+                   text-sm font-semibold
+                   bg-[var(--color-nav-active-bg)]
+                   text-[var(--color-nav-active-text)]
+                   focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" class="shrink-0">
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+            Dashboard
+          </a>
+        </li>
+
+        <!-- Clients -->
+        <li>
+          <a
+            href="clients-list.html"
+            class="flex items-center gap-3
+                   px-3 py-2.5 rounded-lg
+                   text-sm font-medium
+                   text-[var(--color-text-secondary)]
+                   hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)]
+                   focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                   transition-colors duration-150"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" class="shrink-0">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Clients
+          </a>
+        </li>
+
+        
+
+        <!-- Devices -->
+        <li>
+          <a
+            href="devices-list.html"
+            class="flex items-center gap-3
+                   px-3 py-2.5 rounded-lg
+                   text-sm font-medium
+                   text-[var(--color-text-secondary)]
+                   hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)]
+                   focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                   transition-colors duration-150"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" class="shrink-0">
+              <rect x="5" y="2" width="14" height="20" rx="3" ry="3"/>
+              <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/>
+              <path d="M9 7h6M9 11h6"/>
+            </svg>
+            Devices
+          </a>
+        </li>
+
+<!-- Jobs -->
+        <li>
+          <a
+            href="jobs-list.html"
+            class="flex items-center gap-3
+                   px-3 py-2.5 rounded-lg
+                   text-sm font-medium
+                   text-[var(--color-text-secondary)]
+                   hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)]
+                   focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                   transition-colors duration-150"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" class="shrink-0">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            Stock Takes
+          </a>
+        </li>
+        <!-- Client Report -->
+        <li>
+          <a
+            href="reports.html"
+            class="flex items-center gap-3
+                   px-3 py-2.5 rounded-lg
+                   text-sm font-medium
+                   text-[var(--color-text-secondary)]
+                   hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)]
+                   focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                   transition-colors duration-150"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" class="shrink-0">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6"  y1="20" x2="6"  y2="14"/>
+            </svg>
+            Client Report
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+    <!-- End nav -->
+
+    <!-- User profile (pinned to sidebar bottom) -->
+    <div
+      class="shrink-0
+             border-t border-[var(--color-border)]
+             px-4 py-4"
+    >
+      <div class="flex items-center gap-3 min-w-0">
+        <span
+          class="flex items-center justify-center
+                 w-9 h-9 rounded-full shrink-0
+                 bg-[var(--color-primary-light)]
+                 text-[var(--color-primary)]"
+          aria-hidden="true"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </span>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-[var(--color-text-primary)] truncate">Admin User</p>
+          <p class="text-xs text-[var(--color-text-muted)] truncate">Administrator</p>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+  <!-- End Sidebar -->
+
+
+  <!-- ══════════════════════════════════════════════════
+       RIGHT PANEL  (header + scrollable content + footer)
+  ══════════════════════════════════════════════════ -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+
+    <!-- ── HEADER ────────────────────────────────── -->
+    <header
+      id="main-header"
+      class="flex items-center shrink-0
+             h-16 px-4 sm:px-6
+             bg-[var(--color-surface)]
+             border-b border-[var(--color-border)]"
+      style="min-height: var(--header-height);"
+      role="banner"
+    >
+
+      <!-- Mobile: hamburger (hidden on lg+) -->
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        aria-label="Open navigation menu"
+        class="lg:hidden flex items-center justify-center
+               w-10 h-10 mr-3 -ml-1
+               rounded-lg text-[var(--color-text-secondary)]
+               hover:bg-[var(--color-nav-hover-bg)]
+               focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+               transition-colors duration-150"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <line x1="3" y1="6"  x2="21" y2="6"  />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+
+      <!-- Spacer — pushes actions to the right -->
+      <div class="flex-1 min-w-0"></div>
+
+      <!-- Right-side header actions -->
+      <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+
+        <!-- Notification icon -->
+        <button
+          id="notification-btn"
+          type="button"
+          aria-label="View notifications"
+          class="flex items-center justify-center
+                 w-10 h-10 rounded-lg
+                 text-[var(--color-text-secondary)]
+                 hover:bg-[var(--color-nav-hover-bg)]
+                 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                 transition-colors duration-150"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </button>
+
+        <!-- User profile button -->
+        <button
+          id="user-menu-btn"
+          type="button"
+          aria-label="Open user menu"
+          class="flex items-center gap-2
+                 px-3 h-10 rounded-lg
+                 text-sm font-medium
+                 text-[var(--color-text-primary)]
+                 hover:bg-[var(--color-nav-hover-bg)]
+                 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                 transition-colors duration-150"
+        >
+          <!-- Avatar -->
+          <span
+            class="flex items-center justify-center
+                   w-7 h-7 rounded-full shrink-0
+                   bg-[var(--color-primary-light)]
+                   text-[var(--color-primary)]"
+            aria-hidden="true"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </span>
+          <!-- Name + chevron (hidden on mobile) -->
+          <span class="hidden sm:block truncate max-w-[120px]">Admin User</span>
+          <svg
+            class="hidden sm:block shrink-0"
+            xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+
+      </div>
+
+    </header>
+    <!-- End Header -->
+
+
+    <!-- ── MAIN  (scrollable area) ───────────────── -->
+    <main
+      id="main-content"
+      class="flex-1 overflow-y-auto flex flex-col min-w-0"
+      aria-label="Main content"
+    >
+
+      <!-- Content with responsive padding -->
+      <section
+        class="flex-1 p-4 sm:p-6 lg:p-8"
+        aria-labelledby="page-heading"
+      >
+        <div class="mb-6">
+          <h1
+            id="page-heading"
+            class="text-xl sm:text-2xl font-semibold
+                   text-[var(--color-text-primary)]
+                   leading-tight"
+          >
+            Dashboard
+          </h1>
+          <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
+            Stocktakes completed for your clients, at a glance.
+          </p>
+        </div>
+
+        <div id="dash-kpis" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6"></div>
+
+        <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden shadow-xs">
+          <div class="px-5 py-4 border-b border-[var(--color-border)] bg-slate-50/50 flex items-center justify-between">
+            <div>
+              <h2 class="text-sm font-semibold text-[var(--color-text-primary)]">Recent Stocktakes</h2>
+              <p class="text-xs text-[var(--color-text-muted)] mt-0.5">Counted units come from the handheld device files; book stock is the client's lookup file, where one was supplied.</p>
+            </div>
+            <a href="jobs-list.html" class="text-xs font-semibold text-[var(--color-primary)] hover:underline">All stock takes</a>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm min-w-[720px]" aria-label="Recent stocktakes">
+              <thead>
+                <tr class="border-b border-[var(--color-border)] bg-[var(--color-background)] select-none">
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Stock Take</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Client</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Date</th>
+                  <th class="px-4 py-3 text-right text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Locations</th>
+                  <th class="px-4 py-3 text-right text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Units Counted</th>
+                  <th class="px-4 py-3 text-right text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Book Stock</th>
+                  <th class="px-4 py-3 text-right text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Variance</th>
+                </tr>
+              </thead>
+              <tbody id="dash-jobs" class="divide-y divide-[var(--color-border)]"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <script>
+          (function () {
+            var fmt = function (n) { return Number(n).toLocaleString('en-GB'); };
+            var jobs = STOCK.jobs.slice().sort(function (a, b) { return b.iso < a.iso ? -1 : 1; });
+            var units = jobs.reduce(function (a, j) { return a + j.units; }, 0);
+            var locs = jobs.reduce(function (a, j) { return a + STOCK.locations[j.id].length; }, 0);
+            var card = function (label, value, sub, tone) {
+              return '<div class="p-4 bg-white border border-slate-200 rounded-xl shadow-xs"><p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">' + label +
+                '</p><h3 class="text-2xl font-bold ' + tone + ' mt-1">' + value + '</h3><p class="text-[11px] text-slate-500 mt-0.5">' + sub + '</p></div>';
+            };
+            document.getElementById('dash-kpis').innerHTML =
+              card('Clients', STOCK.clients.length, STOCK.clients.map(function (c) { return c.name.replace(/ - .*/, ''); }).join(' &bull; '), 'text-slate-900') +
+              card('Stock Takes', jobs.length, jobs.filter(function (j) { return j.status === 'Completed'; }).length + ' completed', 'text-slate-900') +
+              card('Units Counted', fmt(units), fmt(locs) + ' locations scanned', 'text-emerald-700') +
+              card('Handhelds', STOCK.devices.length, 'Honeywell, live-sync over the private Wi-Fi', 'text-slate-900');
+            document.getElementById('dash-jobs').innerHTML = jobs.map(function (j) {
+              var n = STOCK.locations[j.id].length;
+              var v = j.hasBook ? j.units - j.expected : null;
+              var vcls = v === null ? 'text-slate-400' : (v === 0 ? 'text-slate-700' : (v > 0 ? 'text-emerald-700' : 'text-rose-700'));
+              return '<tr class="hover:bg-slate-50 transition-colors">' +
+                '<td class="px-4 py-3.5"><a href="job-details.html?job=' + j.id + '" class="font-semibold text-[var(--color-primary)] hover:underline block">' + j.title + '</a><span class="text-[11px] font-mono text-[var(--color-text-muted)]">' + j.id + '</span></td>' +
+                '<td class="px-4 py-3.5 font-medium text-[var(--color-text-primary)]">' + j.client + '</td>' +
+                '<td class="px-4 py-3.5 text-[var(--color-text-secondary)]">' + j.date + '</td>' +
+                '<td class="px-4 py-3.5 text-right font-mono">' + fmt(n) + '</td>' +
+                '<td class="px-4 py-3.5 text-right font-mono font-bold text-slate-900">' + fmt(j.units) + '</td>' +
+                '<td class="px-4 py-3.5 text-right font-mono ' + (j.hasBook ? 'text-slate-700' : 'text-slate-400') + '">' + (j.hasBook ? fmt(j.expected) : '—') + '</td>' +
+                '<td class="px-4 py-3.5 text-right font-mono font-bold ' + vcls + '">' + (v === null ? '—' : (v > 0 ? '+' : '') + fmt(v)) + '</td></tr>';
+            }).join('');
+          })();
+        </script>
+
+      </section>
+
+      <!-- ── FOOTER ─────────────────────────────── -->
+      <footer
+        id="main-footer"
+        class="shrink-0
+               border-t border-[var(--color-border)]
+               bg-[var(--color-surface)]
+               px-4 sm:px-6 lg:px-8
+               py-4"
+        role="contentinfo"
+      >
+        <div
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between
+                 gap-1 sm:gap-0
+                 text-xs text-[var(--color-text-muted)]"
+        >
+          <span>© 2026 Admin Panel. All rights reserved.</span>
+          <span>Version 1.0.0</span>
+        </div>
+      </footer>
+      <!-- End Footer -->
+
+    </main>
+    <!-- End Main -->
+
+  </div>
+  <!-- End Right Panel -->
+
+
+  <!-- App JS (placeholder) -->
+  <script src="assets/js/app.js"></script>
+
+</body>
+</html>

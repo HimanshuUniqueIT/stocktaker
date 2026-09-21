@@ -1,0 +1,65 @@
+/*
+ * styles.css
+ *
+ * Shared custom styles for ALL pages (index.html + dashboard.html).
+ * Tailwind CSS handles the primary design system.
+ * Only styles that cannot be expressed with Tailwind utilities belong here.
+ *
+ * Rules:
+ *   - Do NOT recreate Tailwind utilities here.
+ *   - Do NOT duplicate variables from variables.css.
+ *   - Keep this file as short as possible.
+ */
+
+/* ── Base ──────────────────────────────────────── */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    color: var(--color-text-primary);
+}
+
+/* ── Focus ring ────────────────────────────────── */
+
+/*
+ * Global focus ring for keyboard navigation.
+ * Tailwind's focus-visible:ring-* utilities are applied per-element
+ * as well, but this provides a consistent baseline fallback.
+ */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* ══════════════════════════════════════════════════
+   DASHBOARD-SPECIFIC
+   (only affects dashboard.html via the #sidebar selector)
+══════════════════════════════════════════════════ */
+
+/*
+ * Sidebar height is handled by the flex layout:
+ *   body { h-screen flex }  →  aside { h-full } fills the full viewport.
+ * No explicit height calculation needed here.
+ */
+
+/* ── Sidebar nav: thin custom scrollbar ────────── */
+#sidebar nav {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+}
+
+#sidebar nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+#sidebar nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#sidebar nav::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 4px;
+}

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Clients — Admin Panel" />
+  <title>Clients — Admin Panel</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] } } }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <style>
+    .form-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+    }
+    .form-input {
+      width: 100%;
+      height: 42px;
+      padding: 0 12px;
+      font-size: .875rem;
+      color: var(--color-text-primary);
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      transition: border-color .15s, box-shadow .15s;
+      outline: none;
+    }
+    .form-input::placeholder { color: var(--color-text-muted); }
+    .form-input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+    }
+  </style>
+</head>
+
+<body class="h-screen flex overflow-hidden font-sans antialiased bg-[var(--color-background)]">
+
+  <!-- ══════ SIDEBAR ══════ -->
+  <aside id="sidebar" aria-label="Main navigation"
+    class="hidden lg:flex flex-col w-64 shrink-0 h-full
+           bg-[var(--color-sidebar-bg)] border-r border-[var(--color-sidebar-border)]">
+
+    <!-- Logo -->
+    <div class="flex items-center justify-center h-16 px-6 shrink-0 border-b border-[var(--color-border)]">
+      <img src="assets/images/logo-icon.png" alt="IH Stocktaker Ltd" class="h-11 w-auto object-contain" />
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 overflow-y-auto py-4 px-3" aria-label="Sidebar navigation">
+      <ul role="list" class="space-y-0.5">
+
+        <!-- Dashboard -->
+        <li>
+          <a href="dashboard.html"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+            Dashboard
+          </a>
+        </li>
+
+        <!-- Clients (ACTIVE) -->
+        <li>
+          <a href="clients-list.html" aria-current="page"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold
+                   bg-[var(--color-nav-active-bg)] text-[var(--color-nav-active-text)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Clients
+          </a>
+        </li>
+        <!-- Devices -->
+        <li>
+          <a href="devices-list.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <rect x="5" y="2" width="14" height="20" rx="3" ry="3"/>
+              <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/>
+              <path d="M9 7h6M9 11h6"/>
+            </svg>
+            Devices
+          </a>
+        </li>
+
+        <!-- Jobs -->
+        <li>
+          <a href="jobs-list.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            Stock Takes
+          </a>
+        </li>
+        
+       
+
+        <!-- Client Report -->
+        <li>
+          <a href="reports.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                   text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                   hover:text-[var(--color-text-primary)] transition-colors duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            Client Report
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+
+    <!-- User profile -->
+    <div class="shrink-0 border-t border-[var(--color-border)] px-4 py-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="flex items-center justify-center w-9 h-9 rounded-full shrink-0
+                     bg-[var(--color-primary-light)] text-[var(--color-primary)]" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </span>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-[var(--color-text-primary)] truncate">Admin User</p>
+          <p class="text-xs text-[var(--color-text-muted)] truncate">Administrator</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <!-- End Sidebar -->
+
+
+  <!-- ══════ RIGHT PANEL ══════ -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- Header -->
+    <header id="main-header" role="banner"
+      class="flex items-center shrink-0 h-16 px-4 sm:px-6
+             bg-[var(--color-surface)] border-b border-[var(--color-border)]">
+      <!-- Mobile menu button -->
+      <button id="mobile-menu-btn" type="button" aria-label="Open navigation menu"
+        class="lg:hidden flex items-center justify-center w-10 h-10 mr-3 -ml-1 rounded-lg
+               text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+               transition-colors duration-150">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <div class="flex-1 min-w-0"></div>
+      <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+        <!-- Notification -->
+        <button id="notification-btn" type="button" aria-label="View notifications"
+          class="flex items-center justify-center w-10 h-10 rounded-lg
+                 text-[var(--color-text-secondary)] hover:bg-[var(--color-nav-hover-bg)]
+                 transition-colors duration-150">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </button>
+        <!-- User menu -->
+        <button id="user-menu-btn" type="button" aria-label="Open user menu"
+          class="flex items-center gap-2 px-3 h-10 rounded-lg text-sm font-medium
+                 text-[var(--color-text-primary)] hover:bg-[var(--color-nav-hover-bg)]
+                 transition-colors duration-150">
+          <span class="flex items-center justify-center w-7 h-7 rounded-full shrink-0
+                       bg-[var(--color-primary-light)] text-[var(--color-primary)]" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </span>
+          <span class="hidden sm:block truncate max-w-[120px]">Admin User</span>
+          <svg class="hidden sm:block shrink-0" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main (scrollable) -->
+    <main id="main-content" class="flex-1 overflow-y-auto flex flex-col min-w-0" aria-label="Main content">
+      <section class="flex-1 p-4 sm:p-6 lg:p-8" aria-labelledby="page-heading">
+
+        <!-- Page Heading -->
+        <div class="mb-6">
+          <h1 id="page-heading"
+            class="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)] leading-tight">
+            Client Management
+          </h1>
+         
+        </div>
+
+        <!-- Notification Toast -->
+        <div id="toast-notification" class="hidden mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-emerald-600 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span id="toast-message">Client saved successfully!</span>
+          </div>
+          <button type="button" onclick="document.getElementById('toast-notification').classList.add('hidden')" class="text-emerald-600 hover:text-emerald-800 text-xs font-bold">Dismiss</button>
+        </div>
+
+        <!-- ════════════════════════════════════════
+             TOP SECTION: CLIENT FORM (Single Card)
+        ════════════════════════════════════════ -->
+        <form id="client-form" action="javascript:void(0);" onsubmit="event.preventDefault();" novalidate class="w-full mx-auto mb-8">
+          <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden shadow-sm">
+            
+            <div class="px-5 py-4 border-b border-[var(--color-border)] bg-slate-50/50 flex items-center justify-between">
+              <div>
+                <h2 id="form-card-title" class="text-base font-semibold text-[var(--color-text-primary)]">Add New Client</h2>
+              </div>
+            </div>
+
+            <div class="px-5 py-5 grid grid-cols-1 md:grid-cols-3 gap-5">
+              <!-- Client Name (Required) -->
+              <div>
+                <label for="client-name" class="form-label">
+                  Client Name <span class="text-[var(--color-danger)]" aria-hidden="true">*</span>
+                </label>
+                <input type="text" id="client-name" name="client_name"
+                  placeholder="e.g. Pavers"
+                  autocomplete="organization" required class="form-input" />
+              </div>
+
+              <!-- Contact Number (Optional) -->
+              <div>
+                <label for="client-contact" class="form-label">
+                  Contact Number <span class="text-xs font-normal text-[var(--color-text-muted)]">(Optional)</span>
+                </label>
+                <input type="tel" id="client-contact" name="contact"
+                  placeholder="e.g. +44 20 7946 0192"
+                  autocomplete="tel" class="form-input" />
+              </div>
+
+              <!-- Email Address (Optional) -->
+              <div>
+                <label for="client-email" class="form-label">
+                  Email Address <span class="text-xs font-normal text-[var(--color-text-muted)]">(Optional)</span>
+                </label>
+                <input type="email" id="client-email" name="email"
+                  placeholder="e.g. stocktakes@client.co.uk"
+                  autocomplete="email" class="form-input" />
+              </div>
+            </div>
+
+            <!-- Form Action Buttons -->
+            <div class="px-5 py-4 border-t border-[var(--color-border)] bg-[var(--color-background)] flex items-center justify-end gap-3">
+              <button type="button" id="reset-client-btn"
+                class="inline-flex items-center justify-center px-4 h-9 rounded-lg text-sm font-medium border border-[var(--color-border)] bg-white text-[var(--color-text-secondary)] hover:bg-slate-100 transition-colors duration-150">
+                Clear
+              </button>
+              <button type="submit" id="save-client-btn"
+                class="inline-flex items-center justify-center gap-2 px-5 h-9 rounded-lg text-sm font-semibold bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white transition-colors duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                     stroke-linejoin="round" aria-hidden="true">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                <span id="save-btn-text">Save Client</span>
+              </button>
+            </div>
+
+          </div>
+        </form>
+
+        <!-- ════════════════════════════════════════
+             BOTTOM SECTION: CLIENT DIRECTORY (Listing Table)
+        ════════════════════════════════════════ -->
+        <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden shadow-sm">
+          
+          <!-- Toolbar -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-[var(--color-border)] bg-slate-50/50">
+            <div>
+              <h2 class="text-base font-semibold text-[var(--color-text-primary)]">Client Directory</h2>
+            </div>
+            <div class="flex items-center gap-3">
+              <!-- Search -->
+              <div class="relative w-full sm:w-64">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
+                     xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" id="client-search" placeholder="Search clients…"
+                  class="w-full h-9 pl-9 pr-3 text-sm text-[var(--color-text-primary)]
+                         placeholder-[var(--color-text-muted)]
+                         border border-[var(--color-border)] rounded-lg bg-white
+                         focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]
+                         focus:border-[var(--color-primary)] transition-colors duration-150" />
+              </div>
+              <span id="client-count-badge" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
+                3 Clients
+              </span>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[640px] text-sm" aria-label="Clients directory">
+              <thead>
+                <tr class="border-b border-[var(--color-border)] bg-[var(--color-background)] select-none">
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider w-12">#</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Client Name</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Contact Number</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Email Address</th>
+                  <th class="px-4 py-3 text-right text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider w-36">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="clients-tbody" class="divide-y divide-[var(--color-border)]">
+                <tr class="client-row hover:bg-slate-50 transition-colors" data-name="Pavers" data-contact="" data-email="">
+                  <td class="px-4 py-3.5 text-[var(--color-text-muted)] font-medium">1</td>
+                  <td class="px-4 py-3.5 font-semibold text-[var(--color-text-primary)]">Pavers</td>
+                  <td class="px-4 py-3.5 text-[var(--color-text-secondary)] font-medium">—</td>
+                  <td class="px-4 py-3.5 text-[var(--color-text-secondary)]">—</td>
+                  <td class="px-4 py-3.5 text-right">
+                    <div class="inline-flex items-center gap-1">
+                      <button type="button" onclick="editClient(this)" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-[var(--color-primary)] hover:bg-blue-50 transition-colors">Edit</button>
+                      <button type="button" onclick="deleteClient(this)" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="client-row hover:bg-slate-50 transition-colors" data-name="Stratford City" data-contact="" data-email="">
+                  <td class="px-4 py-3.5 text-[var(--color-text-muted)] font-medium">2</td>
+                  <td class="px-4 py-3.5 font-semibold text-[var(--color-text-primary)]">Stratford City</td>
+                  <td class="px-4 py-3.5 text-[var(--color-text-secondary)] font-medium">—</td>
+                  <td class="px-4 py-3.5 text-[var(--color-text-secondary)]">—</td>
+                  <td class="px-4 py-3.5 text-right">
+                    <div class="inline-flex items-center gap-1">
+                      <button type="button" onclick="editClient(this)" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-[var(--color-primary)] hover:bg-blue-50 transition-colors">Edit</button>
+                      <button type="button" onclick="deleteClient(this)" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="client-row hover:bg-slate-50 transition-colors" data-name="The Conran Shop - Sloane Square" data-contact="" data-email="">
+                  <td class="px-4 py-3.5 text-[var(--color-text-muted)] font-medium">3</td>
+                  <td class="px-4 py-3.5 font-semibold text-[var(--color-text-primary)]">The Conran Shop - Sloane Square</td>
+                  <td class="px-4 py-3.5 text-[var(--color-text-secondary)] font-medium">—</td>
+                  <td class="px-4 py-3.5 text-[var(--color-text-secondary)]">—</td>
+                  <td class="px-4 py-3.5 text-right">
+                    <div class="inline-flex items-center gap-1">
+                      <button type="button" onclick="editClient(this)" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-[var(--color-primary)] hover:bg-blue-50 transition-colors">Edit</button>
+                      <button type="button" onclick="deleteClient(this)" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </section>
+    </main>
+
+  </div>
+
+  <!-- JavaScript Interactivity -->
+  <script>
+    function initClientManager() {
+      const form = document.getElementById('client-form');
+      if (!form) return;
+      const nameInput = document.getElementById('client-name');
+      const contactInput = document.getElementById('client-contact');
+      const emailInput = document.getElementById('client-email');
+      const resetBtn = document.getElementById('reset-client-btn');
+      const searchInput = document.getElementById('client-search');
+      const tbody = document.getElementById('clients-tbody');
+      const countBadge = document.getElementById('client-count-badge');
+      const toast = document.getElementById('toast-notification');
+      const toastMsg = document.getElementById('toast-message');
+      const formCardTitle = document.getElementById('form-card-title');
+      const saveBtnText = document.getElementById('save-btn-text');
+
+      let currentEditingRow = null;
+
+      function updateCount() {
+        if (!tbody || !countBadge) return;
+        const rows = tbody.querySelectorAll('.client-row');
+        countBadge.textContent = rows.length + ' Clients';
+      }
+
+      // Form submission
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const nameVal = nameInput.value.trim();
+        const contactVal = contactInput.value.trim();
+        const emailVal = emailInput.value.trim();
+
+        if (!nameVal) {
+          nameInput.classList.add('border-red-500');
+          nameInput.focus();
+          return;
+        } else {
+          nameInput.classList.remove('border-red-500');
+        }
+
+        const displayContact = contactVal ? contactVal : '—';
+        const displayEmail = emailVal ? emailVal : '—';
+
+        if (currentEditingRow) {
+          // Update existing row
+          currentEditingRow.dataset.name = nameVal;
+          currentEditingRow.dataset.contact = contactVal;
+          currentEditingRow.dataset.email = emailVal;
+
+          const cells = currentEditingRow.querySelectorAll('td');
+          cells[1].textContent = nameVal;
+
+          cells[2].textContent = displayContact;
+          cells[2].className = contactVal ? "px-4 py-3.5 text-[var(--color-text-secondary)] font-medium" : "px-4 py-3.5 text-[var(--color-text-muted)] font-normal italic";
+
+          cells[3].textContent = displayEmail;
+          cells[3].className = emailVal ? "px-4 py-3.5 text-[var(--color-text-secondary)]" : "px-4 py-3.5 text-[var(--color-text-muted)] font-normal italic";
+
+          toastMsg.textContent = `Client "${nameVal}" updated successfully!`;
+          currentEditingRow = null;
+          formCardTitle.textContent = 'Add New Client';
+          saveBtnText.textContent = 'Save Client';
+        } else {
+          // Append new row
+          const rowCount = tbody.querySelectorAll('.client-row').length + 1;
+          const tr = document.createElement('tr');
+          tr.className = 'client-row hover:bg-slate-50 transition-colors';
+          tr.dataset.name = nameVal;
+          tr.dataset.contact = contactVal;
+          tr.dataset.email = emailVal;
+
+          tr.innerHTML = `
+            <td class="px-4 py-3.5 text-[var(--color-text-muted)] font-medium">${rowCount}</td>
+            <td class="px-4 py-3.5 font-semibold text-[var(--color-text-primary)]">${nameVal}</td>
+            <td class="${contactVal ? 'px-4 py-3.5 text-[var(--color-text-secondary)] font-medium' : 'px-4 py-3.5 text-[var(--color-text-muted)] font-normal italic'}">${displayContact}</td>
+            <td class="${emailVal ? 'px-4 py-3.5 text-[var(--color-text-secondary)]' : 'px-4 py-3.5 text-[var(--color-text-muted)] font-normal italic'}">${displayEmail}</td>
+            <td class="px-4 py-3.5 text-right">
+              <div class="inline-flex items-center gap-1">
+                <button type="button" onclick="editClient(this)" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-[var(--color-primary)] hover:bg-blue-50 transition-colors">Edit</button>
+                <button type="button" onclick="deleteClient(this)" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors">Delete</button>
+              </div>
+            </td>
+          `;
+
+
+          tbody.prepend(tr);
+          toastMsg.textContent = `Client "${nameVal}" added successfully!`;
+        }
+
+        updateCount();
+        form.reset();
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 4000);
+      });
+
+      // Clear button
+      resetBtn.addEventListener('click', function () {
+        form.reset();
+        currentEditingRow = null;
+        formCardTitle.textContent = 'Add New Client';
+        saveBtnText.textContent = 'Save Client';
+        nameInput.classList.remove('border-red-500');
+      });
+
+      // Search filtering
+      searchInput.addEventListener('input', function () {
+        const query = searchInput.value.toLowerCase().trim();
+        const rows = tbody.querySelectorAll('.client-row');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+          const name = (row.dataset.name || '').toLowerCase();
+          const contact = (row.dataset.contact || '').toLowerCase();
+          const email = (row.dataset.email || '').toLowerCase();
+
+          if (name.includes(query) || contact.includes(query) || email.includes(query)) {
+            row.style.display = '';
+            visibleCount++;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+
+        countBadge.textContent = visibleCount + ' Clients';
+      });
+
+      // Edit row handler
+      window.editClient = function (btn) {
+        const tr = btn.closest('tr');
+        currentEditingRow = tr;
+
+        nameInput.value = tr.dataset.name || '';
+        contactInput.value = tr.dataset.contact || '';
+        emailInput.value = tr.dataset.email || '';
+
+        formCardTitle.textContent = 'Edit Client — ' + tr.dataset.name;
+        saveBtnText.textContent = 'Update Client';
+        nameInput.focus();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      // Delete row handler
+      window.deleteClient = function (btn) {
+        const tr = btn.closest('tr');
+        const clientName = tr.dataset.name || 'Client';
+        if (confirm(`Are you sure you want to delete "${clientName}"?`)) {
+          tr.remove();
+          updateCount();
+          toastMsg.textContent = `Client "${clientName}" has been deleted.`;
+          toast.classList.remove('hidden');
+          setTimeout(() => toast.classList.add('hidden'), 4000);
+        }
+      };
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initClientManager);
+    } else {
+      initClientManager();
+    }
+  </script>
+</body>
+</html>
