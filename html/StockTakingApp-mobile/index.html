@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1e3a8a">
+  <title>Stock Take App — Handheld</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+/* Stock Take handheld app — hi-fi mobile screens */
+:root {
+  --primary: #2563eb; --primary-dark: #1d4ed8; --navy: #0f2a6b; --navy-2: #1e3a8a;
+  --ink: #0f172a; --text: #334155; --muted: #64748b; --faint: #94a3b8;
+  --line: #e2e8f0; --bg: #f1f5f9; --card: #ffffff;
+  --ok: #059669; --ok-bg: #ecfdf5; --ok-line: #a7f3d0;
+  --warn: #d97706; --warn-bg: #fffbeb; --warn-line: #fde68a;
+  --bad: #dc2626; --bad-bg: #fef2f2; --bad-line: #fecaca;
+  --violet: #7c3aed; --violet-bg: #f5f3ff;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; }
+body { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; color: var(--ink); background: #e2e8f0; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
+input { font: inherit; color: inherit; }
+svg { display: block; }
+
+/* ── layout ── */
+.sb { display: flex; align-items: center; justify-content: space-between; padding: 14px 26px 6px; font-size: 13px; font-weight: 700; color: #fff; }
+.sb .r { display: flex; align-items: center; gap: 7px; }
+.hero { background: linear-gradient(160deg, var(--navy) 0%, var(--navy-2) 45%, var(--primary) 100%); color: #fff; }
+.hd { padding: 6px 18px 16px; }
+.hd .row { display: flex; align-items: center; gap: 10px; }
+.hd h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -.01em; line-height: 1.15; }
+.hd .sub { margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: #bfdbfe; font-weight: 500; }
+.iconbtn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,.14); display: grid; place-items: center; color: #fff; flex: none; }
+.iconbtn:active { background: rgba(255,255,255,.26); }
+.bd { flex: 1; overflow-y: auto; padding: 16px 16px 12px; scrollbar-width: none; }
+.bd::-webkit-scrollbar { display: none; }
+.ft { padding: 10px 16px 18px; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-top: 1px solid var(--line); display: flex; gap: 10px; }
+.homebar { width: 118px; height: 4px; border-radius: 4px; background: #0f172a33; margin: 0 auto 6px; }
+
+/* ── controls ── */
+.btn { flex: 1; height: 52px; border-radius: 14px; font-weight: 800; font-size: 15px; letter-spacing: .02em; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform .08s, filter .15s; }
+.btn:active { transform: scale(.98); filter: brightness(.95); }
+.btn.primary { background: linear-gradient(180deg, #3b82f6, var(--primary-dark)); color: #fff; box-shadow: 0 8px 18px -6px rgba(37,99,235,.55); }
+.btn.ok { background: linear-gradient(180deg, #10b981, var(--ok)); color: #fff; box-shadow: 0 8px 18px -6px rgba(5,150,105,.5); }
+.btn.ghost { background: #fff; color: var(--text); border: 1.5px solid var(--line); }
+.btn.danger { background: var(--bad-bg); color: var(--bad); border: 1.5px solid var(--bad-line); }
+.btn[disabled] { opacity: .45; pointer-events: none; }
+.ft .btn { padding: 0 8px; font-size: 14px; white-space: nowrap; }
+.btn.sm { height: 42px; font-size: 13px; border-radius: 12px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 6px 16px -10px rgba(15,23,42,.12); }
+.label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 6px 2px; }
+.field { display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 14px; color: var(--muted); transition: border-color .15s, box-shadow .15s; }
+.field:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37,99,235,.12); }
+.field input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; font-size: 16px; font-weight: 600; color: var(--ink); }
+.field input::placeholder { color: var(--faint); font-weight: 500; }
+.field input:disabled { color: var(--faint); }
+.pill { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 9px; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: .04em; border: 1px solid; }
+.pill.ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok-line); }
+.pill.warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-line); }
+.pill.blue { background: #eff6ff; color: var(--primary-dark); border-color: #bfdbfe; }
+.pill.bad { background: var(--bad-bg); color: var(--bad); border-color: var(--bad-line); }
+.mono { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; }
+.hint { text-align: center; font-size: 12px; color: var(--muted); padding: 10px 14px 0; line-height: 1.45; }
+
+/* ── login ── */
+.login-hero { padding: 26px 24px 54px; text-align: center; }
+.login-hero .logo { width: 78px; height: 78px; margin: 4px auto 14px; border-radius: 22px; background: #fff; display: grid; place-items: center; box-shadow: 0 14px 30px -10px rgba(0,0,0,.4); }
+.login-hero .logo img { width: 54px; height: 54px; object-fit: contain; }
+.login-hero h1 { margin: 0; font-size: 26px; font-weight: 800; letter-spacing: .14em; }
+.login-hero p { margin: 4px 0 0; color: #bfdbfe; font-size: 13px; }
+.login-card { margin: -34px 16px 0; padding: 18px; display: grid; gap: 14px; position: relative; z-index: 2; }
+.devinfo { display: flex; justify-content: space-between; gap: 8px; margin: 16px 18px 0; font-size: 11px; color: var(--muted); }
+.devinfo b { color: var(--text); font-weight: 700; }
+
+/* ── stock take list ── */
+.client { display: flex; align-items: center; gap: 14px; padding: 14px; margin-bottom: 12px; width: 100%; text-align: left; }
+.client:active { background: #f8fafc; }
+.avatar { width: 48px; height: 48px; border-radius: 15px; display: grid; place-items: center; font-weight: 800; font-size: 18px; color: #fff; flex: none; }
+.client .nm { font-size: 16px; font-weight: 800; letter-spacing: -.01em; }
+.client .mt { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.client .end { margin-left: auto; color: var(--faint); }
+
+/* ── history ── */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+.stat { padding: 10px 6px; text-align: center; }
+.stat b { display: block; font-size: 19px; font-weight: 800; }
+.stat span { font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.acc { margin-bottom: 10px; overflow: hidden; }
+.acc-h { width: 100%; display: flex; align-items: center; gap: 10px; padding: 13px 14px; text-align: left; }
+.acc-h .t { font-weight: 800; font-size: 15px; }
+.acc-h .s { font-size: 12px; color: var(--muted); }
+.acc-h .chev { margin-left: auto; color: var(--faint); transition: transform .2s; }
+.acc.open .chev { transform: rotate(180deg); }
+.acc-b { display: none; border-top: 1px solid var(--line); background: #f8fafc; }
+.acc.open .acc-b { display: block; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl th { text-align: left; font-size: 10px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; padding: 8px 12px; background: #f1f5f9; }
+.tbl th.r, .tbl td.r { text-align: right; }
+.tbl td { padding: 9px 12px; border-top: 1px solid var(--line); vertical-align: middle; }
+.tbl td .code { font-weight: 700; color: var(--ink); font-size: 12.5px; }
+.tbl td .desc { display: block; font-size: 11px; color: var(--muted); margin-top: 1px; font-family: 'Inter', sans-serif; }
+.tbl td .nod { display: block; font-size: 10.5px; color: var(--faint); font-style: italic; font-family: 'Inter', sans-serif; }
+.qty { font-weight: 800; font-size: 14px; color: var(--ok); }
+.more { padding: 9px 12px; font-size: 11.5px; color: var(--muted); border-top: 1px solid var(--line); text-align: center; }
+.rm { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; color: var(--bad); background: var(--bad-bg); margin-left: auto; }
+.rm:active { background: var(--bad-line); }
+
+/* ── area / options ── */
+.opt { display: flex; align-items: center; gap: 14px; padding: 15px 14px; margin-bottom: 10px; width: 100%; text-align: left; border: 1.5px solid var(--line); }
+.opt.sel { border-color: var(--primary); background: #eff6ff; box-shadow: 0 0 0 4px rgba(37,99,235,.10); }
+.radio { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #cbd5e1; display: grid; place-items: center; margin-left: auto; flex: none; }
+.opt.sel .radio { border-color: var(--primary); background: var(--primary); color: #fff; }
+.opt .ic { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; flex: none; }
+.opt .nm { font-weight: 800; font-size: 15px; }
+.opt .mt { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+.add { width: 100%; height: 52px; border: 2px dashed #93c5fd; color: var(--primary-dark); border-radius: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; background: #f8fbff; }
+
+/* ── scan ── */
+.scanbtn { width: 100%; height: 132px; border-radius: 22px; background: linear-gradient(160deg, #1d4ed8, #2563eb 55%, #3b82f6); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; position: relative; overflow: hidden; box-shadow: 0 16px 30px -12px rgba(37,99,235,.7); }
+.scanbtn::after { content: ''; position: absolute; left: 14%; right: 14%; top: 50%; height: 2px; background: #fff; box-shadow: 0 0 14px 3px rgba(255,255,255,.75); animation: sweep 2.2s ease-in-out infinite; opacity: .9; }
+@keyframes sweep { 0%, 100% { transform: translateY(-38px); } 50% { transform: translateY(38px); } }
+.scanbtn:active { filter: brightness(.94); }
+.scanbtn .t { font-size: 22px; font-weight: 800; letter-spacing: .12em; z-index: 1; }
+.scanbtn svg { z-index: 1; }
+.or { display: flex; align-items: center; gap: 10px; margin: 14px 0 10px; color: var(--faint); font-size: 11.5px; font-weight: 600; }
+.or::before, .or::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.seg { display: inline-flex; background: rgba(255,255,255,.16); border-radius: 12px; padding: 3px; }
+.seg button { padding: 7px 14px; border-radius: 9px; font-size: 12.5px; font-weight: 800; color: #dbeafe; }
+.seg button.on { background: #fff; color: var(--primary-dark); box-shadow: 0 2px 6px rgba(0,0,0,.18); }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; background: rgba(255,255,255,.16); font-size: 12px; font-weight: 700; color: #fff; }
+.flash { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 14px; background: var(--ok-bg); border: 1px solid var(--ok-line); color: #065f46; margin-bottom: 12px; animation: pop .25s ease-out; }
+.flash.warn { background: var(--warn-bg); border-color: var(--warn-line); color: #92400e; }
+.flash b { font-weight: 800; }
+.flash small { display: block; font-size: 11.5px; opacity: .85; margin-top: 1px; }
+@keyframes pop { from { transform: translateY(-6px) scale(.98); opacity: 0; } to { transform: none; opacity: 1; } }
+.qtyrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: end; }
+.mode-card { padding: 18px; margin-bottom: 14px; width: 100%; text-align: left; border: 2px solid var(--line); display: block; }
+.mode-card.sel { border-color: var(--primary); background: #eff6ff; box-shadow: 0 0 0 4px rgba(37,99,235,.10); }
+.mode-card .big { display: flex; align-items: center; gap: 14px; }
+.mode-card .mi { width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; font-weight: 800; font-size: 20px; flex: none; }
+.mode-card h3 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: .02em; }
+.mode-card p { margin: 3px 0 0; font-size: 13px; color: var(--muted); line-height: 1.4; }
+
+/* ── summary ── */
+.sumrow { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-top: 1px solid var(--line); font-size: 14px; }
+.sumrow:first-child { border-top: 0; }
+.sumrow span { color: var(--muted); font-weight: 600; }
+.sumrow b { font-weight: 800; }
+.bignum { text-align: center; padding: 22px 10px 16px; }
+.bignum b { display: block; font-size: 46px; font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+.bignum span { font-size: 12px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.syncring { width: 132px; height: 132px; margin: 12px auto 4px; border-radius: 50%; display: grid; place-items: center; background: #eff6ff; border: 8px solid #dbeafe; color: var(--primary); }
+.syncring.busy svg { animation: spin 1s linear infinite; }
+.syncring.done { background: var(--ok-bg); border-color: var(--ok-line); color: var(--ok); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── modal + toast ── */
+.scrim { position: absolute; inset: 0; background: rgba(15,23,42,.55); backdrop-filter: blur(3px); display: flex; align-items: flex-end; z-index: 20; animation: fade .18s; }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.sheet { width: 100%; background: #fff; border-radius: 28px 28px 0 0; padding: 12px 20px 24px; animation: up .22s ease-out; }
+@keyframes up { from { transform: translateY(40px); } to { transform: none; } }
+.sheet .grab { width: 44px; height: 5px; border-radius: 5px; background: #cbd5e1; margin: 0 auto 16px; }
+.sheet h2 { margin: 0 0 4px; font-size: 21px; font-weight: 800; }
+.sheet .kv { margin: 14px 0 18px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.sheet .kv div { display: flex; justify-content: space-between; padding: 13px 16px; font-size: 15px; }
+.sheet .kv div + div { border-top: 1px solid var(--line); }
+.sheet .kv span { color: var(--muted); font-weight: 600; }
+.sheet .kv b { font-weight: 800; }
+.sheet .actions { display: flex; gap: 10px; }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 25; background: #0f172a; color: #fff; padding: 13px 16px; border-radius: 14px; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 14px 30px -10px rgba(0,0,0,.5); animation: pop .25s; }
+.toast svg { color: #34d399; flex: none; }
+
+/* ── board (screens.html) ── */
+.board { padding: 40px 28px 60px; max-width: 1500px; margin: 0 auto; }
+.board h1 { margin: 0 0 6px; font-size: 28px; font-weight: 800; letter-spacing: -.02em; }
+.board > p { margin: 0 0 30px; color: var(--muted); max-width: 720px; line-height: 1.55; }
+.grid { display: flex; flex-wrap: wrap; gap: 44px 36px; justify-content: center; }
+.cell { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.cell .cap { text-align: center; }
+.cell .cap b { display: block; font-size: 14px; font-weight: 800; }
+.cell .cap span { font-size: 12px; color: var(--muted); }
+.cell .n { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 12px; font-weight: 800; margin-right: 6px; }
+
+/* ══ Rugged handheld body (Honeywell-style) + 360×640 POS screen ══ */
+.stage { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 26px 12px; }
+.device { position: relative; flex: none; width: 406px; height: 792px; padding: 76px 23px 40px; border-radius: 46px;
+  background: linear-gradient(150deg, #454b54 0%, #262a30 42%, #1b1e23 100%);
+  box-shadow: 0 34px 60px -22px rgba(15,23,42,.6), 0 0 0 3px #101317, inset 0 0 0 2px rgba(255,255,255,.07), inset 0 -14px 26px rgba(0,0,0,.35), inset 0 12px 20px rgba(255,255,255,.05); }
+.device::before { content: ''; position: absolute; inset: 7px; border-radius: 40px; border: 2px solid rgba(0,0,0,.45); pointer-events: none; }
+.device .screen { position: relative; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); width: 360px; height: 640px; border-radius: 9px; box-shadow: 0 0 0 6px #07090c, 0 0 0 7px #2c3138; }
+.hw-top { position: absolute; top: 0; left: 0; right: 0; height: 76px; pointer-events: none; }
+.scanwin { position: absolute; left: 50%; top: 22px; transform: translateX(-50%); width: 178px; height: 28px; border-radius: 8px; background: linear-gradient(180deg, #3a0a0f, #16060a); box-shadow: inset 0 0 0 2px #050608, inset 0 3px 8px rgba(255,80,80,.16), 0 1px 0 rgba(255,255,255,.08); overflow: hidden; }
+.scanwin::after { content: ''; position: absolute; left: 8%; right: 8%; top: 50%; height: 2px; background: #ff2d2d; box-shadow: 0 0 12px 4px rgba(255,40,40,.85); opacity: 0; transform: translateY(-1px); }
+.device.firing .scanwin::after { animation: laser .38s ease-out; }
+@keyframes laser { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
+.hw-led { position: absolute; right: 74px; top: 30px; width: 11px; height: 11px; border-radius: 50%; background: #1f2b22; box-shadow: inset 0 0 0 1.5px #0a0c0f; }
+.device.firing .hw-led { background: #22c55e; box-shadow: 0 0 10px 3px rgba(34,197,94,.9), inset 0 0 0 1.5px #0a0c0f; }
+.hw-speaker { position: absolute; left: 78px; top: 32px; width: 46px; height: 7px; border-radius: 6px; background: repeating-linear-gradient(90deg, #0d0f12 0 3px, transparent 3px 7px); opacity: .9; }
+.hw-btn { position: absolute; border: 0; border-radius: 5px; background: linear-gradient(90deg, #2e343b, #1a1d21); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07), 0 2px 4px rgba(0,0,0,.5); }
+.hw-vol { left: -7px; width: 9px; height: 50px; }
+.hw-scan { width: 10px; height: 104px; top: 258px; cursor: pointer; transition: transform .06s; }
+.hw-scan::after { content: ''; position: absolute; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: #f59e0b; }
+.hw-scan.l { left: -8px; } .hw-scan.l::after { left: 2px; }
+.hw-scan.r { right: -8px; } .hw-scan.r::after { right: 2px; }
+.hw-scan.l:active { transform: translateX(3px); } .hw-scan.r:active { transform: translateX(-3px); }
+.hw-mic { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; border-radius: 50%; background: #0b0d10; }
+.stage .cap { margin: 0; font-size: 12.5px; color: var(--muted); font-weight: 600; text-align: center; }
+@media (max-height: 880px) { .stage .device { zoom: .88; } }
+@media (max-height: 780px) { .stage .device { zoom: .76; } }
+@media (max-height: 680px) { .stage .device { zoom: .66; } }
+@media (max-width: 520px) {
+  .stage { padding: 0; gap: 0; justify-content: stretch; }
+  .stage .cap { display: none; }
+  .device { width: 100%; height: 100vh; height: 100dvh; padding: 0; border-radius: 0; background: none; box-shadow: none; zoom: 1 !important; }
+  .device::before, .hw-top, .hw-btn, .hw-mic { display: none; }
+  .device .screen { width: 100%; height: 100%; border-radius: 0; box-shadow: none; }
+}
+
+/* Android system navigation (Honeywell devices use on-screen nav) */
+.nav { flex: none; height: 44px; background: #0b0f17; display: flex; align-items: center; justify-content: space-around; padding: 0 34px; }
+.nav button { width: 54px; height: 34px; display: grid; place-items: center; color: #e2e8f0; border-radius: 17px; opacity: .92; }
+.nav button:active { background: rgba(255,255,255,.14); }
+.nav svg { width: 18px; height: 18px; }
+
+/* compact POS density for the 360×640 screen */
+.sb { padding: 8px 14px 2px; font-size: 12px; }
+.hd { padding: 4px 14px 12px; }
+.hd h1 { font-size: 18px; }
+.hd .sub { font-size: 11.5px; }
+.iconbtn { width: 34px; height: 34px; border-radius: 10px; }
+.bd { padding: 12px 12px 10px; }
+.ft { padding: 8px 12px 10px; }
+.btn { height: 48px; border-radius: 12px; font-size: 14px; }
+.field { height: 46px; border-radius: 12px; }
+.card { border-radius: 14px; }
+.scanbtn { height: 104px; border-radius: 18px; }
+.scanbtn .t { font-size: 19px; }
+.login-hero { padding: 14px 20px 46px; }
+.login-hero .logo { width: 64px; height: 64px; border-radius: 18px; margin-bottom: 10px; }
+.login-hero .logo img { width: 44px; height: 44px; }
+.login-hero h1 { font-size: 22px; }
+.bignum b { font-size: 40px; }
+.mode-card { padding: 14px; margin-bottom: 12px; }
+.mode-card .mi { width: 48px; height: 48px; }
+.mode-card h3 { font-size: 16px; }
+.mode-card p { font-size: 12px; }
+.board .device { zoom: .9; }
+
+.scanbtn.compact { height: 68px; flex-direction: row; gap: 14px; border-radius: 16px; }
+.scanbtn.compact::after { display: none; }
+@keyframes sweep2 { 0%, 100% { transform: translateY(-20px); } 50% { transform: translateY(20px); } }
+.flash { padding: 8px 12px; margin-bottom: 10px; border-radius: 12px; }
+.flash svg { width: 20px; height: 20px; }
+.hero .hd .row + div { margin-top: 8px !important; }
+
+.listwrap { min-height: 100%; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
+.netnote { display: flex; align-items: center; gap: 9px; padding: 9px 11px; border-radius: 12px; background: #f8fafc; border: 1px dashed #cbd5e1; font-size: 10.5px; line-height: 1.35; color: var(--muted); }
+.netnote b { display: block; color: var(--text); font-weight: 700; font-size: 11px; }
+.netnote span:not(.dot) { display: block; }
+.netnote .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,.22); flex: none; }
+.spin { display: inline-flex; animation: spin 1s linear infinite; }
+.btn.ghost[disabled] { opacity: .7; }
+
+.areabox { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 11px 12px; border-radius: 12px; font-size: 12px; line-height: 1.35; border: 1px solid; }
+.areabox small { display: block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; opacity: .75; }
+.areabox b { font-size: 14px; font-weight: 800; display: block; }
+.areabox.idle { background: #f8fafc; border: 1px dashed #cbd5e1; color: var(--muted); }
+.areabox.ok { background: var(--ok-bg); border-color: var(--ok-line); color: #065f46; }
+.areabox.bad { background: var(--bad-bg); border-color: var(--bad-line); color: #991b1b; }
+.areabox.bad small { text-transform: none; letter-spacing: 0; font-size: 11.5px; font-weight: 500; margin-top: 2px; }
+
+</style>
+  <style>
+    .top { position: fixed; top: 14px; right: 18px; z-index: 5; display: flex; gap: 8px; }
+    .top a { font-size: 13px; font-weight: 700; color: #1d4ed8; text-decoration: none; background: #fff; border: 1px solid #cbd5e1; padding: 8px 14px; border-radius: 10px; }
+    @media (max-width: 520px) { .top { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="top"><a href="screens.html">All screens →</a></div>
+  <div class="stage"><div id="app"></div><p class="cap">Press the orange side trigger (or SCAN on screen) to scan · ◁ ○ □ are the Android keys</p></div>
+  <script>
+/* Real sample data for the handheld prototype (Pavers, Stratford City, The Conran Shop). */
+window.APPDATA = {"device":"195B2FF60701080B15","clients":[{"id":"pav","name":"Pavers","sub":"Stock Take 0589","date":"16 Sep 2026","time":"14:32","stId":"ST-2026-001","locs":87,"areas":["Area 1 - Shop Floor","Area 2 - Store Room"],"history":[{"loc":"2001","area":"Area 1 - Shop Floor","status":"DONE","qty":1,"count":1,"lines":[["5051169556575",1,""]]},{"loc":"2002","area":"Area 1 - Shop Floor","status":"DONE","qty":43,"count":43,"lines":[["5063862113870",1,""],["5063862082664",1,""],["5059943197624",1,""],["5063521464619",1,""],["5063222909211",1,""]]},{"loc":"2003","area":"Area 1 - Shop Floor","status":"DONE","qty":101,"count":101,"lines":[["5063521951195",1,""],["5059601090670",1,""],["199703028029",1,""],["5063862060259",1,""],["5059601166689",1,""]]},{"loc":"2004","area":"Area 1 - Shop Floor","status":"OPEN","qty":99,"count":99,"lines":[]}],"demo":[["5063521546803",""],["5063521508887",""],["5063222261074",""],["5063222586542",""],["5063862131973",""],["5063521371160",""],["5063862131850",""],["4064225665143",""],["198739538366",""],["5063862054890",""],["4064226219925",""],["5059601456278",""],["197627699851",""],["197627454641",""],["197976351837",""],["199025970839",""]],"nextLoc":"2004"},{"id":"str","name":"Stratford City","sub":"Store 9104","date":"01 Jun 2025","time":"17:42","stId":"ST-2025-001","locs":1,"areas":["Store 9104"],"history":[{"loc":"9104","area":"Store 9104","status":"OPEN","qty":4100,"count":185,"lines":[]}],"demo":[["6285952001259","Arabian Blend JABAL AL FIL TESTER"],["6285952002232","Tester Blue Moon"],["6281101829439","SULTANI 50 ml"],["6285952000801","KHAIYYAL TESTER"],["6281101824052","Amiri"],["6285952000443","ONLY BLACK TESTER"],["0403010016","Bag- arabian Oud VELV(S)"],["6281101822171","TITANIUM"],["6281101829699","MADAWI 200 ML"],["6285952000139","INTERNATIONAL BAGS+CARD (MEDIUM)"],["6281101829590","Arabian Blend JABAL TAMYA."],["6281101829507","MADAWI 50ml"],["6285952000771","SHALKI BLUE TESTER"],["6281101826667","ONLY COLLECTION"],["6285952000207","KALEMAT TESTER"],["6281101820030","ELEGANT PINK"]],"nextLoc":"9104"},{"id":"crn","name":"The Conran Shop","sub":"Sloane Square","date":"14 Aug 2024","time":"10:05","stId":"ST-2024-001","locs":11,"areas":["Shop Floor"],"history":[{"loc":"0001","area":"Shop Floor","status":"DONE","qty":17,"count":7,"lines":[["TCS17524",1,"Paris Grand Primary 80X74cm"],["TCS316435",3,"Recycled Glass Tea Light Holder"],["TCS319120",3,"Bud Vase Short Smoke 11cm"],["TCS319121",2,"Bud Vase Tall Clear 16cm"],["TCS323581",2,"Serenity Black/Sand/Pink Column Vase  14 x 25cm"],["TCS337833",4,"Medium Vintage Grey Pot Assorted"]]},{"loc":"0002","area":"Shop Floor","status":"DONE","qty":42,"count":11,"lines":[["TCS216286",4,"Tiles A3 Print 250 Gsm"],["TCS275505",5,"Exclusive Jungle Metropolis Mobile"],["TCS275506",3,"Exclusive Dallas Midnight Mobile"],["TCS311939",8,"Pillar Candle 20cm Matt Red"],["TCS311942",2,"Pillar Candle 20cm Matt Olive Green"],["TCS311945",1,"Pillar Candle 20cm Matt Gold"]]},{"loc":"0003","area":"Shop Floor","status":"DONE","qty":79,"count":23,"lines":[["TCS312253",4,"Form Deep Coral Glass Vase 20cm"],["TCS319120",17,"Bud Vase Short Smoke 11cm"],["TCS319121",21,"Bud Vase Tall Clear 16cm"],["TCS319123",5,"Bud Vase Fluted Smoke 13cm"],["TCS323556",1,"Large Vintage Jug Assorted"],["TCS323557",4,"Medium Vintage Jug Assorted"]]},{"loc":"0004","area":"Shop Floor","status":"OPEN","qty":7,"count":6,"lines":[]}],"demo":[["TCS17032","Decanter Guppy Glass Fish"],["TCS17033","Decanter Cardinale Glass Fish"],["TCS17035","Decanter Pesce Pappagallo Glass Fish"],["TCS17046","Seahorse Vessel"],["TCS17356","Exotic Fish Glass Decanter H21cm"],["TCS17554","Exclusive Sofia Multi Mobile (46 X H41cm)"],["TCS17858","Exclusive Cottage Culture Mobile"],["TCS221201","Set Of 6 Twist & Straight Pop 20cm"],["TCS221203","Set of 6 Twist & Straight Greens 20cm"],["TCS221204","Set Of 6 Twist & Straight Bon Bon 20cm"],["TCS275505","Exclusive Jungle Metropolis Mobile"],["TCS275506","Exclusive Dallas Midnight Mobile"],["TCS311948","Set of 6 Twist & Straight (Navy, Gold, Green) 20cm"],["TCS311951","Rainbow Set of 12 Matt"],["TCS311954","Terrazzo Candlestick Tall 9cm"],["TCS311955","Marbled Candlestick Small 3.5cm"]],"nextLoc":"0004"}]};
+
+</script>
+  <script>
+/* Stock Take handheld app — clickable hi-fi prototype.
+   createApp(rootEl, { screen, preset })  renders one phone; screens.html renders ten of them. */
+(function () {
+  var D = window.APPDATA;
+  var I = {
+    user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+    chevR: '<path d="m9 18 6-6-6-6"/>', chevD: '<path d="m6 9 6 6 6-6"/>', back: '<path d="m15 18-6-6 6-6"/>',
+    scan: '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8v8M10 8v8M13 8v8M17 8v8"/>',
+    trash: '<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    sync: '<path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/>',
+    pin: '<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    layers: '<path d="m12 2 10 5-10 5L2 7Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/>',
+    wifi: '<path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><path d="M12 20h.01"/>',
+    logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+    one: '<path d="M6 12h12"/>', many: '<path d="M4 8h16M4 12h16M4 16h16"/>',
+    save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/>',
+    download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+    alert: '<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/>'
+  };
+  function ic(n, s, w) { s = s || 20; return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 2.2) + '" stroke-linecap="round" stroke-linejoin="round">' + I[n] + '</svg>'; }
+  var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+  var fmt = function (n) { return Number(n).toLocaleString('en-GB'); };
+  var COLORS = { pav: '#2563eb', str: '#7c3aed', crn: '#059669' };
+  /* Area location ranges as set in the admin panel — the handheld resolves the area from the scanned location */
+  var AREAS = { pav: [['Area 1 - Shop Floor', 2001, 2074], ['Area 2 - Store Room', 2075, 2087]], str: [['Store 9104', 9104, 9104]], crn: [['Shop Floor', 1, 11]] };
+  var LAPTOP = { name: 'STOCKTAKE-LAPTOP-01', wifi: 'STOCKTAKE', ip: '192.168.0.10' };
+  var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
+
+  function sbar() {
+    return '<div class="sb"><span>14:32</span><span class="r">' + ic('wifi', 15, 2.4) +
+      '<svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".55"/><rect x="2" y="2" width="15" height="9" rx="2" fill="currentColor"/><rect x="23.5" y="4" width="2" height="5" rx="1" fill="currentColor" opacity=".55"/></svg></span></div>';
+  }
+  function hero(title, sub, o) {
+    o = o || {};
+    return '<div class="hero">' + sbar() + '<div class="hd"><div class="row">' +
+      (o.back ? '<button class="iconbtn" data-a="' + o.back + '" aria-label="Back">' + ic('back', 20, 2.6) + '</button>' : '') +
+      '<div style="flex:1;min-width:0"><h1>' + title + '</h1>' + (sub ? '<div class="sub">' + sub + '</div>' : '') + '</div>' + (o.right || '') +
+      '</div>' + (o.extra || '') + '</div></div>';
+  }
+
+  function createApp(root, opts) {
+    opts = opts || {};
+    var S = {
+      screen: opts.screen || 'login', user: 'UMAIR', client: null, area: null, loc: '', locVal: '', mode: 'single',
+      items: [], drafts: {}, hist: null, done: [], extra: { locs: 0, recs: 0 }, open: {}, toast: '', flash: null, modal: null,
+      codeVal: '', qtyVal: '', demoIdx: 0, syncState: 'idle', addArea: false, areaName: '', areasExtra: [], nextLoc: 0
+    };
+    if (opts.preset) applyPreset(S, opts.preset);
+    var timer = null;
+
+    function cl() { return D.clients.find(function (c) { return c.id === S.client; }); }
+    function lookup(code) { var c = cl(); var f = c && c.demo.find(function (d) { return d[0] === code; }); return f ? f[1] : ''; }
+    function total(items) { return items.reduce(function (a, i) { return a + i.qty; }, 0); }
+    function pending() { return S.done.filter(function (d) { return !d.synced; }); }
+    function toast(m) { S.toast = m; clearTimeout(timer); timer = setTimeout(function () { S.toast = ''; render(); }, 2400); }
+    function go(s) { S.screen = s; S.flash = null; S.modal = null; render(); }
+
+    /* ───────────── screens ───────────── */
+    var V = {};
+    V.login = function () {
+      return { html:
+        '<div class="hero login-hero">' + sbar().replace('padding', 'padding') +
+        '<div class="logo"><img src="data:image/png;base64,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" alt=""></div><h1>STOCKTAKE</h1><p>Handheld counter</p></div>' +
+        '<div class="bd" style="padding-top:0;overflow:visible"><div class="card login-card">' +
+        '<div><p class="label">Username</p><label class="field">' + ic('user', 20) + '<input data-f="user" value="' + esc(S.user) + '" placeholder="e.g. UMAIR" autocapitalize="characters" autocomplete="off"></label></div>' +
+        '<button class="btn primary" data-a="login" style="flex:none;width:100%">LOGIN</button></div>' +
+        '<div class="devinfo"><span>Device<br><b class="mono">' + D.device + '</b></span><span style="text-align:right">Battery <b>78%</b><br>App <b>v1.0</b></span></div></div>' +
+        '<div style="padding:0 0 8px"><div class="homebar"></div></div>', cls: 'login' };
+    };
+
+    V.list = function () {
+      var cards = D.clients.map(function (c) {
+        return '<button class="card client" data-a="pick" data-id="' + c.id + '"><div class="avatar" style="background:' + COLORS[c.id] + '">' + esc(c.name[0]) + '</div>' +
+          '<div><div class="nm">' + esc(c.name) + '</div><div class="mt">' + esc(c.sub) + ' · ' + c.date + '</div></div>' +
+          '<span class="end">' + ic('chevR', 22) + '</span></button>';
+      }).join('');
+      return { head: hero('Stock Takes', 'Select a client to continue', { right: '<button class="iconbtn" data-a="logout" aria-label="Log out">' + ic('logout', 19) + '</button>' }),
+        body: '<div class="listwrap"><div><p class="label">Clients</p>' + cards + '<p class="hint">Tap a client → opens stock take history &amp; data</p></div>' +
+          '<div class="netnote"><span class="dot"></span><div><b>Connected to laptop ' + esc(LAPTOP.name) + '</b><span>Wi-Fi ' + esc(LAPTOP.wifi) + ' · ' + esc(LAPTOP.ip) + ' — clients &amp; data on this network only</span></div></div></div>' };
+    };
+
+    function histBlock() {
+      var c = cl(), H = S.hist;
+      var doneN = H.filter(function (h) { return h.status === 'DONE'; }).length;
+      var units = H.filter(function (h) { return h.status === 'DONE'; }).reduce(function (a, h) { return a + h.qty; }, 0);
+      var openN = H.length - doneN;
+      var stats = '<div class="stats"><div class="card stat"><b style="color:var(--ok)">' + doneN + '</b><span>Done</span></div><div class="card stat"><b>' + fmt(units) + '</b><span>Units</span></div><div class="card stat"><b style="color:var(--warn)">' + openN + '</b><span>Open</span></div></div>';
+      var acc = H.map(function (h) {
+        var ok = h.status === 'DONE', op = !!S.open[h.loc];
+        var rows = h.lines.map(function (l, i) {
+          return '<tr><td><span class="code mono">' + esc(l[0]) + '</span>' + (l[2] ? '<span class="desc">' + esc(l[2]) + '</span>' : '<span class="nod">no description on file</span>') + '</td>' +
+            '<td class="mono">' + h.loc + '</td><td class="r"><span class="qty">' + l[1] + '</span></td>' +
+            '<td class="r"><button class="rm" data-a="rmhist" data-loc="' + h.loc + '" data-i="' + i + '" aria-label="Remove line">' + ic('trash', 15) + '</button></td></tr>';
+        }).join('');
+        var body = ok ? '<table class="tbl"><thead><tr><th>Barcode</th><th>Loc</th><th class="r">Qty</th><th class="r">Action</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+          (h.count > h.lines.length ? '<div class="more">+ ' + (h.count - h.lines.length) + ' more lines on the laptop</div>' : '')
+          : '<div class="more" style="border:0;padding:14px">Not completed yet — tap CONTINUE to keep counting this location.</div>';
+        return '<div class="card acc' + (op ? ' open' : '') + '"><button class="acc-h" data-a="acc" data-loc="' + h.loc + '">' +
+          '<span class="avatar" style="width:38px;height:38px;border-radius:12px;font-size:13px;background:' + (ok ? 'var(--ok-bg)' : 'var(--warn-bg)') + ';color:' + (ok ? 'var(--ok)' : 'var(--warn)') + '">' + (ok ? ic('check', 18, 3) : ic('pin', 18)) + '</span>' +
+          '<div><div class="t">Location ' + h.loc + '</div><div class="s">' + esc(h.area.replace(/^Area \d+ - /, '')) + ' · ' + fmt(h.qty) + (h.qty === 1 ? ' unit' : ' units') + '</div></div>' +
+          '<span class="pill ' + (ok ? 'ok' : 'warn') + '" style="margin-left:auto">' + h.status + '</span><span class="chev" style="margin-left:6px">' + ic('chevD', 18) + '</span></button><div class="acc-b">' + body + '</div></div>';
+      }).join('');
+      return stats + acc + '<p class="hint">Locations scanned by you</p>';
+    }
+    V.history = function () {
+      var c = cl();
+      return { head: hero(esc(c.name), esc(c.sub), { back: 'toList', right: '<button data-a="cont" class="chip" style="height:38px;background:#fff;color:var(--primary-dark);font-weight:800;padding:0 14px">CONTINUE ' + ic('chevR', 16, 3) + '</button>' }),
+        body: histBlock(),
+        foot: '<button class="btn ghost" data-a="download"' + (S.dl === 'busy' ? ' disabled' : '') + '>' + (S.dl === 'busy' ? '<span class="spin">' + ic('sync', 18) + '</span> DOWNLOADING…' : ic('download', 19) + ' DOWNLOAD FILE') + '</button><button class="btn primary" data-a="goSync">' + ic('sync', 20) + ' SYNC</button>',
+        hintFoot: 'DOWNLOAD FILE gets the lookup file from the laptop · SYNC sends all local scans to it' };
+    };
+
+    function areaFor(v) {
+      var n = parseInt(v, 10); if (!v || isNaN(n)) return null;
+      var r = (AREAS[S.client] || []).find(function (x) { return n >= x[1] && n <= x[2]; });
+      return r ? r[0] : null;
+    }
+    V.loc = function () {
+      var c = cl(), ar = areaFor(S.locVal);
+      var dup = S.hist && S.hist.find(function (h) { return h.loc === S.locVal && h.status === 'DONE'; });
+      var warn = dup ? '<div class="flash warn" style="margin-top:12px">' + ic('alert', 22) + '<div><b>Location ' + S.locVal + ' is already synced</b><small>Opening it again creates a duplicate that must be resolved on the laptop.</small></div></div>' : '';
+      var area = !S.locVal ? '<div class="areabox idle">' + ic('layers', 18) + '<span>The area is picked up automatically from the location</span></div>'
+        : (ar ? '<div class="areabox ok">' + ic('layers', 18) + '<div><small>Area</small><b>' + esc(ar) + '</b></div><span class="pill ok" style="margin-left:auto">' + ic('check', 12, 3.4) + ' Found</span></div>'
+          : '<div class="areabox bad">' + ic('alert', 18) + '<div><b>Location ' + esc(S.locVal) + ' is not in this stock take</b><small>Check the code, or ask the supervisor to add it in the admin panel.</small></div></div>');
+      return { head: hero('Enter Location', esc(c.name) + ' · ' + esc(c.sub), { back: 'toHist', right: '<button class="iconbtn" data-a="goSync" aria-label="Sync">' + ic('sync', 19) + '</button>' }),
+        body: '<button class="scanbtn compact" data-a="scanLoc">' + ic('scan', 34, 1.8) + '<span class="t">SCAN</span></button>' +
+          '<div class="or">or enter the code</div><p class="label">Location code</p><label class="field">' + ic('pin', 20) + '<input data-f="locVal" inputmode="numeric" value="' + esc(S.locVal) + '" placeholder="location code…"></label>' + area + warn +
+          '<p class="hint">Scan a location barcode, or type its code</p>',
+        foot: '<button class="btn ghost" data-a="toHist">BACK</button><button class="btn primary"' + (ar ? '' : ' disabled') + ' data-a="locNext">NEXT</button>' };
+    };
+
+    V.mode = function () {
+      var m = function (id, t, p, col, bg, sym) {
+        return '<button class="card mode-card' + (S.mode === id ? ' sel' : '') + '" data-a="mode" data-m="' + id + '"><div class="big"><span class="mi" style="background:' + bg + ';color:' + col + '">' + sym + '</span><div><h3>' + t + '</h3><p>' + p + '</p></div></div></button>';
+      };
+      return { head: hero('Scan Type', 'Location ' + esc(S.loc) + ' · ' + esc(S.area), { back: 'toLoc' }),
+        body: '<p class="label">Choose how this location is counted</p>' +
+          m('single', 'SINGLE SCAN', 'Same item, scan again → qty +1 automatically', 'var(--primary)', '#dbeafe', '+1') +
+          m('multi', 'MULTI SCAN', 'Asks you to enter a quantity each time', 'var(--violet)', 'var(--violet-bg)', '×N') +
+          '<p class="hint">Pick once per location — the switch on the scan screen changes it later</p>',
+        foot: '<button class="btn ghost" data-a="toLoc">BACK</button>' };
+    };
+
+    V.main = function () {
+      var single = S.mode === 'single', it = S.items;
+      var extra = '<div style="display:flex;align-items:center;gap:10px;margin-top:12px"><div class="seg"><button data-a="setmode" data-m="single" class="' + (single ? 'on' : '') + '">Single</button><button data-a="setmode" data-m="multi" class="' + (!single ? 'on' : '') + '">Multi</button></div><span class="chip" style="margin-left:auto">' + ic('pin', 14) + ' ' + esc(S.loc) + '</span></div>';
+      var flash = S.flash ? '<div class="flash' + (S.flash.warn ? ' warn' : '') + '">' + ic(S.flash.warn ? 'alert' : 'check', 22, 2.8) + '<div><b>' + esc(S.flash.t) + '</b>' + (S.flash.s ? '<small>' + esc(S.flash.s) + '</small>' : '') + '</div></div>' : '';
+      var rows = it.map(function (x, i) {
+        return '<tr><td class="mono" style="color:var(--faint)">' + (i + 1) + '</td><td><span class="code mono">' + esc(x.code) + '</span>' + (x.desc ? '<span class="desc">' + esc(x.desc) + '</span>' : '') + '</td><td class="r"><span class="qty">' + x.qty + '</span></td><td class="r"><button class="rm" data-a="rm" data-i="' + i + '" aria-label="Remove">' + ic('trash', 15) + '</button></td></tr>';
+      }).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--faint);padding:22px">Nothing scanned yet</td></tr>';
+      return { head: hero('Scan Items', '', { back: 'toMode', extra: extra }),
+        body: flash + '<button class="scanbtn compact" data-a="scan">' + ic('scan', 34, 1.8) + '<span class="t">SCAN</span></button>' +
+          '<p class="label" style="margin-top:12px">Enter code</p><label class="field">' + ic('scan', 20) + '<input data-f="codeVal" inputmode="numeric" value="' + esc(S.codeVal) + '" placeholder="scan or type barcode…"></label>' +
+          '<div class="qtyrow" style="margin-top:8px"><div><p class="label">Enter qty</p><label class="field"><input data-f="qtyVal" inputmode="numeric" value="' + (single ? '1' : esc(S.qtyVal)) + '"' + (single ? ' disabled' : '') + ' placeholder="qty"></label></div><button class="btn primary" data-a="save" style="height:52px">' + ic('save', 19) + ' SAVE</button></div>' +
+          '<div style="display:flex;justify-content:space-between;align-items:baseline;margin:14px 2px 6px"><p class="label" style="margin:0">Scanned items</p><span style="font-size:12px;color:var(--muted);font-weight:600">' + it.length + ' lines · <b style="color:var(--ink)">' + total(it) + '</b> units</span></div>' +
+          '<div class="card" style="overflow:hidden"><table class="tbl"><thead><tr><th style="width:26px">No.</th><th>Barcode</th><th class="r">Qty</th><th class="r">Action</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+          '<p class="hint">' + (single ? 'Single scan = auto +1' : 'Multi scan = asks qty each time') + ' · tap the bin to remove a line</p>',
+        foot: '<button class="btn ghost" data-a="chg">CHANGE LOCATION</button><button class="btn ok"' + (it.length ? '' : ' disabled') + ' data-a="toComplete">COMPLETE</button>' };
+    };
+
+    V.complete = function () {
+      var c = cl();
+      return { head: hero('Complete Location', 'Check the totals before you finish', { back: 'toMain' }),
+        body: '<div class="card"><div class="bignum"><b>' + fmt(total(S.items)) + '</b><span>Units counted</span></div>' +
+          '<div class="sumrow"><span>Stock take</span><b>' + esc(c.name) + '</b></div><div class="sumrow"><span>Area</span><b>' + esc(S.area) + '</b></div>' +
+          '<div class="sumrow"><span>Location</span><b class="mono">' + esc(S.loc) + '</b></div><div class="sumrow"><span>Products</span><b>' + S.items.length + '</b></div>' +
+          '<div class="sumrow"><span>Scan type</span><b>' + (S.mode === 'single' ? 'Single' : 'Multi') + '</b></div></div>' +
+          '<p class="hint">Complete → back to location selection. The scans stay saved on this device until you sync.</p>',
+        foot: '<button class="btn ghost" data-a="toMain">BACK</button><button class="btn ok" data-a="complete">' + ic('check', 20, 3) + ' COMPLETE</button>' };
+    };
+
+    V.sync = function () {
+      var p = pending(), recs = p.reduce(function (a, d) { return a + d.lines.length; }, 0) + S.extra.recs, locs = p.length + S.extra.locs;
+      var st = S.syncState, ring = st === 'busy' ? ' busy' : (st === 'done' ? ' done' : '');
+      var pill = st === 'busy' ? '<span class="pill blue">Syncing…</span>' : (st === 'done' ? '<span class="pill ok">Synced</span>' : '<span class="pill ' + (locs ? 'warn' : 'ok') + '">' + (locs ? 'Pending' : 'Nothing to sync') + '</span>');
+      var chips = p.map(function (d) { return '<span class="pill blue mono">' + d.loc + '</span>'; }).join(' ');
+      return { head: hero('Sync Data', 'Send this device’s scans to the laptop', { back: 'toBack' }),
+        body: '<div class="syncring' + ring + '">' + (st === 'done' ? ic('check', 56, 2.6) : ic('sync', 56, 2)) + '</div><div style="text-align:center;margin:6px 0 16px">' + pill + '</div>' +
+          '<div class="stats" style="grid-template-columns:1fr 1fr"><div class="card stat" style="padding:16px"><b style="font-size:30px">' + locs + '</b><span>Pending locations</span></div><div class="card stat" style="padding:16px"><b style="font-size:30px">' + fmt(recs) + '</b><span>Pending records</span></div></div>' +
+          (chips ? '<p class="label" style="margin-top:6px">Waiting to sync</p><div style="display:flex;flex-wrap:wrap;gap:6px">' + chips + '</div>' : '') +
+          '<p class="hint">Sync is always manual — never automatic.<br>Saved scans are never lost if the Wi-Fi drops.</p>',
+        foot: '<button class="btn primary"' + ((locs || st === 'busy') && st !== 'busy' ? '' : ' disabled') + ' data-a="doSync">' + ic('sync', 20) + ' SYNC TO PC</button>' };
+    };
+
+    /* ───────────── render ───────────── */
+    function render() {
+      var f = document.activeElement, fid = f && root.contains(f) && f.dataset ? f.dataset.f : null, pos = fid ? f.selectionStart : 0;
+      var v = V[S.screen]();
+      var inner = v.html ? v.html : v.head + '<div class="bd">' + v.body + '</div>' +
+        (v.foot ? '<div class="ft" style="flex-wrap:wrap">' + (v.hintFoot ? '<div style="width:100%;text-align:center;font-size:11.5px;color:var(--muted);margin:-2px 0 2px">' + v.hintFoot + '</div>' : '') + v.foot + '</div>' : '');
+      var modal = '';
+      if (S.modal) modal = '<div class="scrim"><div class="sheet"><div class="grab"></div><h2>Save this scan?</h2><div class="kv"><div><span>Barcode</span><b class="mono">' + esc(S.modal.code) + '</b></div>' + (S.modal.desc ? '<div><span>Product</span><b style="font-size:13px;text-align:right">' + esc(S.modal.desc) + '</b></div>' : '') + '<div><span>Qty</span><b style="color:var(--primary);font-size:20px">' + S.modal.qty + '</b></div></div><div class="actions"><button class="btn ghost" data-a="no">NO</button><button class="btn primary" data-a="yes">YES</button></div></div></div>';
+      var t = S.toast ? '<div class="toast">' + ic('check', 20, 3) + esc(S.toast) + '</div>' : '';
+      root.classList.add('device');
+      var NAV = '<div class="nav"><button data-a="hwback" aria-label="Back"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 4v16L5 12z"/></svg></button><button data-a="hwhome" aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="7"/></svg></button><button data-a="hwrecent" aria-label="Recent apps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></button></div>';
+      root.innerHTML = '<span class="hw-btn hw-vol" style="top:150px"></span><span class="hw-btn hw-vol" style="top:208px"></span>' +
+        '<button class="hw-btn hw-scan l" data-a="hwscan" aria-label="Scan trigger (left)" title="Scan trigger"></button><button class="hw-btn hw-scan r" data-a="hwscan" aria-label="Scan trigger (right)" title="Scan trigger"></button>' +
+        '<div class="hw-top"><span class="hw-speaker"></span><div class="scanwin"></div><span class="hw-led"></span></div>' +
+        '<div class="screen">' + inner + modal + t + NAV + '</div><span class="hw-mic"></span>';
+      if (fid) { var n = root.querySelector('[data-f="' + fid + '"]'); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) { } } }
+    }
+
+    /* ───────────── actions ───────────── */
+    function addItem(code, qty) {
+      var e = S.items.find(function (x) { return x.code === code; });
+      if (e) e.qty += qty; else S.items.push({ code: code, qty: qty, desc: lookup(code) });
+      return e ? e.qty : qty;
+    }
+    function fire() { root.classList.add('firing'); clearTimeout(fire.t); fire.t = setTimeout(function () { root.classList.remove('firing'); }, 420); }
+    var BACK = { history: 'toList', loc: 'toHist', mode: 'toLoc', main: 'toMode', complete: 'toMain', sync: 'toBack' };
+    var A = {
+      hwscan: function () { fire(); if (S.screen === 'main') A.scan(); else if (S.screen === 'loc') A.scanLoc(); else toast('Open a scan screen to use the trigger'); },
+      hwback: function () { if (BACK[S.screen]) A[BACK[S.screen]](); },
+      hwhome: function () { if (S.screen !== 'login') go(S.client ? 'list' : 'list'); },
+      hwrecent: function () { },
+      login: function () { go('list'); },
+      logout: function () { go('login'); },
+      pick: function (el) { S.client = el.dataset.id; S.hist = clone(cl().history); S.area = null; S.areasExtra = []; S.open = {}; S.nextLoc = parseInt(cl().nextLoc, 10); S.locVal = ''; S.items = []; S.drafts = {}; go('history'); },
+      toList: function () { go('list'); }, toHist: function () { go('history'); }, cont: function () { go('loc'); },
+      acc: function (el) { S.open[el.dataset.loc] = !S.open[el.dataset.loc]; render(); },
+      rmhist: function (el) { var h = S.hist.find(function (x) { return x.loc === el.dataset.loc; }); var l = h.lines.splice(+el.dataset.i, 1)[0]; h.qty -= l[1]; h.count -= 1; toast('Line removed — will re-sync'); },
+      scanLoc: function () { fire(); S.locVal = String(S.nextLoc).padStart(cl().nextLoc.length, '0'); S.nextLoc++; render(); },
+      locNext: function () { S.area = areaFor(S.locVal); if (!S.area) return; S.loc = S.locVal; go('mode'); }, toLoc: function () { go('loc'); },
+      mode: function (el) { S.mode = el.dataset.m; S.items = S.drafts[S.loc] || []; S.codeVal = ''; S.qtyVal = ''; go('main'); },
+      setmode: function (el) { S.mode = el.dataset.m; S.flash = null; render(); }, toMode: function () { go('mode'); },
+      scan: function () {
+        fire(); var c = cl(), d = c.demo[S.demoIdx++ % c.demo.length];
+        if (S.mode === 'single') { var q = addItem(d[0], 1); S.flash = { t: '+1 · ' + d[0], s: (d[1] || 'No description on file') + ' — now ' + q }; S.codeVal = ''; }
+        else { S.codeVal = d[0]; S.flash = { t: 'Scanned ' + d[0], s: (d[1] || 'No description on file') + ' — enter the quantity' }; S.qtyVal = ''; }
+        render();
+        if (S.mode === 'multi') { var n = root.querySelector('[data-f="qtyVal"]'); if (n) n.focus(); }
+      },
+      save: function () {
+        var code = S.codeVal.trim(); if (!code) { S.flash = { t: 'Enter or scan a barcode first', warn: true }; return render(); }
+        if (S.mode === 'single') { var q = addItem(code, 1); S.flash = { t: '+1 · ' + code, s: 'now ' + q }; S.codeVal = ''; return render(); }
+        var qty = parseInt(S.qtyVal, 10); if (!(qty > 0)) { S.flash = { t: 'Enter a quantity', warn: true }; return render(); }
+        S.modal = { code: code, qty: qty, desc: lookup(code) }; render();
+      },
+      yes: function () { var m = S.modal; S.modal = null; var q = addItem(m.code, m.qty); S.flash = { t: 'Saved · ' + m.code, s: m.qty + ' added — line total ' + q }; S.codeVal = ''; S.qtyVal = ''; render(); },
+      no: function () { S.modal = null; render(); },
+      rm: function (el) { S.items.splice(+el.dataset.i, 1); render(); },
+      chg: function () { if (S.items.length) { S.drafts[S.loc] = S.items; toast('Location ' + S.loc + ' left open — saved on device'); } S.locVal = ''; S.items = []; go('loc'); },
+      toComplete: function () { go('complete'); }, toMain: function () { go('main'); },
+      complete: function () {
+        S.done.push({ loc: S.loc, area: S.area, qty: total(S.items), lines: S.items.map(function (x) { return [x.code, x.qty, x.desc]; }), synced: false });
+        delete S.drafts[S.loc]; var l = S.loc; S.items = []; S.locVal = ''; S.nextLoc = Math.max(S.nextLoc, parseInt(l, 10) + 1); S.screen = 'loc'; toast('Location ' + l + ' completed — saved on device'); render();
+      },
+      goSync: function () { S.syncBack = S.screen; S.syncState = 'idle'; go('sync'); },
+      toBack: function () { go(S.syncBack || 'history'); },
+      doSync: function () {
+        S.syncState = 'busy'; render();
+        setTimeout(function () {
+          var n = pending().length + S.extra.locs;
+          pending().forEach(function (d) { d.synced = true; if (S.hist) S.hist.push({ loc: d.loc, area: d.area, status: 'DONE', qty: d.qty, count: d.lines.length, lines: d.lines.slice(0, 5) }); });
+          S.extra = { locs: 0, recs: 0 }; S.syncState = 'done'; toast(n + ' location' + (n === 1 ? '' : 's') + ' synced to the laptop'); render();
+        }, 1500);
+      }
+    };
+
+    root.addEventListener('click', function (e) { var el = e.target.closest('[data-a]'); if (el && root.contains(el) && A[el.dataset.a]) A[el.dataset.a](el); });
+    root.addEventListener('input', function (e) { var f = e.target.dataset && e.target.dataset.f; if (!f) return; S[f] = e.target.value; if (f === 'locVal') render(); });
+    root.addEventListener('keydown', function (e) { if (e.key !== 'Enter') return; var f = e.target.dataset && e.target.dataset.f; if (f === 'user') A.login(); else if (f === 'locVal' && areaFor(S.locVal)) A.locNext(); else if (f === 'codeVal' || f === 'qtyVal') A.save(); });
+    render();
+    return { state: S, go: go };
+  }
+
+  /* screens.html presets: each phone starts in a realistic mid-flow state */
+  function applyPreset(S, p) {
+    var c = D.clients[0];
+    S.client = 'pav'; S.hist = clone(c.history); S.area = c.areas[0]; S.loc = c.nextLoc; S.locVal = (p === 'loc') ? '2004' : ''; S.nextLoc = parseInt(c.nextLoc, 10);
+    var mk = function (n, qs) { return c.demo.slice(0, n).map(function (d, i) { return { code: d[0], qty: qs[i], desc: '' }; }); };
+    if (p === 'history') S.open = { '2003': true };
+    if (p === 'loc') S.locVal = '2004';
+    if (p === 'main-single') { S.mode = 'single'; S.items = mk(3, [1, 2, 1]); S.flash = { t: '+1 · ' + c.demo[2][0], s: 'No description on file — now 1' }; }
+    if (p === 'main-multi') { S.mode = 'multi'; S.items = mk(3, [3, 5, 6]); S.codeVal = c.demo[3][0]; S.qtyVal = '3'; S.modal = { code: c.demo[3][0], qty: 3, desc: '' }; }
+    if (p === 'complete') { S.mode = 'multi'; S.items = mk(6, [3, 5, 6, 2, 8, 4]); }
+    if (p === 'sync') { S.extra = { locs: 8, recs: 42 }; }
+  }
+  window.createApp = createApp;
+})();
+
+</script>
+  <script>createApp(document.getElementById('app'));</script>
+</body>
+</html>

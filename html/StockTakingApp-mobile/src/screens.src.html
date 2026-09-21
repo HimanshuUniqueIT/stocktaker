@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stock Take App — All Screens</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+  <div class="board">
+    <h1>Stock Take App — all screens</h1>
+    <p>The handheld counter’s journey, top to bottom: login, pick a client, review history, scan the location (the area comes from the admin panel), pick single or multi scan, count, complete, and sync to the laptop. Every phone below is live — tap through it. Data is real (Pavers, Stratford City, The Conran Shop).</p>
+    <div class="grid" id="grid"></div>
+  </div>
+  <script src="assets/data.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    var S = [
+      ['login', '', 'Login', 'Username only, plus device ID and battery'],
+      ['list', '', 'Stock take list', 'Select a client to continue'],
+      ['history', 'history', 'History', 'Synced locations — DONE / OPEN'],
+      ['loc', 'loc', 'Enter location', 'Area is found automatically from the code'],
+      ['mode', 'mode', 'Scan type', 'Single (+1) or Multi (asks qty)'],
+      ['main', 'main-single', 'Scan screen — single', 'SCAN auto adds +1'],
+      ['main', 'main-multi', 'Scan screen — multi', 'Confirm save sheet before adding'],
+      ['complete', 'complete', 'Complete location', 'Check totals, then finish'],
+      ['sync', 'sync', 'Sync data', 'Manual — never automatic']
+    ];
+    var g = document.getElementById('grid');
+    S.forEach(function (s, i) {
+      var cell = document.createElement('div'); cell.className = 'cell';
+      cell.innerHTML = '<div class="device"></div><div class="cap"><b><span class="n">' + (i + 1) + '</span>' + s[2] + '</b><span>' + s[3] + '</span></div>';
+      g.appendChild(cell);
+      var a = createApp(cell.firstChild, { screen: s[0], preset: s[1] || undefined });
+      if (s[0] === 'list') { a.state.client = null; }
+    });
+  </script>
+</body>
+</html>
