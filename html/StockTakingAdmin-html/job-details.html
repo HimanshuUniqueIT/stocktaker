@@ -436,70 +436,26 @@
                 barcodes</span>
             </div>
 
-            <!-- Mode Selector: Use Existing Area vs + Add New Area -->
+            <!-- Area & Location Generator Container -->
             <div class="space-y-4">
-              <div class="flex items-center gap-2">
-                <button type="button" onclick="setAreaMode('existing')" id="area-mode-btn-existing"
-                  class="area-mode-btn px-4 py-2 rounded-lg text-xs font-bold bg-blue-600 text-white transition-colors shadow-2xs">
-                  Use Existing Area
-                </button>
-                <button type="button" onclick="setAreaMode('new')" id="area-mode-btn-new"
-                  class="area-mode-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
-                  + Add New Area
+              <!-- Action Button: + Add Area -->
+              <div class="flex items-center justify-between">
+                <button type="button" onclick="addNewAreaRow()" id="btn-add-area"
+                  class="px-4 py-2 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors flex items-center gap-1.5 shadow-2xs">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  <span>Add Area</span>
                 </button>
               </div>
 
-              <!-- Option A: Use Existing Area Form -->
-              <div id="area-existing-block" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label for="loc-area-select" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Selected Area
-                  </label>
-                  <select id="loc-area-select"
-                    class="w-full h-9 text-xs font-semibold px-3 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800"></select>
-                </div>
-                <div>
-                  <label for="loc-start-num" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Start Location #
-                  </label>
-                  <input type="number" id="loc-start-num" value="9021" min="1" step="1"
-                    class="w-full h-9 text-xs font-mono font-semibold px-3 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                </div>
-                <div>
-                  <label for="loc-end-num" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                    End Location #
-                  </label>
-                  <input type="number" id="loc-end-num" value="9035" min="1" step="1"
-                    class="w-full h-9 text-xs font-mono font-semibold px-3 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                </div>
-              </div>
-
-              <!-- Option B: Add New Area Form (Toggled) -->
-              <div id="area-new-block" class="hidden p-4 bg-blue-50/70 border border-blue-200 rounded-xl space-y-3">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
-                  <div class="sm:col-span-2">
-                    <label for="new-area-name" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                      Enter New Area Name
-                    </label>
-                    <input type="text" id="new-area-name" placeholder="e.g. Area 3 - Back Office"
-                      class="w-full h-9 text-xs font-semibold px-3 bg-white border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800" />
-                  </div>
-                  <div>
-                    <button type="button" onclick="handleAddNewArea()"
-                      class="w-full h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2.5">
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                      </svg>
-                      <span>Save & Select Area</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <!-- Container for dynamic Area input rows -->
+              <div id="area-rows-container" class="space-y-3"></div>
 
               <!-- Generate Locations Button -->
-              <div class="pt-2 flex justify-end border-t border-slate-100">
+              <div class="pt-3 flex justify-end border-t border-slate-100">
                 <button type="button" onclick="handleCreateLocations()"
                   class="px-5 h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2 shadow-2xs">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -513,16 +469,18 @@
             </div>
           </div>
 
-          <!-- 2. GENERATED LOCATIONS TABLE -->
+          <!-- 2. GENERATED LOCATIONS SECTION WITH AREA-WISE ACCORDIONS -->
           <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
             <div
               class="px-4 py-3 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-                <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">Generated Locations</h3>
+                <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">Generated Locations
+                </h3>
                 <span id="loc-count-badge"
-                  class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">5
-                  Locations</span>
+                  class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">
+                  0 Locations
+                </span>
               </div>
               <div class="relative">
                 <svg class="absolute left-2.5 top-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="14"
@@ -536,27 +494,13 @@
               </div>
             </div>
 
-            <div class="overflow-x-auto custom-scrollbar">
-              <table class="w-full text-xs text-left border-collapse" id="generated-locations-table">
-                <thead>
-                  <tr
-                    class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px] select-none">
-                    <th class="py-2 px-4 w-12 text-center border-r border-slate-200">#</th>
-                    <th class="py-2 px-4 border-r border-slate-200">AREA</th>
-                    <th class="py-2 px-4 text-center border-r border-slate-200">LOCATION #</th>
-                    <th class="py-2 px-4 border-r border-slate-200">LOCATION BARCODE</th>
-                    <th class="py-2 px-4 text-center border-r border-slate-200">STATUS</th>
-                    <th class="py-2 px-4 text-center no-print">ACTIONS</th>
-                  </tr>
-                </thead>
-                <tbody id="generated-locations-tbody" class="divide-y divide-slate-100">
-                  <tr id="generated-locations-empty-row" class="hidden">
-                    <td colspan="6" class="py-8 text-center text-slate-400 text-xs font-medium">No locations generated
-                      yet. Set a range above and click "Create Locations".</td>
-                  </tr>
-                </tbody>
-              </table>
+            <!-- Empty State Placeholder -->
+            <div id="generated-locations-empty-row" class="p-8 text-center text-slate-400 text-xs font-medium">
+              No locations generated yet. Set area ranges above and click "Create Locations".
             </div>
+
+            <!-- Container for Area Accordions -->
+            <div id="area-accordions-container" class="divide-y divide-slate-200"></div>
           </div>
         </div>
         <!-- END TAB PANE 1: LOCATION SETUP -->
@@ -613,8 +557,8 @@
                     </div>
                     <div class="p-2 bg-white rounded border border-slate-200 flex flex-col justify-between">
                       <span class="text-slate-500 text-[10.5px] font-medium">Not On File Qty/Count:</span>
-                      <span class="font-mono font-semibold text-slate-700 text-xs"><strong
-                          class="text-blue-700" id="stat-nof-qty">0</strong> / <span id="stat-nof-total">0</span></span>
+                      <span class="font-mono font-semibold text-slate-700 text-xs"><strong class="text-blue-700"
+                          id="stat-nof-qty">0</strong> / <span id="stat-nof-total">0</span></span>
                     </div>
                   </div>
                 </div>
@@ -658,8 +602,7 @@
                 </div>
 
                 <!-- 3. ACTIVESYNC SYSTEM & HARDWARE TERMINAL LOGS BOX -->
-                <div
-                  class="bg-slate-50/70 border border-slate-200 rounded-lg overflow-hidden flex flex-col">
+                <div class="bg-slate-50/70 border border-slate-200 rounded-lg overflow-hidden flex flex-col">
                   <div class="flex items-center justify-between px-2.5 pt-2.5 pb-1.5 border-b border-slate-200/80">
                     <div class="flex items-center gap-1.5">
                       <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
@@ -733,271 +676,281 @@
             </div>
           </div>
 
-        <!-- ══════════════════════════════════════════════════════════
+          <!-- ══════════════════════════════════════════════════════════
              4. MAIN LOCATION STOCKTAKING PROGRESS & INLINE EDIT TABLE
         ══════════════════════════════════════════════════════════ -->
-        <div
-          class="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-xs flex-1 flex flex-col min-h-[450px]">
-
-          <!-- Primary Header for Location Stocktaking Progress -->
-          <div onclick="toggleStocktakeAccordion('sec-location-progress-body', this)"
-            class="px-3.5 py-2 bg-white border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 shrink-0 cursor-pointer hover:bg-slate-50 transition-colors select-none">
-            <div class="flex items-center gap-2 shrink-0">
-              <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-              <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">LOCATION STOCKTAKING
-                PROGRESS
-                DIRECTORY</h3>
-            </div>
-
-            <div class="flex flex-wrap items-center gap-2 no-print" onclick="event.stopPropagation()">
-              <!-- Search Input -->
-              <div class="relative">
-                <svg class="absolute left-2.5 top-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="14"
-                  height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-                <input type="text" id="table-search-input" placeholder="Search Location, User, Device ID..."
-                  onkeyup="filterLocationTable()"
-                  class="w-44 sm:w-64 h-8 pl-8 pr-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" />
-              </div>
-
-              <!-- Status Filter Radio Group -->
-              <div class="flex items-center gap-2 h-8 px-2.5 bg-white border border-slate-300 rounded-md">
-                <label class="flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs font-semibold text-slate-700">
-                  <input type="radio" name="table-status-filter" value="all" checked onchange="filterLocationTable()"
-                    class="w-3 h-3 text-blue-600 focus:ring-1 focus:ring-blue-500 border-slate-300">
-                  <span>All</span>
-                </label>
-                <label class="flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs font-semibold text-slate-700">
-                  <input type="radio" name="table-status-filter" value="Complete" onchange="filterLocationTable()"
-                    class="w-3 h-3 text-blue-600 focus:ring-1 focus:ring-blue-500 border-slate-300">
-                  <span>Complete</span>
-                </label>
-                <label class="flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs font-semibold text-slate-700">
-                  <input type="radio" name="table-status-filter" value="Waiting" onchange="filterLocationTable()"
-                    class="w-3 h-3 text-blue-600 focus:ring-1 focus:ring-blue-500 border-slate-300">
-                  <span>Waiting</span>
-                </label>
-              </div>
-            </div>
-
-            <svg class="accord-chevron rotate-180 transition-transform duration-200 shrink-0" xmlns="http://www.w3.org/2000/svg"
-              width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </div>
-
-          <div id="sec-location-progress-body" class="contents">
-
-          <!-- Main Location Progress Table with Accordion & Inline Editing (EXCEL GRID STYLED) -->
-          <div class="overflow-x-auto custom-scrollbar flex-1">
-            <table class="w-full text-xs text-left border-collapse border border-slate-200"
-              id="location-progress-table">
-              <thead>
-                <tr
-                  class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-xs select-none">
-                  <th class="py-2 px-3 w-12 text-center border-r border-slate-200">PRODUCTS</th>
-                  <th class="py-2 px-3 min-w-[190px] border-r border-slate-200">DEVICE ID</th>
-                  <th class="py-2 px-3 min-w-[120px] border-r border-slate-200">USER NAME</th>
-                  <th class="py-2 px-3 min-w-[100px] border-r border-slate-200 text-center">LOCATION #</th>
-                  <th class="py-2 px-3 min-w-[130px] border-r border-slate-200 text-center">LOCATION BARCODE</th>
-                  <th class="py-2 px-3 min-w-[110px] border-r border-slate-200 text-center">STATUS</th>
-                  <th class="py-2 px-3 min-w-[90px] border-r border-slate-200 text-right">QTY</th>
-                  <th class="py-2 px-3 min-w-[140px] border-r border-slate-200">TIME STARTED</th>
-                  <th class="py-2 px-3 w-16 text-center border-r border-slate-200">PRINTED</th>
-                  <th class="py-2 px-3 w-16 text-center border-r border-slate-200">DUPLICATE</th>
-                  <th class="py-2 px-3 w-16 text-center">CHANGED</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-200 font-mono text-xs" id="location-tbody"></tbody>
-            </table>
-          </div>
-
-          <!-- Table Footer Pagination -->
           <div
-            class="p-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-600 no-print">
-            <span class="font-mono text-slate-500">Total Complete Locations: <strong
-                class="text-emerald-700" id="foot-complete">0</strong> | Waiting: <strong class="text-amber-700" id="foot-waiting">0</strong></span>
-            <div class="flex items-center gap-2">
-              <button type="button"
-                class="px-3 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100 text-slate-700 font-semibold disabled:opacity-50">Previous</button>
-              <span class="font-semibold text-slate-800">Page 1 of 1</span>
-              <button type="button"
-                class="px-3 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100 text-slate-700 font-semibold">Next</button>
-            </div>
-          </div>
+            class="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-xs flex-1 flex flex-col min-h-[450px]">
 
-          </div>
-          <!-- END sec-location-progress-body -->
-        </div>
-      </div>
-      <!-- END TAB PANE 2: STOCK TAKE -->
-
-      <!-- TAB PANE 3: IMPORT / EXPORT -->
-      <div id="tab-pane-import-export" class="job-tab-pane hidden space-y-3">
-
-        <!-- 1. CURRENT DATA DIRECTORY (LIVE STOCKTAKE DATA TABLE) -->
-        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
-          <div
-            class="px-3.5 py-2.5 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-              <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">Current Data</h3>
-              <span id="current-data-count-badge"
-                class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">
-                0 Items
-              </span>
-            </div>
-
-            <!-- Toolbar / Search / Group Filter -->
-            <div class="flex items-center gap-2">
-              <div class="relative w-48 sm:w-64">
-                <svg class="absolute left-2.5 top-2.5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="13"
-                  height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-                <input type="text" id="current-data-search" onkeyup="filterCurrentDataTable()"
-                  placeholder="Search Device ID, Location..."
-                  class="w-full h-8 pl-8 pr-2.5 text-xs bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" />
+            <!-- Primary Header for Location Stocktaking Progress -->
+            <div onclick="toggleStocktakeAccordion('sec-location-progress-body', this)"
+              class="px-3.5 py-2 bg-white border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 shrink-0 cursor-pointer hover:bg-slate-50 transition-colors select-none">
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">LOCATION STOCKTAKING
+                  PROGRESS
+                  DIRECTORY</h3>
               </div>
-              <select id="current-data-group-filter" onchange="filterCurrentDataTable()"
-                class="h-8 px-2.5 text-xs bg-white border border-slate-300 rounded-md font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                <option value="all">Group Filter (All)</option>
-                
-              </select>
-            </div>
-          </div>
 
-          <div class="overflow-x-auto custom-scrollbar max-h-[220px]">
-            <table id="current-data-table" class="w-full text-xs text-left border-collapse border border-slate-200">
-              <thead
-                class="bg-slate-100 text-slate-700 font-bold text-xs uppercase tracking-wider sticky top-0 border-b border-slate-200 select-none">
-                <tr>
-                  <th class="py-2 px-3 w-10 text-center border-r border-slate-200">
-                    <input type="checkbox" onchange="toggleSelectAllCurrentRows(this)"
-                      class="h-3.5 w-3.5 rounded text-blue-600 focus:ring-blue-500" />
-                  </th>
-                  <th class="py-2 px-3 min-w-[180px] border-r border-slate-200">Area</th>
-                  <th class="py-2 px-3 min-w-[140px] border-r border-slate-200">Location</th>
-                  <th class="py-2 px-3 min-w-[90px] border-r border-slate-200 text-right">Qty</th>
-                  <th class="py-2 px-3 min-w-[140px]">Group</th>
-                </tr>
-              </thead>
-              <tbody id="current-data-tbody" class="divide-y divide-slate-200 font-mono text-xs bg-white"></tbody>
-            </table>
+              <div class="flex flex-wrap items-center gap-2 no-print" onclick="event.stopPropagation()">
+                <!-- Search Input -->
+                <div class="relative">
+                  <svg class="absolute left-2.5 top-2 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="14"
+                    height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <input type="text" id="table-search-input" placeholder="Search Location, User, Device ID..."
+                    onkeyup="filterLocationTable()"
+                    class="w-44 sm:w-64 h-8 pl-8 pr-3 text-xs sm:text-sm bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                </div>
+
+                <!-- Status Filter Radio Group -->
+                <div class="flex items-center gap-2 h-8 px-2.5 bg-white border border-slate-300 rounded-md">
+                  <label
+                    class="flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs font-semibold text-slate-700">
+                    <input type="radio" name="table-status-filter" value="all" checked onchange="filterLocationTable()"
+                      class="w-3 h-3 text-blue-600 focus:ring-1 focus:ring-blue-500 border-slate-300">
+                    <span>All</span>
+                  </label>
+                  <label
+                    class="flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs font-semibold text-slate-700">
+                    <input type="radio" name="table-status-filter" value="Complete" onchange="filterLocationTable()"
+                      class="w-3 h-3 text-blue-600 focus:ring-1 focus:ring-blue-500 border-slate-300">
+                    <span>Complete</span>
+                  </label>
+                  <label
+                    class="flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs font-semibold text-slate-700">
+                    <input type="radio" name="table-status-filter" value="Waiting" onchange="filterLocationTable()"
+                      class="w-3 h-3 text-blue-600 focus:ring-1 focus:ring-blue-500 border-slate-300">
+                    <span>Waiting</span>
+                  </label>
+                </div>
+              </div>
+
+              <svg class="accord-chevron rotate-180 transition-transform duration-200 shrink-0"
+                xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+
+            <div id="sec-location-progress-body" class="contents">
+
+              <!-- Main Location Progress Table with Accordion & Inline Editing (EXCEL GRID STYLED) -->
+              <div class="overflow-x-auto custom-scrollbar flex-1">
+                <table class="w-full text-xs text-left border-collapse border border-slate-200"
+                  id="location-progress-table">
+                  <thead>
+                    <tr
+                      class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-xs select-none">
+                      <th class="py-2 px-3 w-12 text-center border-r border-slate-200">PRODUCTS</th>
+                      <th class="py-2 px-3 min-w-[190px] border-r border-slate-200">DEVICE ID</th>
+                      <th class="py-2 px-3 min-w-[120px] border-r border-slate-200">USER NAME</th>
+                      <th class="py-2 px-3 min-w-[100px] border-r border-slate-200 text-center">LOCATION #</th>
+                      <th class="py-2 px-3 min-w-[130px] border-r border-slate-200 text-center">LOCATION BARCODE</th>
+                      <th class="py-2 px-3 min-w-[110px] border-r border-slate-200 text-center">STATUS</th>
+                      <th class="py-2 px-3 min-w-[90px] border-r border-slate-200 text-right">QTY</th>
+                      <th class="py-2 px-3 min-w-[140px] border-r border-slate-200">TIME STARTED</th>
+                      <th class="py-2 px-3 w-16 text-center border-r border-slate-200">PRINTED</th>
+                      <th class="py-2 px-3 w-16 text-center border-r border-slate-200">DUPLICATE</th>
+                      <th class="py-2 px-3 w-16 text-center">CHANGED</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200 font-mono text-xs" id="location-tbody"></tbody>
+                </table>
+              </div>
+
+              <!-- Table Footer Pagination -->
+              <div
+                class="p-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-600 no-print">
+                <span class="font-mono text-slate-500">Total Complete Locations: <strong class="text-emerald-700"
+                    id="foot-complete">0</strong> | Waiting: <strong class="text-amber-700"
+                    id="foot-waiting">0</strong></span>
+                <div class="flex items-center gap-2">
+                  <button type="button"
+                    class="px-3 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100 text-slate-700 font-semibold disabled:opacity-50">Previous</button>
+                  <span class="font-semibold text-slate-800">Page 1 of 1</span>
+                  <button type="button"
+                    class="px-3 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100 text-slate-700 font-semibold">Next</button>
+                </div>
+              </div>
+
+            </div>
+            <!-- END sec-location-progress-body -->
           </div>
         </div>
+        <!-- END TAB PANE 2: STOCK TAKE -->
 
-        <!-- 2. IMPORTED DATA (STAGING DIRECTORY TABLE) -->
-        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
-          <div
-            class="px-3.5 py-2.5 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
-              <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">Imported Data</h3>
-              <span id="imported-data-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200">Staging Buffer (0 Batches)</span>
-            </div>
+        <!-- TAB PANE 3: IMPORT / EXPORT -->
+        <div id="tab-pane-import-export" class="job-tab-pane hidden space-y-3">
 
-            <div class="flex items-center gap-2">
-              <div class="relative w-48 sm:w-64">
-                <svg class="absolute left-2.5 top-2.5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="13"
-                  height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-                <input type="text" id="imported-data-search" onkeyup="filterImportedDataTable()"
-                  placeholder="Search Device / File Name..."
-                  class="w-full h-8 pl-8 pr-2.5 text-xs bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" />
+          <!-- 1. CURRENT DATA DIRECTORY (LIVE STOCKTAKE DATA TABLE) -->
+          <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+            <div
+              class="px-3.5 py-2.5 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">Current Data</h3>
+                <span id="current-data-count-badge"
+                  class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">
+                  0 Items
+                </span>
+              </div>
+
+              <!-- Toolbar / Search / Group Filter -->
+              <div class="flex items-center gap-2">
+                <div class="relative w-48 sm:w-64">
+                  <svg class="absolute left-2.5 top-2.5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="13"
+                    height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <input type="text" id="current-data-search" onkeyup="filterCurrentDataTable()"
+                    placeholder="Search Device ID, Location..."
+                    class="w-full h-8 pl-8 pr-2.5 text-xs bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                </div>
+                <select id="current-data-group-filter" onchange="filterCurrentDataTable()"
+                  class="h-8 px-2.5 text-xs bg-white border border-slate-300 rounded-md font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                  <option value="all">Group Filter (All)</option>
+
+                </select>
               </div>
             </div>
+
+            <div class="overflow-x-auto custom-scrollbar max-h-[220px]">
+              <table id="current-data-table" class="w-full text-xs text-left border-collapse border border-slate-200">
+                <thead
+                  class="bg-slate-100 text-slate-700 font-bold text-xs uppercase tracking-wider sticky top-0 border-b border-slate-200 select-none">
+                  <tr>
+                    <th class="py-2 px-3 w-10 text-center border-r border-slate-200">
+                      <input type="checkbox" onchange="toggleSelectAllCurrentRows(this)"
+                        class="h-3.5 w-3.5 rounded text-blue-600 focus:ring-blue-500" />
+                    </th>
+                    <th class="py-2 px-3 min-w-[180px] border-r border-slate-200">Area</th>
+                    <th class="py-2 px-3 min-w-[140px] border-r border-slate-200">Location</th>
+                    <th class="py-2 px-3 min-w-[90px] border-r border-slate-200 text-right">Qty</th>
+                    <th class="py-2 px-3 min-w-[140px]">Group</th>
+                  </tr>
+                </thead>
+                <tbody id="current-data-tbody" class="divide-y divide-slate-200 font-mono text-xs bg-white"></tbody>
+              </table>
+            </div>
           </div>
 
-          <div class="overflow-x-auto custom-scrollbar min-h-[160px] max-h-[200px]">
-            <table id="imported-data-table" class="w-full text-xs text-left border-collapse border border-slate-200">
-              <thead
-                class="bg-slate-100 text-slate-700 font-bold text-xs uppercase tracking-wider sticky top-0 border-b border-slate-200 select-none">
-                <tr>
-                  <th class="py-2 px-3 w-10 text-center border-r border-slate-200">
-                    <input type="checkbox" onchange="toggleSelectAllImportedRows(this)"
-                      class="h-3.5 w-3.5 rounded text-blue-600 focus:ring-blue-500" />
-                  </th>
-                  <th class="py-2 px-3 min-w-[180px] border-r border-slate-200">Area</th>
-                  <th class="py-2 px-3 min-w-[140px] border-r border-slate-200">Location</th>
-                  <th class="py-2 px-3 min-w-[90px] border-r border-slate-200 text-right">Qty</th>
-                  <th class="py-2 px-3 min-w-[140px]">Group</th>
-                </tr>
-              </thead>
-              <tbody id="imported-data-tbody" class="divide-y divide-slate-200 font-mono text-xs bg-white"></tbody>
-            </table>
+          <!-- 2. IMPORTED DATA (STAGING DIRECTORY TABLE) -->
+          <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+            <div
+              class="px-3.5 py-2.5 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
+                <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900">Imported Data</h3>
+                <span id="imported-data-count-badge"
+                  class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200">Staging
+                  Buffer (0 Batches)</span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <div class="relative w-48 sm:w-64">
+                  <svg class="absolute left-2.5 top-2.5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="13"
+                    height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <input type="text" id="imported-data-search" onkeyup="filterImportedDataTable()"
+                    placeholder="Search Device / File Name..."
+                    class="w-full h-8 pl-8 pr-2.5 text-xs bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                </div>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto custom-scrollbar min-h-[160px] max-h-[200px]">
+              <table id="imported-data-table" class="w-full text-xs text-left border-collapse border border-slate-200">
+                <thead
+                  class="bg-slate-100 text-slate-700 font-bold text-xs uppercase tracking-wider sticky top-0 border-b border-slate-200 select-none">
+                  <tr>
+                    <th class="py-2 px-3 w-10 text-center border-r border-slate-200">
+                      <input type="checkbox" onchange="toggleSelectAllImportedRows(this)"
+                        class="h-3.5 w-3.5 rounded text-blue-600 focus:ring-blue-500" />
+                    </th>
+                    <th class="py-2 px-3 min-w-[160px] border-r border-slate-200">Area</th>
+                    <th class="py-2 px-3 min-w-[140px] border-r border-slate-200">Location</th>
+                    <th class="py-2 px-3 min-w-[80px] border-r border-slate-200 text-right">Qty</th>
+                    <th class="py-2 px-3 min-w-[120px] border-r border-slate-200">Group</th>
+                    <th class="py-2 px-3 text-center no-print w-24">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="imported-data-tbody" class="divide-y divide-slate-200 font-mono text-xs bg-white"></tbody>
+              </table>
+            </div>
           </div>
+
+          <!-- 3. BOTTOM CONTROL ACTION BAR (IMPORT DATA | MERGE DATA | EXPORT DATA) -->
+          <div
+            class="bg-white border border-slate-200 rounded-xl p-3 shadow-2xs flex flex-wrap items-center justify-between gap-3 no-print">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button type="button" title="Use when a handheld could not sync over the local network"
+                onclick="openImportModal('device')"
+                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                <span>Import Device File</span>
+              </button>
+              <button type="button" title="Bring in the full stock take file exported from another laptop"
+                onclick="openImportModal('laptop')"
+                class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                <span>Import Laptop File</span>
+              </button>
+
+              <button type="button" onclick="handleMergeData()"
+                class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2.5">
+                  <path d="M16 3h5v5" />
+                  <path d="M8 3H3v5" />
+                  <path d="M21 3l-7 7" />
+                  <path d="M3 3l7 7" />
+                  <path d="M16 21h5v-5" />
+                  <path d="M8 21H3v-5" />
+                </svg>
+                <span>Merge Data</span>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="handleExportData()"
+                class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span>Export Data</span>
+              </button>
+            </div>
+          </div>
+
         </div>
 
-        <!-- 3. BOTTOM CONTROL ACTION BAR (IMPORT DATA | MERGE DATA | EXPORT DATA) -->
-        <div
-          class="bg-white border border-slate-200 rounded-xl p-3 shadow-2xs flex flex-wrap items-center justify-between gap-3 no-print">
-          <div class="flex flex-wrap items-center gap-2.5">
-            <button type="button" title="Use when a handheld could not sync over the local network" onclick="openImportModal('device')"
-              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2.5">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-              <span>Import Device File</span>
-            </button>
-            <button type="button" title="Bring in the full stock take file exported from another laptop" onclick="openImportModal('laptop')"
-              class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2.5">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-              <span>Import Laptop File</span>
-            </button>
-
-            <button type="button" onclick="handleMergeData()"
-              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2.5">
-                <path d="M16 3h5v5" />
-                <path d="M8 3H3v5" />
-                <path d="M21 3l-7 7" />
-                <path d="M3 3l7 7" />
-                <path d="M16 21h5v-5" />
-                <path d="M8 21H3v-5" />
-              </svg>
-              <span>Merge Data</span>
-            </button>
+        <!-- Footer -->
+        <footer id="main-footer" role="contentinfo"
+          class="shrink-0 border-t border-slate-200 bg-white px-4 sm:px-6 lg:px-8 py-3.5 mt-auto no-print">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-xs text-slate-500">
+            <span>© 2026 Admin Panel — Stocktake Real-Time Engine</span>
+            <span>Version 2.4.0</span>
           </div>
-
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="handleExportData()"
-              class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2.5">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              <span>Export Data</span>
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Footer -->
-      <footer id="main-footer" role="contentinfo"
-        class="shrink-0 border-t border-slate-200 bg-white px-4 sm:px-6 lg:px-8 py-3.5 mt-auto no-print">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-xs text-slate-500">
-          <span>© 2026 Admin Panel — Stocktake Real-Time Engine</span>
-          <span>Version 2.4.0</span>
-        </div>
-      </footer>
+        </footer>
     </main>
 
   </div>
@@ -1016,7 +969,8 @@
       <div class="p-5 space-y-4">
         <div
           class="p-6 border-2 border-dashed border-blue-300 rounded-xl bg-blue-50/50 text-center cursor-pointer hover:border-blue-500 transition-all">
-          <input type="file" id="modal-file-input" multiple class="hidden" accept=".txt,.dat,.csv" onchange="handleFileSelected(this)" />
+          <input type="file" id="modal-file-input" multiple class="hidden" accept=".txt,.dat,.csv"
+            onchange="handleFileSelected(this)" />
           <label for="modal-file-input" class="cursor-pointer block">
             <svg class="mx-auto text-blue-600 mb-2" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1025,7 +979,8 @@
               <line x1="12" y1="3" x2="12" y2="15" />
             </svg>
             <span class="text-xs font-bold text-slate-800 block">Click to select handheld device data file</span>
-            <span class="text-[11px] text-slate-500 block mt-1">For a handheld that could not sync over the local network &bull; DAT, TXT, CSV</span>
+            <span class="text-[11px] text-slate-500 block mt-1">For a handheld that could not sync over the local
+              network &bull; DAT, TXT, CSV</span>
           </label>
         </div>
         <div id="file-selection-name" class="hidden p-3 bg-slate-100 rounded-lg text-xs font-mono text-slate-700"></div>
@@ -1069,72 +1024,237 @@
       }
     }
 
-    // Location Setup Area Mode Switcher
-    function setAreaMode(mode) {
-      const existingBlock = document.getElementById('area-existing-block');
-      const newBlock = document.getElementById('area-new-block');
-      const btnExisting = document.getElementById('area-mode-btn-existing');
-      const btnNew = document.getElementById('area-mode-btn-new');
+    // Area Rows Management for Location Setup
+    let areaRowCounter = 0;
 
-      if (mode === 'new') {
-        if (existingBlock) existingBlock.classList.add('hidden');
-        if (newBlock) newBlock.classList.remove('hidden');
-        if (btnNew) btnNew.className = 'area-mode-btn px-4 py-2 rounded-lg text-xs font-bold bg-blue-600 text-white transition-colors shadow-2xs';
-        if (btnExisting) btnExisting.className = 'area-mode-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors';
-      } else {
-        if (newBlock) newBlock.classList.add('hidden');
-        if (existingBlock) existingBlock.classList.remove('hidden');
-        if (btnExisting) btnExisting.className = 'area-mode-btn px-4 py-2 rounded-lg text-xs font-bold bg-blue-600 text-white transition-colors shadow-2xs';
-        if (btnNew) btnNew.className = 'area-mode-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors';
-      }
+    function createAreaRowHtml(id, areaName = '', startNum = 2008, endNum = 2102) {
+      return `
+        <div id="area-row-${id}" class="area-input-row p-3.5 bg-slate-50/80 border border-slate-200 rounded-xl space-y-2 transition-all">
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+            <div class="sm:col-span-5">
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+                Area Name
+              </label>
+              <input type="text" class="area-name-input w-full h-9 text-xs font-semibold px-3 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800"
+                placeholder="e.g. Area 1" value="${areaName}" />
+            </div>
+            <div class="sm:col-span-3">
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+                Start Location #
+              </label>
+              <input type="number" class="area-start-num w-full h-9 text-xs font-mono font-semibold px-3 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="2008" value="${startNum}" min="1" step="1" />
+            </div>
+            <div class="sm:col-span-3">
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+                End Location #
+              </label>
+              <input type="number" class="area-end-num w-full h-9 text-xs font-mono font-semibold px-3 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="2102" value="${endNum}" min="1" step="1" />
+            </div>
+            <div class="sm:col-span-1 flex justify-end">
+              <button type="button" onclick="removeAreaRow('${id}')" title="Remove Area"
+                class="remove-area-row-btn w-9 h-9 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 flex items-center justify-center transition-colors shadow-2xs">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18"/>
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
-    // Add New Area Handler
-    function handleAddNewArea() {
-      const input = document.getElementById('new-area-name');
-      const areaName = input ? input.value.trim() : '';
+    function addNewAreaRow(defaultAreaName, defaultStart, defaultEnd) {
+      const container = document.getElementById('area-rows-container');
+      if (!container) return;
+
+      areaRowCounter++;
+      const currentRows = container.querySelectorAll('.area-input-row').length;
+
+      let areaName = defaultAreaName;
+      let startNum = defaultStart;
+      let endNum = defaultEnd;
+
       if (!areaName) {
-        showToast('Please enter a valid Area Name', 'info');
-        return;
+        areaName = `Area ${currentRows + 1}`;
       }
-      const select = document.getElementById('loc-area-select');
-      if (select) {
-        const opt = document.createElement('option');
-        opt.value = areaName;
-        opt.textContent = areaName;
-        opt.selected = true;
-        select.appendChild(opt);
+
+      if (startNum === undefined || endNum === undefined) {
+        const lastRow = container.querySelector('.area-input-row:last-child');
+        if (lastRow) {
+          const lastEnd = parseInt(lastRow.querySelector('.area-end-num')?.value, 10);
+          if (!isNaN(lastEnd)) {
+            startNum = lastEnd + 1;
+            endNum = lastEnd + 50;
+          } else {
+            startNum = 2008;
+            endNum = 2102;
+          }
+        } else {
+          startNum = 2008;
+          endNum = 2102;
+        }
       }
-      input.value = '';
-      setAreaMode('existing');
-      showToast(`New Area "${areaName}" created and selected!`, 'success');
+
+      const rowId = 'row-' + Date.now() + '-' + areaRowCounter;
+      const div = document.createElement('div');
+      div.innerHTML = createAreaRowHtml(rowId, areaName, startNum, endNum);
+      const rowElem = div.firstElementChild;
+      container.appendChild(rowElem);
+
+      updateAreaRowDeleteButtons();
     }
 
-    // Sequential Location Generator
-    function handleCreateLocations() {
-      const select = document.getElementById('loc-area-select');
-      const area = select ? select.value : ((JOB.areas[0] || {}).name || 'Area 1');
-      const startNum = parseInt(document.getElementById('loc-start-num').value) || 9021;
-      const endNum = parseInt(document.getElementById('loc-end-num').value) || 9035;
+    function removeAreaRow(id) {
+      const row = document.getElementById(`area-row-${id}`);
+      if (row) {
+        row.remove();
+        updateAreaRowDeleteButtons();
+      }
+    }
 
-      if (endNum < startNum) {
-        showToast('End Location # must be greater than or equal to Start Location #', 'info');
+    function updateAreaRowDeleteButtons() {
+      const container = document.getElementById('area-rows-container');
+      if (!container) return;
+      const rows = container.querySelectorAll('.area-input-row');
+      rows.forEach(row => {
+        const btn = row.querySelector('.remove-area-row-btn');
+        if (btn) {
+          if (rows.length <= 1) {
+            btn.classList.add('opacity-40', 'cursor-not-allowed');
+            btn.disabled = true;
+          } else {
+            btn.classList.remove('opacity-40', 'cursor-not-allowed');
+            btn.disabled = false;
+          }
+        }
+      });
+    }
+
+    function initAreaRows() {
+      const container = document.getElementById('area-rows-container');
+      if (container && container.children.length === 0) {
+        if (typeof JOB !== 'undefined' && JOB && JOB.areas && JOB.areas.length > 0) {
+          JOB.areas.forEach(a => {
+            addNewAreaRow(a.name, parseInt(a.from, 10), parseInt(a.to, 10));
+          });
+        } else {
+          addNewAreaRow('Area 1', 2008, 2102);
+        }
+        handleCreateLocations();
+      }
+    }
+
+    // Initialize Area rows on script load & DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAreaRows);
+    } else {
+      setTimeout(initAreaRows, 0);
+    }
+
+    // Area Accordions & Locations Management
+    let areaAccordionsData = {};
+
+    function toggleAreaAccordion(areaId, event) {
+      if (event) event.stopPropagation();
+      const body = document.getElementById(`area-accordion-body-${areaId}`);
+      const chevron = document.getElementById(`area-chevron-${areaId}`);
+      if (!body) return;
+
+      const isHidden = body.classList.contains('hidden');
+      if (isHidden) {
+        body.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
+      } else {
+        body.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+      }
+    }
+
+    function enableAreaRangeEdit(areaId) {
+      const editPanel = document.getElementById(`area-range-edit-panel-${areaId}`);
+      if (editPanel) editPanel.classList.remove('hidden');
+      const body = document.getElementById(`area-accordion-body-${areaId}`);
+      const chevron = document.getElementById(`area-chevron-${areaId}`);
+      if (body && body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
+      }
+    }
+
+    function cancelAreaRangeEdit(areaId) {
+      const editPanel = document.getElementById(`area-range-edit-panel-${areaId}`);
+      if (editPanel) editPanel.classList.add('hidden');
+    }
+
+    function saveAreaRangeEdit(areaId) {
+      const nameInput = document.getElementById(`edit-area-name-${areaId}`);
+      const startInput = document.getElementById(`edit-area-start-${areaId}`);
+      const endInput = document.getElementById(`edit-area-end-${areaId}`);
+
+      const newName = nameInput?.value.trim() || 'Area';
+      const startNum = parseInt(startInput?.value, 10);
+      const endNum = parseInt(endInput?.value, 10);
+
+      if (isNaN(startNum) || isNaN(endNum) || endNum < startNum) {
+        showToast('Please enter a valid Start and End location range!', 'info');
         return;
       }
 
-      const tbody = document.getElementById('generated-locations-tbody');
+      // Update data store
+      if (areaAccordionsData[areaId]) {
+        areaAccordionsData[areaId].areaName = newName;
+        areaAccordionsData[areaId].startNum = startNum;
+        areaAccordionsData[areaId].endNum = endNum;
+      }
+
+      // Update Header Display
+      const titleEl = document.getElementById(`area-title-${areaId}`);
+      const rangeEl = document.getElementById(`area-range-badge-${areaId}`);
+      if (titleEl) titleEl.textContent = newName;
+      if (rangeEl) rangeEl.textContent = `Range: #${startNum} - #${endNum}`;
+
+      // Re-render Table Rows inside this Accordion
+      renderAccordionLocationRows(areaId, newName, startNum, endNum);
+
+      // Hide Edit Panel
+      cancelAreaRangeEdit(areaId);
+      updateGeneratedLocationsCount();
+      showToast(`Area "${newName}" range updated (#${startNum} - #${endNum})!`, 'success');
+    }
+
+    function deleteAreaAccordion(areaId) {
+      const areaObj = areaAccordionsData[areaId];
+      const areaName = areaObj ? areaObj.areaName : 'Area';
+      if (!confirm(`Delete "${areaName}" and all its locations?\nThis action cannot be undone.`)) return;
+
+      delete areaAccordionsData[areaId];
+      const itemElem = document.getElementById(`area-accordion-${areaId}`);
+      if (itemElem) itemElem.remove();
+
+      updateGeneratedLocationsCount();
+      showToast(`Area "${areaName}" deleted.`, 'info');
+    }
+
+    function renderAccordionLocationRows(areaId, areaName, startNum, endNum) {
+      const tbody = document.getElementById(`area-tbody-${areaId}`);
       if (!tbody) return;
 
       tbody.innerHTML = '';
-      let count = 0;
+      let locCount = 0;
 
       for (let i = startNum; i <= endNum; i++) {
-        count++;
+        locCount++;
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50/80 transition-colors location-row text-slate-900 border-b border-slate-200';
+        tr.id = `loc-row-${areaId}-${i}`;
         tr.innerHTML = `
-          <td class="py-2.5 px-4 text-center font-mono text-slate-500 border-r border-slate-200 row-num-cell">${count}</td>
-          <td class="py-2.5 px-4 font-sans font-medium border-r border-slate-200 area-cell text-slate-800">${area}</td>
+          <td class="py-2.5 px-4 text-center font-mono text-slate-500 border-r border-slate-200 row-num-cell">${locCount}</td>
+          <td class="py-2.5 px-4 font-sans font-medium border-r border-slate-200 area-cell text-slate-800">${areaName}</td>
           <td class="py-2.5 px-4 text-center font-bold border-r border-slate-200 loc-cell text-slate-900">${i}</td>
           <td class="py-2.5 px-4 font-bold border-r border-slate-200 loc-barcode-cell text-slate-800">LOC-BAR-${i}</td>
           <td class="py-2.5 px-4 text-center border-r border-slate-200 status-cell">
@@ -1154,28 +1274,206 @@
         tbody.appendChild(tr);
       }
 
+      // Update accordion area count badge
+      const countBadge = document.getElementById(`area-count-badge-${areaId}`);
+      if (countBadge) countBadge.textContent = `${locCount} Locations`;
+    }
+
+    function createAreaAccordionHtml(areaId, areaName, startNum, endNum) {
+      const locCount = endNum >= startNum ? (endNum - startNum + 1) : 0;
+      return `
+        <div class="area-accordion-item bg-white overflow-hidden" id="area-accordion-${areaId}">
+          <!-- Accordion Header -->
+          <div class="area-accordion-header px-4 py-3 bg-slate-50/90 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 cursor-pointer hover:bg-slate-100/80 transition-colors select-none"
+            onclick="toggleAreaAccordion('${areaId}', event)">
+            <div class="flex items-center gap-2.5">
+              <svg class="area-chevron-icon transition-transform duration-200 text-slate-500" id="area-chevron-${areaId}"
+                xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-900 tracking-wide" id="area-title-${areaId}">${areaName}</h4>
+              <span class="px-2.5 py-0.5 rounded text-[10.5px] font-mono font-semibold bg-slate-200/80 text-slate-700" id="area-range-badge-${areaId}">Range: #${startNum} - #${endNum}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200" id="area-count-badge-${areaId}">${locCount} Locations</span>
+            </div>
+
+            <div class="flex items-center gap-2" onclick="event.stopPropagation()">
+              <button type="button" onclick="enableAreaRangeEdit('${areaId}')"
+                class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-sans font-semibold transition-colors shadow-2xs flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                <span>Edit Range</span>
+              </button>
+              <button type="button" onclick="deleteAreaAccordion('${areaId}')"
+                class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-[11px] font-sans font-semibold border border-rose-200 transition-colors flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18"/>
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                </svg>
+                <span>Delete Area</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Edit Range Inline Panel -->
+          <div id="area-range-edit-panel-${areaId}" class="hidden p-3.5 bg-blue-50/70 border-b border-blue-200">
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+              <div class="sm:col-span-4">
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Area Name</label>
+                <input type="text" id="edit-area-name-${areaId}" value="${areaName}"
+                  class="w-full h-8 text-xs font-semibold px-2.5 bg-white border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800" />
+              </div>
+              <div class="sm:col-span-3">
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Start Location #</label>
+                <input type="number" id="edit-area-start-${areaId}" value="${startNum}" min="1" step="1"
+                  class="w-full h-8 text-xs font-mono font-semibold px-2.5 bg-white border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800" />
+              </div>
+              <div class="sm:col-span-3">
+                <label class="block text-xs font-semibold text-slate-700 mb-1">End Location #</label>
+                <input type="number" id="edit-area-end-${areaId}" value="${endNum}" min="1" step="1"
+                  class="w-full h-8 text-xs font-mono font-semibold px-2.5 bg-white border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800" />
+              </div>
+              <div class="sm:col-span-2 flex items-center gap-1.5 justify-end">
+                <button type="button" onclick="saveAreaRangeEdit('${areaId}')"
+                  class="px-3 h-8 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-bold shadow-2xs transition-colors">
+                  Save
+                </button>
+                <button type="button" onclick="cancelAreaRangeEdit('${areaId}')"
+                  class="px-3 h-8 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-xs font-semibold transition-colors">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accordion Content Table -->
+          <div id="area-accordion-body-${areaId}" class="area-accordion-body overflow-x-auto custom-scrollbar">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px] select-none">
+                  <th class="py-2 px-4 w-12 text-center border-r border-slate-200">#</th>
+                  <th class="py-2 px-4 border-r border-slate-200">AREA</th>
+                  <th class="py-2 px-4 text-center border-r border-slate-200">LOCATION #</th>
+                  <th class="py-2 px-4 border-r border-slate-200">LOCATION BARCODE</th>
+                  <th class="py-2 px-4 text-center border-r border-slate-200">STATUS</th>
+                  <th class="py-2 px-4 text-center no-print">ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="area-tbody-${areaId}" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    // Main Location Generator (creates Area Accordions)
+    function handleCreateLocations() {
+      const container = document.getElementById('area-rows-container');
+      const rows = container ? container.querySelectorAll('.area-input-row') : [];
+
+      if (rows.length === 0) {
+        showToast('Please add at least one Area range.', 'info');
+        return;
+      }
+
+      let areaConfigs = [];
+      let hasError = false;
+
+      rows.forEach((row, idx) => {
+        const nameInput = row.querySelector('.area-name-input');
+        const startInput = row.querySelector('.area-start-num');
+        const endInput = row.querySelector('.area-end-num');
+
+        const areaName = nameInput?.value.trim() || `Area ${idx + 1}`;
+        const startNum = parseInt(startInput?.value, 10);
+        const endNum = parseInt(endInput?.value, 10);
+
+        if (isNaN(startNum) || isNaN(endNum)) {
+          showToast(`Please enter valid Start and End location numbers for ${areaName}`, 'info');
+          hasError = true;
+          return;
+        }
+
+        if (endNum < startNum) {
+          showToast(`End Location # must be greater than or equal to Start Location # for ${areaName}`, 'info');
+          hasError = true;
+          return;
+        }
+
+        areaConfigs.push({ areaName, startNum, endNum });
+      });
+
+      if (hasError) return;
+
+      const accordionContainer = document.getElementById('area-accordions-container');
+      if (!accordionContainer) return;
+
+      accordionContainer.innerHTML = '';
+      areaAccordionsData = {};
+      let grandTotalCount = 0;
+
+      areaConfigs.forEach((config, idx) => {
+        const areaId = 'area-' + Date.now() + '-' + (idx + 1);
+        areaAccordionsData[areaId] = {
+          id: areaId,
+          areaName: config.areaName,
+          startNum: config.startNum,
+          endNum: config.endNum
+        };
+
+        const div = document.createElement('div');
+        div.innerHTML = createAreaAccordionHtml(areaId, config.areaName, config.startNum, config.endNum);
+        const itemElem = div.firstElementChild;
+        accordionContainer.appendChild(itemElem);
+
+        renderAccordionLocationRows(areaId, config.areaName, config.startNum, config.endNum);
+        grandTotalCount += (config.endNum - config.startNum + 1);
+      });
+
       updateGeneratedLocationsCount();
-      showToast(`Generated ${count} locations (${startNum} to ${endNum}) under ${area}`, 'success');
+      showToast(`Generated ${grandTotalCount} locations across ${areaConfigs.length} area accordion(s)`, 'success');
     }
 
     function updateGeneratedLocationsCount() {
-      const tbody = document.getElementById('generated-locations-tbody');
+      const accordionContainer = document.getElementById('area-accordions-container');
       const emptyRow = document.getElementById('generated-locations-empty-row');
-      const rows = tbody ? tbody.querySelectorAll('tr.location-row') : [];
       const countBadge = document.getElementById('loc-count-badge');
-      if (countBadge) countBadge.textContent = `${rows.length} Locations`;
-      if (emptyRow) emptyRow.classList.toggle('hidden', rows.length > 0);
-      rows.forEach((row, idx) => {
-        const numCell = row.querySelector('.row-num-cell');
-        if (numCell) numCell.textContent = idx + 1;
-      });
+
+      const allRows = accordionContainer ? accordionContainer.querySelectorAll('tr.location-row') : [];
+      const areaItems = accordionContainer ? accordionContainer.querySelectorAll('.area-accordion-item') : [];
+
+      if (countBadge) {
+        countBadge.textContent = `${allRows.length} Locations (${areaItems.length} Areas)`;
+      }
+
+      if (emptyRow) {
+        emptyRow.classList.toggle('hidden', areaItems.length > 0);
+      }
     }
 
     function deleteSetupLocation(btn) {
       const row = btn.closest('tr');
       const locNum = row.querySelector('.loc-cell')?.textContent.trim();
+      const accordionItem = btn.closest('.area-accordion-item');
+
       if (!confirm(`Delete Location #${locNum}?\nThis action cannot be undone.`)) return;
       row.remove();
+
+      if (accordionItem) {
+        const areaId = accordionItem.id.replace('area-accordion-', '');
+        const locRows = accordionItem.querySelectorAll('tr.location-row');
+        const countBadge = document.getElementById(`area-count-badge-${areaId}`);
+        if (countBadge) countBadge.textContent = `${locRows.length} Locations`;
+
+        locRows.forEach((r, idx) => {
+          const numCell = r.querySelector('.row-num-cell');
+          if (numCell) numCell.textContent = idx + 1;
+        });
+      }
+
       updateGeneratedLocationsCount();
       showToast(`Location #${locNum} deleted.`, 'info');
     }
@@ -1269,13 +1567,34 @@
 
     function filterLocationSetupTable() {
       const query = document.getElementById('loc-search-input')?.value.toLowerCase().trim() || '';
-      const rows = document.querySelectorAll('#generated-locations-tbody tr');
-      rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        if (text.includes(query)) {
-          row.classList.remove('hidden');
+      const accordions = document.querySelectorAll('.area-accordion-item');
+
+      accordions.forEach(item => {
+        const areaId = item.id.replace('area-accordion-', '');
+        const rows = item.querySelectorAll('tr.location-row');
+        let matchCount = 0;
+
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          if (text.includes(query)) {
+            row.classList.remove('hidden');
+            matchCount++;
+          } else {
+            row.classList.add('hidden');
+          }
+        });
+
+        if (query === '') {
+          item.classList.remove('hidden');
+          rows.forEach(r => r.classList.remove('hidden'));
+        } else if (matchCount > 0 || item.querySelector('.area-accordion-header')?.textContent.toLowerCase().includes(query)) {
+          item.classList.remove('hidden');
+          const body = document.getElementById(`area-accordion-body-${areaId}`);
+          const chevron = document.getElementById(`area-chevron-${areaId}`);
+          if (body) body.classList.remove('hidden');
+          if (chevron) chevron.classList.add('rotate-180');
         } else {
-          row.classList.add('hidden');
+          item.classList.add('hidden');
         }
       });
     }
@@ -1565,7 +1884,7 @@
     }
 
     // Create Locations Range
-    function handleCreateLocations() {
+    function handleStockTakeCreateLocations() {
       const selectedArea = document.getElementById('loc-area-select')?.value || ((JOB.areas[0] || {}).name || 'Area 1');
       const startNum = parseInt(document.getElementById('loc-start-num').value, 10);
       const endNum = parseInt(document.getElementById('loc-end-num').value, 10);
@@ -1995,338 +2314,417 @@
 
 
   <script>
-  // ══════════════════════════════════════════════════════════
-  // RUNTIME RENDER — real stocktake data (assets/js/data.js), selected with ?job=JOB-xxxx-nnn
-  // ══════════════════════════════════════════════════════════
-  var JOB = (function () {
-    var id = new URLSearchParams(location.search).get('job') || 'ST-2026-001';
-    return STOCK.jobs.find(function (j) { return j.id === id; }) || STOCK.jobs[0];
-  })();
-  var LOCS = STOCK.locations[JOB.id];
-  var NOF = ((STOCK.reports[JOB.id] || {}).notonfile) || [];
+    // ══════════════════════════════════════════════════════════
+    // RUNTIME RENDER — real stocktake data (assets/js/data.js), selected with ?job=JOB-xxxx-nnn
+    // ══════════════════════════════════════════════════════════
+    var JOB = (function () {
+      var id = new URLSearchParams(location.search).get('job') || 'ST-2026-001';
+      return STOCK.jobs.find(function (j) { return j.id === id; }) || STOCK.jobs[0];
+    })();
+    var LOCS = STOCK.locations[JOB.id];
+    var NOF = ((STOCK.reports[JOB.id] || {}).notonfile) || [];
 
-  (function () {
-    var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
-    var fmt = function (n) { return Number(n).toLocaleString('en-GB'); };
-    var $ = function (id) { return document.getElementById(id); };
-    var totalQty = LOCS.reduce(function (a, l) { return a + l.qty; }, 0);
-    var nofQty = NOF.reduce(function (a, r) { return a + r[3]; }, 0);
-    var devices = [];
-    LOCS.forEach(function (l) { if (devices.indexOf(l.device) < 0) devices.push(l.device); });
-    var deviceName = function (id) { var d = STOCK.devices.find(function (x) { return x.id === id; }); return d ? d.counter : ''; };
+    (function () {
+      var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+      var fmt = function (n) { return Number(n).toLocaleString('en-GB'); };
+      var $ = function (id) { return document.getElementById(id); };
+      var totalQty = LOCS.reduce(function (a, l) { return a + l.qty; }, 0);
+      var nofQty = NOF.reduce(function (a, r) { return a + r[3]; }, 0);
+      var devices = [];
+      LOCS.forEach(function (l) { if (devices.indexOf(l.device) < 0) devices.push(l.device); });
+      var deviceName = function (id) { var d = STOCK.devices.find(function (x) { return x.id === id; }); return d ? d.counter : ''; };
 
-    document.title = JOB.title + ' — Admin Panel';
-    $('page-heading').textContent = JOB.client;
-    $('job-subtitle').textContent = JOB.title + ' Monitor & Control';
+      document.title = JOB.title + ' — Admin Panel';
+      $('page-heading').textContent = JOB.client;
+      $('job-subtitle').textContent = JOB.title + ' Monitor & Control';
 
-    // --- Location Setup tab -------------------------------------------------
-    var sel = $('loc-area-select');
-    JOB.areas.forEach(function (a) { var o = document.createElement('option'); o.value = a.name; o.textContent = a.name; sel.appendChild(o); });
-    var nums = LOCS.map(function (l) { return parseInt(l.loc, 10); });
-    var maxNum = Math.max.apply(null, nums);
-    $('loc-start-num').value = maxNum + 1;
-    $('loc-end-num').value = maxNum + 15;
-    var setupBody = $('generated-locations-tbody');
-    var setupHtml = LOCS.map(function (l, i) {
-      return '<tr class="hover:bg-slate-50/80 transition-colors location-row text-slate-900 border-b border-slate-200">' +
-        '<td class="py-2.5 px-4 text-center font-mono text-slate-500 border-r border-slate-200 row-num-cell">' + (i + 1) + '</td>' +
-        '<td class="py-2.5 px-4 font-sans font-medium border-r border-slate-200 area-cell text-slate-800">' + esc(l.area) + '</td>' +
-        '<td class="py-2.5 px-4 text-center font-bold border-r border-slate-200 loc-cell text-slate-900">' + l.loc + '</td>' +
-        '<td class="py-2.5 px-4 font-bold border-r border-slate-200 loc-barcode-cell text-slate-800">LOC-BAR-' + l.loc + '</td>' +
-        '<td class="py-2.5 px-4 text-center border-r border-slate-200 status-cell"><span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Active</span></td>' +
-        '<td class="py-2.5 px-4 text-center no-print actions-cell"><div class="flex items-center justify-center gap-1">' +
-        '<button type="button" onclick="enableSetupInlineEdit(this)" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-sans font-semibold transition-colors shadow-2xs">Inline Edit</button>' +
-        '<button type="button" onclick="deleteSetupLocation(this)" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-[10px] font-sans font-semibold border border-rose-200 transition-colors">Delete</button>' +
-        '</div></td></tr>';
-    }).join('');
-    setupBody.insertAdjacentHTML('beforeend', setupHtml);
-    $('generated-locations-empty-row').classList.add('hidden');
-    if (typeof updateGeneratedLocationsCount === 'function') updateGeneratedLocationsCount();
+      // --- Location Setup tab -------------------------------------------------
+      var sel = $('loc-area-select');
+      if (sel) {
+        JOB.areas.forEach(function (a) { var o = document.createElement('option'); o.value = a.name; o.textContent = a.name; sel.appendChild(o); });
+      }
+      var nums = LOCS.map(function (l) { return parseInt(l.loc, 10); });
+      var maxNum = Math.max.apply(null, nums);
+      if ($('loc-start-num')) $('loc-start-num').value = maxNum + 1;
+      if ($('loc-end-num')) $('loc-end-num').value = maxNum + 15;
+      var setupBody = $('generated-locations-tbody');
+      if (setupBody) {
+        var setupHtml = LOCS.map(function (l, i) {
+          return '<tr class="hover:bg-slate-50/80 transition-colors location-row text-slate-900 border-b border-slate-200">' +
+            '<td class="py-2.5 px-4 text-center font-mono text-slate-500 border-r border-slate-200 row-num-cell">' + (i + 1) + '</td>' +
+            '<td class="py-2.5 px-4 font-sans font-medium border-r border-slate-200 area-cell text-slate-800">' + esc(l.area) + '</td>' +
+            '<td class="py-2.5 px-4 text-center font-bold border-r border-slate-200 loc-cell text-slate-900">' + l.loc + '</td>' +
+            '<td class="py-2.5 px-4 font-bold border-r border-slate-200 loc-barcode-cell text-slate-800">LOC-BAR-' + l.loc + '</td>' +
+            '<td class="py-2.5 px-4 text-center border-r border-slate-200 status-cell"><span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Active</span></td>' +
+            '<td class="py-2.5 px-4 text-center no-print actions-cell"><div class="flex items-center justify-center gap-1">' +
+            '<button type="button" onclick="enableSetupInlineEdit(this)" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-sans font-semibold transition-colors shadow-2xs">Inline Edit</button>' +
+            '<button type="button" onclick="deleteSetupLocation(this)" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-[10px] font-sans font-semibold border border-rose-200 transition-colors">Delete</button>' +
+            '</div></td></tr>';
+        }).join('');
+        setupBody.insertAdjacentHTML('beforeend', setupHtml);
+        if ($('generated-locations-empty-row')) $('generated-locations-empty-row').classList.add('hidden');
+        if (typeof updateGeneratedLocationsCount === 'function') updateGeneratedLocationsCount();
+      }
 
-    // --- Job statistics -----------------------------------------------------
-    $('stat-complete').textContent = fmt(LOCS.filter(function (l) { return l.status === 'Complete'; }).length);
-    $('stat-waiting').textContent = fmt(LOCS.filter(function (l) { return l.status !== 'Complete'; }).length);
-    $('stat-total-items').textContent = fmt(totalQty);
-    $('stat-nof-qty').textContent = fmt(nofQty);
-    $('stat-nof-total').textContent = fmt(totalQty);
-    $('foot-complete').textContent = fmt(LOCS.filter(function (l) { return l.status === 'Complete'; }).length);
-    $('foot-waiting').textContent = fmt(LOCS.filter(function (l) { return l.status !== 'Complete'; }).length);
+      // --- Job statistics -----------------------------------------------------
+      $('stat-complete').textContent = fmt(LOCS.filter(function (l) { return l.status === 'Complete'; }).length);
+      $('stat-waiting').textContent = fmt(LOCS.filter(function (l) { return l.status !== 'Complete'; }).length);
+      $('stat-total-items').textContent = fmt(totalQty);
+      $('stat-nof-qty').textContent = fmt(nofQty);
+      $('stat-nof-total').textContent = fmt(totalQty);
+      $('foot-complete').textContent = fmt(LOCS.filter(function (l) { return l.status === 'Complete'; }).length);
+      $('foot-waiting').textContent = fmt(LOCS.filter(function (l) { return l.status !== 'Complete'; }).length);
 
-    // --- Terminal log -------------------------------------------------------
-    var last = LOCS[LOCS.length - 1];
-    var hh = function (t) { return t.split(' ')[1]; };
-    var logs = [['text-slate-500', '[' + hh(LOCS[0].time).replace(/:\d+$/, ':00') + '] SYS_INIT: ActiveSync listening on port 8082...']];
-    devices.forEach(function (d) { logs.push(['text-emerald-700 font-medium', 'CONNECT: Device ' + d + ' online.']); });
-    LOCS.slice(-3).forEach(function (l) { logs.push(['text-blue-700 font-medium', '[' + hh(l.time) + '] SYNC_PKT: Loc ' + l.loc + ' -> ' + fmt(l.qty) + ' items. Complete.']); });
-    if (NOF.length) NOF.forEach(function (r) { logs.push(['text-amber-700 font-medium', 'WARN_BARCODE: ' + r[1] + ' not on file (Loc ' + r[2] + ')']); });
-    logs.push(['text-slate-800 font-medium', 'AUDIT: Workspace ' + JOB.id + ' — ' + LOCS.length + ' locations, ' + fmt(totalQty) + ' units.']);
-    $('sec-terminal-logs-body').innerHTML = logs.map(function (r) { return '<div class="' + r[0] + '">' + esc(r[1]) + '</div>'; }).join('');
+      // --- Terminal log -------------------------------------------------------
+      var last = LOCS[LOCS.length - 1];
+      var hh = function (t) { return t.split(' ')[1]; };
+      var logs = [['text-slate-500', '[' + hh(LOCS[0].time).replace(/:\d+$/, ':00') + '] SYS_INIT: ActiveSync listening on port 8082...']];
+      devices.forEach(function (d) { logs.push(['text-emerald-700 font-medium', 'CONNECT: Device ' + d + ' online.']); });
+      LOCS.slice(-3).forEach(function (l) { logs.push(['text-blue-700 font-medium', '[' + hh(l.time) + '] SYNC_PKT: Loc ' + l.loc + ' -> ' + fmt(l.qty) + ' items. Complete.']); });
+      if (NOF.length) NOF.forEach(function (r) { logs.push(['text-amber-700 font-medium', 'WARN_BARCODE: ' + r[1] + ' not on file (Loc ' + r[2] + ')']); });
+      logs.push(['text-slate-800 font-medium', 'AUDIT: Workspace ' + JOB.id + ' — ' + LOCS.length + ' locations, ' + fmt(totalQty) + ' units.']);
+      $('sec-terminal-logs-body').innerHTML = logs.map(function (r) { return '<div class="' + r[0] + '">' + esc(r[1]) + '</div>'; }).join('');
 
-    // --- Connected devices --------------------------------------------------
-    $('devices-stream-tbody').innerHTML = devices.map(function (d) {
-      var mine = LOCS.filter(function (l) { return l.device === d; });
-      var q = mine.reduce(function (a, l) { return a + l.qty; }, 0);
-      var lastL = mine[mine.length - 1];
-      var stamp = JOB.client.replace(/ - .*/, '') + ' ' + lastL.time.split(' ')[0] + ' ' + lastL.time.split(' ')[1] + ':00';
-      return '<tr class="hover:bg-slate-50">' +
-        '<td class="py-1 px-2.5 text-slate-800 font-semibold truncate max-w-[150px]" title="' + d + '">' + d + '</td>' +
-        '<td class="py-1 px-2.5 text-blue-700 font-bold">' + deviceName(d) + '</td>' +
-        '<td class="py-1 px-2.5 text-slate-600 truncate">' + esc(stamp) + '</td>' +
-        '<td class="py-1 px-2.5 text-center text-slate-800 font-bold">' + mine[0].loc + (mine.length > 1 ? '–' + lastL.loc : '') + '</td>' +
-        '<td class="py-1 px-2.5 text-right text-emerald-700 font-bold">' + fmt(q) + '</td>' +
-        '<td class="py-1 px-2.5 text-center"><span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 font-sans"><span class="w-1 h-1 rounded-full bg-emerald-500"></span>Connected</span></td>' +
-        '<td class="py-1 px-2.5 text-center no-print"><div class="flex items-center justify-center gap-1">' +
-        '<button type="button" onclick="confirmDeviceSync(\'' + d + '\')" class="px-2 py-0.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10.5px] font-semibold transition-colors shadow-2xs">Sync</button>' +
-        '<button type="button" onclick="confirmDeviceClear(\'' + d + '\')" class="px-2 py-0.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-[10.5px] font-semibold border border-rose-200 transition-colors">Clear Data</button>' +
-        '</div></td></tr>';
-    }).join('');
-
-    // --- Location progress directory (accordion detail is filled on first open) ---
-    var CHEV = '<svg class="chevron-icon transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>';
-    var noDesc = '<span class="text-slate-400 italic font-normal">No description on file</span>';
-    $('location-tbody').innerHTML = LOCS.map(function (l, i) {
-      var done = l.status === 'Complete';
-      var rowCls = done ? 'hover:bg-slate-50' : 'bg-amber-50/70 hover:bg-amber-100/60';
-      var btnCls = done ? 'bg-slate-100 hover:bg-slate-200 text-slate-700' : 'bg-amber-100 hover:bg-amber-200 text-amber-900';
-      var pill = done ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300';
-      return '<tr class="' + rowCls + ' transition-colors location-row text-slate-900 border-b border-slate-200" data-status="' + l.status + '" data-idx="' + i + '">' +
-        '<td class="py-2.5 px-3 text-center border-r border-slate-200"><button type="button" onclick="toggleLocationAccordion(this)" class="w-6 h-6 inline-flex items-center justify-center rounded ' + btnCls + ' transition-colors" title="View Scanned Products at this Location">' + CHEV + '</button></td>' +
-        '<td class="py-1.5 px-2.5 font-semibold border-r border-slate-200 truncate max-w-[200px] device-cell text-slate-800" title="' + l.device + '">' + l.device + '</td>' +
-        '<td class="py-1.5 px-2.5 font-bold border-r border-slate-200 user-cell text-slate-900">' + l.user + '</td>' +
-        '<td class="py-1.5 px-2.5 text-center font-bold border-r border-slate-200 loc-cell text-slate-900">' + l.loc + '</td>' +
-        '<td class="py-1.5 px-2.5 text-center font-mono font-bold border-r border-slate-200 loc-barcode-cell text-slate-800">LOC-BAR-' + l.loc + '</td>' +
-        '<td class="py-1.5 px-2.5 text-center border-r border-slate-200 status-cell"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ' + pill + ' border">' + l.status + '</span></td>' +
-        '<td class="py-1.5 px-2.5 text-right font-bold border-r border-slate-200 qty-cell text-emerald-700">' + fmt(l.qty) + '</td>' +
-        '<td class="py-1.5 px-2.5 border-r border-slate-200 text-slate-600">' + l.time + '</td>' +
-        '<td class="py-1.5 px-2.5 text-center border-r border-slate-200"><input type="checkbox" class="h-3.5 w-3.5 rounded text-blue-600" /></td>' +
-        '<td class="py-1.5 px-2.5 text-center border-r border-slate-200"><input type="checkbox" class="h-3.5 w-3.5 rounded text-blue-600" /></td>' +
-        '<td class="py-1.5 px-2.5 text-center"><input type="checkbox" class="h-3.5 w-3.5 rounded text-blue-600" /></td></tr>' +
-        '<tr class="accordion-details-row hidden bg-blue-50/40 text-slate-800 border-b border-slate-200" data-idx="' + i + '"><td colspan="11" class="p-3.5"></td></tr>';
-    }).join('');
-
-    window.__fillAccordion = function (accRow) {
-      if (accRow.dataset.filled) return;
-      var l = LOCS[+accRow.dataset.idx];
-      var items = l.lines.map(function (ln, k) {
-        return '<tr class="accord-item-row hover:bg-slate-50 border-b border-slate-200">' +
-          '<td class="py-2 px-3 text-slate-400 border-r border-slate-200">' + (k + 1) + '</td>' +
-          '<td class="py-2 px-3 font-semibold text-blue-700 border-r border-slate-200 accord-sku-cell">' + esc(ln[0]) + '</td>' +
-          '<td class="py-2 px-3 text-slate-600 border-r border-slate-200 accord-barcode-cell">' + (ln[1] ? esc(ln[1]) : '—') + '</td>' +
-          '<td class="py-2 px-3 text-slate-800 font-sans font-medium border-r border-slate-200 accord-desc-cell">' + (ln[2] ? esc(ln[2]) : noDesc) + '</td>' +
-          '<td class="py-2 px-3 text-right font-bold text-emerald-700 border-r border-slate-200 accord-qty-cell">' + ln[3] + '</td>' +
-          '<td class="py-2 px-3 text-right text-slate-500 border-r border-slate-200">—</td>' +
-          '<td class="py-2 px-3 text-center no-print accord-actions-cell"><button type="button" onclick="enableAccordInlineEdit(this)" class="px-2 py-0.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold transition-colors shadow-2xs">Inline Edit</button></td></tr>';
+      // --- Connected devices --------------------------------------------------
+      $('devices-stream-tbody').innerHTML = devices.map(function (d) {
+        var mine = LOCS.filter(function (l) { return l.device === d; });
+        var q = mine.reduce(function (a, l) { return a + l.qty; }, 0);
+        var lastL = mine[mine.length - 1];
+        var stamp = JOB.client.replace(/ - .*/, '') + ' ' + lastL.time.split(' ')[0] + ' ' + lastL.time.split(' ')[1] + ':00';
+        return '<tr class="hover:bg-slate-50">' +
+          '<td class="py-1 px-2.5 text-slate-800 font-semibold truncate max-w-[150px]" title="' + d + '">' + d + '</td>' +
+          '<td class="py-1 px-2.5 text-blue-700 font-bold">' + deviceName(d) + '</td>' +
+          '<td class="py-1 px-2.5 text-slate-600 truncate">' + esc(stamp) + '</td>' +
+          '<td class="py-1 px-2.5 text-center text-slate-800 font-bold">' + mine[0].loc + (mine.length > 1 ? '–' + lastL.loc : '') + '</td>' +
+          '<td class="py-1 px-2.5 text-right text-emerald-700 font-bold">' + fmt(q) + '</td>' +
+          '<td class="py-1 px-2.5 text-center"><span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 font-sans"><span class="w-1 h-1 rounded-full bg-emerald-500"></span>Connected</span></td>' +
+          '<td class="py-1 px-2.5 text-center no-print"><div class="flex items-center justify-center gap-1">' +
+          '<button type="button" onclick="confirmDeviceSync(\'' + d + '\')" class="px-2 py-0.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10.5px] font-semibold transition-colors shadow-2xs">Sync</button>' +
+          '<button type="button" onclick="confirmDeviceClear(\'' + d + '\')" class="px-2 py-0.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-[10.5px] font-semibold border border-rose-200 transition-colors">Clear Data</button>' +
+          '</div></td></tr>';
       }).join('');
-      accRow.firstElementChild.innerHTML =
-        '<div class="bg-white border border-blue-200/90 rounded-xl p-2.5 space-y-2 shadow-xs">' +
-        '<div class="flex flex-wrap items-center justify-between text-[11px] border-b border-slate-100 pb-1.5">' +
-        '<div class="flex items-center gap-2 text-blue-700 font-bold"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>' +
-        '<span>Scanned Products at Location #<span class="accord-loc-num">' + l.loc + '</span></span>' +
-        '<span class="text-slate-500 font-normal font-sans">(<span class="accord-qty-text">' + fmt(l.qty) + '</span> total items scanned &bull; ' + l.lines.length + ' lines)</span></div>' +
-        '<div class="text-[10px] font-mono text-slate-500">Operator: <strong class="text-slate-800 font-sans accord-user-name">' + l.user + '</strong> &bull; Device ID: <span class="text-slate-700 font-mono">' + l.device + '</span></div></div>' +
-        '<div class="overflow-x-auto custom-scrollbar"><table class="w-full text-xs text-left font-mono border border-slate-200 rounded"><thead><tr class="text-[10px] text-slate-700 font-bold uppercase tracking-wider border-b border-slate-200 bg-slate-100 select-none">' +
-        '<th class="py-2 px-3 border-r border-slate-200 w-10">#</th><th class="py-2 px-3 border-r border-slate-200">SKU CODE</th><th class="py-2 px-3 border-r border-slate-200">BARCODE</th><th class="py-2 px-3 border-r border-slate-200">PRODUCT DESCRIPTION</th><th class="py-2 px-3 border-r border-slate-200 text-right">SCANNED QTY</th><th class="py-2 px-3 border-r border-slate-200 text-right">SCAN TIME</th><th class="py-2 px-3 text-center no-print w-28">ACTIONS</th></tr></thead>' +
-        '<tbody class="divide-y divide-slate-200 text-[11px] bg-white">' + items + '</tbody></table></div></div>';
-      accRow.dataset.filled = '1';
-    };
-    var _orig = window.toggleLocationAccordion;
-    window.toggleLocationAccordion = function (btn) {
-      var acc = btn.closest('tr').nextElementSibling;
-      if (acc && acc.classList.contains('accordion-details-row')) window.__fillAccordion(acc);
-      _orig(btn);
-    };
-    if (typeof filterLocationTable === 'function') filterLocationTable();
 
-    // --- Current Data (merged job data) ------------------------------------
-    var groups = [];
-    LOCS.forEach(function (l) { if (groups.indexOf(l.group) < 0) groups.push(l.group); });
-    var gsel = $('current-data-group-filter');
-    groups.forEach(function (g) { var o = document.createElement('option'); o.value = g; o.textContent = g; gsel.appendChild(o); });
-    var CCHEV = '<svg class="current-data-chevron shrink-0 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>';
-    var itemCount = 0;
-    $('current-data-tbody').innerHTML = LOCS.map(function (l) {
-      itemCount += l.lines.length;
-      var det = l.lines.map(function (ln) {
-        return '<tr><td class="py-1.5 pl-11 pr-3 text-slate-600 border-r border-slate-200 truncate max-w-[200px]">' + l.device + '</td>' +
-          '<td class="py-1.5 px-3 font-semibold text-blue-700 border-r border-slate-200">' + esc(ln[0]) + '</td>' +
-          '<td class="py-1.5 px-3 text-slate-600 border-r border-slate-200">' + (ln[1] ? esc(ln[1]) : '—') + '</td>' +
-          '<td class="py-1.5 px-3 text-slate-700 font-sans border-r border-slate-200">' + (ln[2] ? esc(ln[2]) : noDesc) + '</td>' +
-          '<td class="py-1.5 px-3 text-right font-bold text-emerald-700">' + ln[3] + '</td></tr>';
+      // --- Location progress directory (accordion detail is filled on first open) ---
+      var CHEV = '<svg class="chevron-icon transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>';
+      var noDesc = '<span class="text-slate-400 italic font-normal">No description on file</span>';
+      $('location-tbody').innerHTML = LOCS.map(function (l, i) {
+        var done = l.status === 'Complete';
+        var rowCls = done ? 'hover:bg-slate-50' : 'bg-amber-50/70 hover:bg-amber-100/60';
+        var btnCls = done ? 'bg-slate-100 hover:bg-slate-200 text-slate-700' : 'bg-amber-100 hover:bg-amber-200 text-amber-900';
+        var pill = done ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300';
+        return '<tr class="' + rowCls + ' transition-colors location-row text-slate-900 border-b border-slate-200" data-status="' + l.status + '" data-idx="' + i + '">' +
+          '<td class="py-2.5 px-3 text-center border-r border-slate-200"><button type="button" onclick="toggleLocationAccordion(this)" class="w-6 h-6 inline-flex items-center justify-center rounded ' + btnCls + ' transition-colors" title="View Scanned Products at this Location">' + CHEV + '</button></td>' +
+          '<td class="py-1.5 px-2.5 font-semibold border-r border-slate-200 truncate max-w-[200px] device-cell text-slate-800" title="' + l.device + '">' + l.device + '</td>' +
+          '<td class="py-1.5 px-2.5 font-bold border-r border-slate-200 user-cell text-slate-900">' + l.user + '</td>' +
+          '<td class="py-1.5 px-2.5 text-center font-bold border-r border-slate-200 loc-cell text-slate-900">' + l.loc + '</td>' +
+          '<td class="py-1.5 px-2.5 text-center font-mono font-bold border-r border-slate-200 loc-barcode-cell text-slate-800">LOC-BAR-' + l.loc + '</td>' +
+          '<td class="py-1.5 px-2.5 text-center border-r border-slate-200 status-cell"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ' + pill + ' border">' + l.status + '</span></td>' +
+          '<td class="py-1.5 px-2.5 text-right font-bold border-r border-slate-200 qty-cell text-emerald-700">' + fmt(l.qty) + '</td>' +
+          '<td class="py-1.5 px-2.5 border-r border-slate-200 text-slate-600">' + l.time + '</td>' +
+          '<td class="py-1.5 px-2.5 text-center border-r border-slate-200"><input type="checkbox" class="h-3.5 w-3.5 rounded text-blue-600" /></td>' +
+          '<td class="py-1.5 px-2.5 text-center border-r border-slate-200"><input type="checkbox" class="h-3.5 w-3.5 rounded text-blue-600" /></td>' +
+          '<td class="py-1.5 px-2.5 text-center"><input type="checkbox" class="h-3.5 w-3.5 rounded text-blue-600" /></td></tr>' +
+          '<tr class="accordion-details-row hidden bg-blue-50/40 text-slate-800 border-b border-slate-200" data-idx="' + i + '"><td colspan="11" class="p-3.5"></td></tr>';
       }).join('');
-      return '<tr class="hover:bg-slate-50 transition-colors current-data-row" data-group="' + esc(l.group) + '" data-location="' + l.loc + '">' +
-        '<td class="py-1.5 px-3 text-center border-r border-slate-200"><input type="checkbox" class="current-row-chk h-3.5 w-3.5 rounded text-blue-600" /></td>' +
-        '<td class="py-1.5 px-3 font-sans font-medium text-slate-700 border-r border-slate-200">' + esc(l.area) + '</td>' +
-        '<td class="py-1.5 px-3 border-r border-slate-200"><button type="button" onclick="toggleCurrentDataAccordion(this)" class="flex items-center gap-1.5 font-bold text-slate-900 hover:text-blue-700 transition-colors">' + CCHEV + '<span>' + l.loc + '</span></button></td>' +
-        '<td class="py-1.5 px-3 text-right font-bold text-emerald-700 border-r border-slate-200">' + fmt(l.qty) + '</td>' +
-        '<td class="py-1.5 px-3 font-sans font-medium text-slate-700">' + esc(l.group) + '</td></tr>' +
-        '<tr class="current-data-detail-row hidden bg-slate-50/60"><td class="py-0 px-0" colspan="5"><table class="w-full text-xs text-left border-collapse"><thead><tr class="bg-slate-100 text-slate-500 font-bold text-[10px] uppercase tracking-wider border-b border-slate-200">' +
-        '<th class="py-1 pl-11 pr-3 border-r border-slate-200 font-bold">Device ID</th><th class="py-1 px-3 border-r border-slate-200 font-bold">SKU Code</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Barcode</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Product Description</th><th class="py-1 px-3 text-right font-bold">Qty</th></tr></thead>' +
-        '<tbody class="divide-y divide-slate-100">' + det + '</tbody></table></td></tr>';
-    }).join('');
-    $('current-data-count-badge').textContent = fmt(itemCount) + ' Items';
 
-    // --- Imported data staging buffer --------------------------------------
-    $('imported-data-tbody').innerHTML = '<tr><td colspan="5" class="py-6 px-3 text-center text-slate-400 font-sans text-xs">No device files waiting in the staging buffer — use “Import Device File” or “Import Laptop File”.</td></tr>';
-    var ib = $('imported-data-count-badge'); if (ib) ib.textContent = 'Staging Buffer (0 Batches)';
-  })();
+      window.__fillAccordion = function (accRow) {
+        if (accRow.dataset.filled) return;
+        var l = LOCS[+accRow.dataset.idx];
+        var items = l.lines.map(function (ln, k) {
+          return '<tr class="accord-item-row hover:bg-slate-50 border-b border-slate-200">' +
+            '<td class="py-2 px-3 text-slate-400 border-r border-slate-200">' + (k + 1) + '</td>' +
+            '<td class="py-2 px-3 font-semibold text-blue-700 border-r border-slate-200 accord-sku-cell">' + esc(ln[0]) + '</td>' +
+            '<td class="py-2 px-3 text-slate-600 border-r border-slate-200 accord-barcode-cell">' + (ln[1] ? esc(ln[1]) : '—') + '</td>' +
+            '<td class="py-2 px-3 text-slate-800 font-sans font-medium border-r border-slate-200 accord-desc-cell">' + (ln[2] ? esc(ln[2]) : noDesc) + '</td>' +
+            '<td class="py-2 px-3 text-right font-bold text-emerald-700 border-r border-slate-200 accord-qty-cell">' + ln[3] + '</td>' +
+            '<td class="py-2 px-3 text-right text-slate-500 border-r border-slate-200">—</td>' +
+            '<td class="py-2 px-3 text-center no-print accord-actions-cell"><button type="button" onclick="enableAccordInlineEdit(this)" class="px-2 py-0.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold transition-colors shadow-2xs">Inline Edit</button></td></tr>';
+        }).join('');
+        accRow.firstElementChild.innerHTML =
+          '<div class="bg-white border border-blue-200/90 rounded-xl p-2.5 space-y-2 shadow-xs">' +
+          '<div class="flex flex-wrap items-center justify-between text-[11px] border-b border-slate-100 pb-1.5">' +
+          '<div class="flex items-center gap-2 text-blue-700 font-bold"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>' +
+          '<span>Scanned Products at Location #<span class="accord-loc-num">' + l.loc + '</span></span>' +
+          '<span class="text-slate-500 font-normal font-sans">(<span class="accord-qty-text">' + fmt(l.qty) + '</span> total items scanned &bull; ' + l.lines.length + ' lines)</span></div>' +
+          '<div class="text-[10px] font-mono text-slate-500">Operator: <strong class="text-slate-800 font-sans accord-user-name">' + l.user + '</strong> &bull; Device ID: <span class="text-slate-700 font-mono">' + l.device + '</span></div></div>' +
+          '<div class="overflow-x-auto custom-scrollbar"><table class="w-full text-xs text-left font-mono border border-slate-200 rounded"><thead><tr class="text-[10px] text-slate-700 font-bold uppercase tracking-wider border-b border-slate-200 bg-slate-100 select-none">' +
+          '<th class="py-2 px-3 border-r border-slate-200 w-10">#</th><th class="py-2 px-3 border-r border-slate-200">SKU CODE</th><th class="py-2 px-3 border-r border-slate-200">BARCODE</th><th class="py-2 px-3 border-r border-slate-200">PRODUCT DESCRIPTION</th><th class="py-2 px-3 border-r border-slate-200 text-right">SCANNED QTY</th><th class="py-2 px-3 border-r border-slate-200 text-right">SCAN TIME</th><th class="py-2 px-3 text-center no-print w-28">ACTIONS</th></tr></thead>' +
+          '<tbody class="divide-y divide-slate-200 text-[11px] bg-white">' + items + '</tbody></table></div></div>';
+        accRow.dataset.filled = '1';
+      };
+      var _orig = window.toggleLocationAccordion;
+      window.toggleLocationAccordion = function (btn) {
+        var acc = btn.closest('tr').nextElementSibling;
+        if (acc && acc.classList.contains('accordion-details-row')) window.__fillAccordion(acc);
+        _orig(btn);
+      };
+      if (typeof filterLocationTable === 'function') filterLocationTable();
+
+      // --- Current Data (merged job data) ------------------------------------
+      var groups = [];
+      LOCS.forEach(function (l) { if (groups.indexOf(l.group) < 0) groups.push(l.group); });
+      var gsel = $('current-data-group-filter');
+      groups.forEach(function (g) { var o = document.createElement('option'); o.value = g; o.textContent = g; gsel.appendChild(o); });
+      var CCHEV = '<svg class="current-data-chevron shrink-0 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>';
+      var itemCount = 0;
+      $('current-data-tbody').innerHTML = LOCS.map(function (l) {
+        itemCount += l.lines.length;
+        var det = l.lines.map(function (ln) {
+          return '<tr><td class="py-1.5 pl-11 pr-3 text-slate-600 border-r border-slate-200 truncate max-w-[200px]">' + l.device + '</td>' +
+            '<td class="py-1.5 px-3 font-semibold text-blue-700 border-r border-slate-200">' + esc(ln[0]) + '</td>' +
+            '<td class="py-1.5 px-3 text-slate-600 border-r border-slate-200">' + (ln[1] ? esc(ln[1]) : '—') + '</td>' +
+            '<td class="py-1.5 px-3 text-slate-700 font-sans border-r border-slate-200">' + (ln[2] ? esc(ln[2]) : noDesc) + '</td>' +
+            '<td class="py-1.5 px-3 text-right font-bold text-emerald-700">' + ln[3] + '</td></tr>';
+        }).join('');
+        return '<tr class="hover:bg-slate-50 transition-colors current-data-row" data-group="' + esc(l.group) + '" data-location="' + l.loc + '">' +
+          '<td class="py-1.5 px-3 text-center border-r border-slate-200"><input type="checkbox" class="current-row-chk h-3.5 w-3.5 rounded text-blue-600" /></td>' +
+          '<td class="py-1.5 px-3 font-sans font-medium text-slate-700 border-r border-slate-200">' + esc(l.area) + '</td>' +
+          '<td class="py-1.5 px-3 border-r border-slate-200"><button type="button" onclick="toggleCurrentDataAccordion(this)" class="flex items-center gap-1.5 font-bold text-slate-900 hover:text-blue-700 transition-colors">' + CCHEV + '<span>' + l.loc + '</span></button></td>' +
+          '<td class="py-1.5 px-3 text-right font-bold text-emerald-700 border-r border-slate-200">' + fmt(l.qty) + '</td>' +
+          '<td class="py-1.5 px-3 font-sans font-medium text-slate-700">' + esc(l.group) + '</td></tr>' +
+          '<tr class="current-data-detail-row hidden bg-slate-50/60"><td class="py-0 px-0" colspan="5"><table class="w-full text-xs text-left border-collapse"><thead><tr class="bg-slate-100 text-slate-500 font-bold text-[10px] uppercase tracking-wider border-b border-slate-200">' +
+          '<th class="py-1 pl-11 pr-3 border-r border-slate-200 font-bold">Device ID</th><th class="py-1 px-3 border-r border-slate-200 font-bold">SKU Code</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Barcode</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Product Description</th><th class="py-1 px-3 text-right font-bold">Qty</th></tr></thead>' +
+          '<tbody class="divide-y divide-slate-100">' + det + '</tbody></table></td></tr>';
+      }).join('');
+      $('current-data-count-badge').textContent = fmt(itemCount) + ' Items';
+
+      // --- Imported data staging buffer --------------------------------------
+      if (typeof stageLocation === 'function') {
+        stageLocation('2003', {
+          area: 'Area 1 - Shop Floor',
+          group: 'Area 1',
+          lines: [
+            ['5063862295354', '5063862295354', '', 1, '195B2FF60701080B15'],
+            ['5063862295286', '5063862295286', '', 1, '195B2FF60701080B15'],
+            ['5063862134189', '5063862134189', '', 1, '195B2FF60701080B15'],
+            ['5063862073778', '5063862073778', '', 1, '195B2FF60701080B15']
+          ]
+        }, 'handheld_2003.dat');
+      } else {
+        $('imported-data-tbody').innerHTML = '<tr><td colspan="6" class="py-6 px-3 text-center text-slate-400 font-sans text-xs">No device files waiting in the staging buffer — use “Import Device File” or “Import Laptop File”.</td></tr>';
+        var ib = $('imported-data-count-badge'); if (ib) ib.textContent = 'Staging Buffer (0 Batches)';
+      }
+    })();
   </script>
 
   <script>
-  // ══════════════════════════════════════════════════════════
-  // FILE IMPORT / EXPORT for when data did not arrive over the local network
-  //  - Device file : handheld dump (BBBB header, "FFFF<loc> <lines> <qty>", then "<loc><barcode> <qty>")
-  //  - Laptop file : the CSV made by "Export Data" on another laptop (full job data, all locations)
-  // Both land in the Imported Data staging table; "Merge Data" adds them to Current Data.
-  // ══════════════════════════════════════════════════════════
-  (function () {
-    var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
-    var $ = function (id) { return document.getElementById(id); };
-    var mode = 'device';
-    var NODESC = '<span class="text-slate-400 italic">No description on file</span>';
+    // ══════════════════════════════════════════════════════════
+    // FILE IMPORT / EXPORT for when data did not arrive over the local network
+    //  - Device file : handheld dump (BBBB header, "FFFF<loc> <lines> <qty>", then "<loc><barcode> <qty>")
+    //  - Laptop file : the CSV made by "Export Data" on another laptop (full job data, all locations)
+    // Both land in the Imported Data staging table; "Merge Data" adds them to Current Data.
+    // ══════════════════════════════════════════════════════════
+    (function () {
+      var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+      var $ = function (id) { return document.getElementById(id); };
+      var mode = 'device';
+      var NODESC = '<span class="text-slate-400 italic">No description on file</span>';
 
-    function areaOf(loc) {
-      var n = parseInt(loc, 10);
-      var a = JOB.areas.find(function (x) { return n >= parseInt(x.from, 10) && n <= parseInt(x.to, 10); });
-      return a ? { name: a.name, group: a.group } : { name: 'Unassigned', group: 'None' };
-    }
-
-    // line = [sku, barcode, description, qty, deviceId]
-    function parseDeviceFile(text) {
-      var locs = {}, order = [], cur = null, n = 0;
-      var dev = (/[0-9A-F]{16,20}/.exec(text.slice(0, 600)) || ['From file'])[0];
-      text.split(/\r?\n/).forEach(function (raw) {
-        var l = raw.replace(/\s+$/, ''), m;
-        if (!l.trim()) return;
-        if ((m = /^FFFF(\d{4})\s+\d+\s+\d+$/.exec(l))) { cur = m[1]; if (!locs[cur]) { locs[cur] = { lines: [] }; order.push(cur); } return; }
-        if (/^(BBBB|\s+TD|\s+SD|\s+ST)/.test(l)) return;
-        if ((m = /^(\d{4})(\d+?)\s+(\d+)$/.exec(l)) && (!cur || m[1] === cur)) {
-          if (!locs[m[1]]) { locs[m[1]] = { lines: [] }; order.push(m[1]); }
-          locs[m[1]].lines.push([m[2], m[2], '', parseInt(m[3], 10), dev]); n++;
-        }
-      });
-      return n ? { locs: locs, order: order } : { error: 'No scan lines recognised' };
-    }
-
-    function csvRow(line) {
-      var out = [], cur = '', q = false;
-      for (var i = 0; i < line.length; i++) {
-        var c = line[i];
-        if (q) { if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (c === '"') q = false; else cur += c; }
-        else if (c === '"') q = true; else if (c === ',') { out.push(cur); cur = ''; } else cur += c;
+      function areaOf(loc) {
+        var n = parseInt(loc, 10);
+        var a = JOB.areas.find(function (x) { return n >= parseInt(x.from, 10) && n <= parseInt(x.to, 10); });
+        return a ? { name: a.name, group: a.group } : { name: 'Unassigned', group: 'None' };
       }
-      out.push(cur); return out;
-    }
 
-    // Laptop file header: Area,Location,Group,Device ID,Product Code,Barcode,Description,Qty
-    function parseLaptopFile(text) {
-      var rows = text.split(/\r?\n/).filter(function (l) { return l.trim(); }).map(csvRow);
-      var head = rows.shift() || [];
-      if (head[0] !== 'Area' || head[1] !== 'Location' || head[7] !== 'Qty') return { error: 'Not a laptop stock take file' };
-      var locs = {}, order = [];
-      rows.forEach(function (r) {
-        var loc = r[1]; if (!loc) return;
-        if (!locs[loc]) { locs[loc] = { area: r[0], group: r[2], lines: [] }; order.push(loc); }
-        locs[loc].lines.push([r[4], r[5], r[6], parseInt(r[7], 10) || 0, r[3]]);
-      });
-      return order.length ? { locs: locs, order: order } : { error: 'No locations found' };
-    }
-
-    function stageLocation(loc, info, fileName) {
-      var tbody = $('imported-data-tbody');
-      var placeholder = tbody.querySelector('tr:not(.imported-data-row):not(.imported-data-detail-row)');
-      if (placeholder) placeholder.remove();
-      var existing = tbody.querySelector('tr.imported-data-row[data-location="' + loc + '"]');
-      if (existing) { existing.nextElementSibling.remove(); existing.remove(); }
-      var dupInJob = !!document.querySelector('#current-data-tbody tr.current-data-row[data-location="' + loc + '"]');
-      var qty = info.lines.reduce(function (a, r) { return a + r[3]; }, 0);
-      var ar = info.area ? { name: info.area, group: info.group || 'None' } : areaOf(loc);
-      var flag = dupInJob ? ' <span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold font-sans bg-amber-100 text-amber-800 border border-amber-300" title="This location already exists in the job data">Duplicate</span>' : '';
-      var items = info.lines.map(function (r) {
-        return '<tr><td class="py-1.5 pl-11 pr-3 text-slate-600 border-r border-slate-200 truncate max-w-[200px]">' + esc(r[4]) + '</td>' +
-          '<td class="py-1.5 px-3 font-semibold text-blue-700 border-r border-slate-200">' + esc(r[0]) + '</td>' +
-          '<td class="py-1.5 px-3 text-slate-600 border-r border-slate-200">' + esc(r[1]) + '</td>' +
-          '<td class="py-1.5 px-3 text-slate-700 font-sans border-r border-slate-200">' + (r[2] ? esc(r[2]) : NODESC) + '</td>' +
-          '<td class="py-1.5 px-3 text-right font-bold text-purple-700">' + r[3] + '</td></tr>';
-      }).join('');
-      tbody.insertAdjacentHTML('beforeend',
-        '<tr class="hover:bg-purple-50/50 transition-colors imported-data-row" data-location="' + loc + '">' +
-        '<td class="py-1.5 px-3 text-center border-r border-slate-200"><input type="checkbox" class="imported-row-chk h-3.5 w-3.5 rounded text-blue-600" /></td>' +
-        '<td class="py-1.5 px-3 font-sans font-medium text-slate-700 border-r border-slate-200">' + esc(ar.name) + '</td>' +
-        '<td class="py-1.5 px-3 border-r border-slate-200"><button type="button" onclick="toggleImportedDataAccordion(this)" class="flex items-center gap-1.5 font-bold text-purple-900 hover:text-purple-700 transition-colors" title="Source file: ' + esc(fileName) + '">' +
-        '<svg class="imported-data-chevron shrink-0 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg><span>' + loc + '</span></button>' + flag + '</td>' +
-        '<td class="py-1.5 px-3 text-right font-bold text-purple-700 border-r border-slate-200">' + qty + '</td>' +
-        '<td class="py-1.5 px-3 font-sans font-medium text-slate-700">' + esc(ar.group) + '</td></tr>' +
-        '<tr class="imported-data-detail-row hidden bg-purple-50/30"><td class="py-0 px-0" colspan="5"><table class="w-full text-xs text-left border-collapse"><thead><tr class="bg-slate-100 text-slate-500 font-bold text-[10px] uppercase tracking-wider border-b border-slate-200">' +
-        '<th class="py-1 pl-11 pr-3 border-r border-slate-200 font-bold">Device ID</th><th class="py-1 px-3 border-r border-slate-200 font-bold">SKU Code</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Barcode</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Product Description</th><th class="py-1 px-3 text-right font-bold">Qty</th></tr></thead>' +
-        '<tbody class="divide-y divide-slate-100">' + items + '</tbody></table></td></tr>');
-      return { qty: qty, dup: dupInJob };
-    }
-
-    window.importFiles = function (files, kind) {
-      files = Array.prototype.slice.call(files || []);
-      if (!files.length) { showToast('Choose a file first', 'info'); return Promise.resolve(); }
-      var parse = kind === 'laptop' ? parseLaptopFile : parseDeviceFile;
-      return Promise.all(files.map(function (f) { return f.text().then(function (t) { return { name: f.name, res: parse(t) }; }); })).then(function (results) {
-        var locCount = 0, units = 0, dups = 0, bad = [];
-        results.forEach(function (r) {
-          if (r.res.error) { bad.push(r.name); return; }
-          r.res.order.forEach(function (loc) { var o = stageLocation(loc, r.res.locs[loc], r.name); locCount++; units += o.qty; if (o.dup) dups++; });
+      // line = [sku, barcode, description, qty, deviceId]
+      function parseDeviceFile(text) {
+        var locs = {}, order = [], cur = null, n = 0;
+        var dev = (/[0-9A-F]{16,20}/.exec(text.slice(0, 600)) || ['From file'])[0];
+        text.split(/\r?\n/).forEach(function (raw) {
+          var l = raw.replace(/\s+$/, ''), m;
+          if (!l.trim()) return;
+          if ((m = /^FFFF(\d{4})\s+\d+\s+\d+$/.exec(l))) { cur = m[1]; if (!locs[cur]) { locs[cur] = { lines: [] }; order.push(cur); } return; }
+          if (/^(BBBB|\s+TD|\s+SD|\s+ST)/.test(l)) return;
+          if ((m = /^(\d{4})(\d+?)\s+(\d+)$/.exec(l)) && (!cur || m[1] === cur)) {
+            if (!locs[m[1]]) { locs[m[1]] = { lines: [] }; order.push(m[1]); }
+            locs[m[1]].lines.push([m[2], m[2], '', parseInt(m[3], 10), dev]); n++;
+          }
         });
+        return n ? { locs: locs, order: order } : { error: 'No scan lines recognised' };
+      }
+
+      function csvRow(line) {
+        var out = [], cur = '', q = false;
+        for (var i = 0; i < line.length; i++) {
+          var c = line[i];
+          if (q) { if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (c === '"') q = false; else cur += c; }
+          else if (c === '"') q = true; else if (c === ',') { out.push(cur); cur = ''; } else cur += c;
+        }
+        out.push(cur); return out;
+      }
+
+      // Laptop file header: Area,Location,Group,Device ID,Product Code,Barcode,Description,Qty
+      function parseLaptopFile(text) {
+        var rows = text.split(/\r?\n/).filter(function (l) { return l.trim(); }).map(csvRow);
+        var head = rows.shift() || [];
+        if (head[0] !== 'Area' || head[1] !== 'Location' || head[7] !== 'Qty') return { error: 'Not a laptop stock take file' };
+        var locs = {}, order = [];
+        rows.forEach(function (r) {
+          var loc = r[1]; if (!loc) return;
+          if (!locs[loc]) { locs[loc] = { area: r[0], group: r[2], lines: [] }; order.push(loc); }
+          locs[loc].lines.push([r[4], r[5], r[6], parseInt(r[7], 10) || 0, r[3]]);
+        });
+        return order.length ? { locs: locs, order: order } : { error: 'No locations found' };
+      }
+
+      function stageLocation(loc, info, fileName) {
+        var tbody = $('imported-data-tbody');
+        var placeholder = tbody.querySelector('tr:not(.imported-data-row):not(.imported-data-detail-row)');
+        if (placeholder) placeholder.remove();
+        var existing = tbody.querySelector('tr.imported-data-row[data-location="' + loc + '"]');
+        if (existing) { existing.nextElementSibling.remove(); existing.remove(); }
+        var dupInJob = !!document.querySelector('#current-data-tbody tr.current-data-row[data-location="' + loc + '"]');
+        var qty = info.lines.reduce(function (a, r) { return a + r[3]; }, 0);
+        var ar = info.area ? { name: info.area, group: info.group || 'None' } : areaOf(loc);
+
+        // Red badge and red row styling for duplicates
+        var flag = dupInJob ? ' <span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold font-sans bg-rose-100 text-rose-800 border border-rose-300 shadow-2xs" title="This location already exists in the job data">Duplicate</span>' : '';
+        var rowBg = dupInJob ? 'bg-rose-50/80 hover:bg-rose-100/70 border-rose-200 text-rose-950' : 'hover:bg-purple-50/50';
+        var locBtnColor = dupInJob ? 'text-rose-900 hover:text-rose-700' : 'text-purple-900 hover:text-purple-700';
+        var qtyColor = dupInJob ? 'text-rose-800' : 'text-purple-700';
+
+        var items = info.lines.map(function (r) {
+          return '<tr class="imported-item-row hover:bg-slate-100/70 border-b border-slate-200">' +
+            '<td class="py-1.5 pl-11 pr-3 text-slate-600 border-r border-slate-200 truncate max-w-[200px]">' + esc(r[4]) + '</td>' +
+            '<td class="py-1.5 px-3 font-semibold text-blue-700 border-r border-slate-200">' + esc(r[0]) + '</td>' +
+            '<td class="py-1.5 px-3 text-slate-600 border-r border-slate-200">' + esc(r[1]) + '</td>' +
+            '<td class="py-1.5 px-3 text-slate-700 font-sans border-r border-slate-200">' + (r[2] ? esc(r[2]) : NODESC) + '</td>' +
+            '<td class="py-1.5 px-3 text-right font-bold text-purple-700 border-r border-slate-200 item-qty">' + r[3] + '</td>' +
+            '<td class="py-1.5 px-3 text-center no-print">' +
+            '<button type="button" onclick="deleteImportedStagingItem(this, \'' + loc + '\')" title="Delete product item" class="px-2 py-0.5 bg-rose-50 hover:bg-rose-100 text-rose-700 hover:text-rose-900 border border-rose-200 rounded text-[10px] font-sans font-semibold transition-colors inline-flex items-center gap-1 shadow-2xs">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>' +
+            '<span>Delete Product</span></button></td></tr>';
+        }).join('');
+
+        tbody.insertAdjacentHTML('beforeend',
+          '<tr class="' + rowBg + ' transition-colors imported-data-row border-b border-slate-200" data-location="' + loc + '">' +
+          '<td class="py-1.5 px-3 text-center border-r border-slate-200"><input type="checkbox" class="imported-row-chk h-3.5 w-3.5 rounded text-blue-600" /></td>' +
+          '<td class="py-1.5 px-3 font-sans font-medium text-slate-700 border-r border-slate-200">' + esc(ar.name) + '</td>' +
+          '<td class="py-1.5 px-3 border-r border-slate-200"><button type="button" onclick="toggleImportedDataAccordion(this)" class="flex items-center gap-1.5 font-bold ' + locBtnColor + ' transition-colors" title="Source file: ' + esc(fileName) + '">' +
+          '<svg class="imported-data-chevron shrink-0 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg><span>' + loc + '</span></button>' + flag + '</td>' +
+          '<td class="py-1.5 px-3 text-right font-bold ' + qtyColor + ' border-r border-slate-200">' + qty + '</td>' +
+          '<td class="py-1.5 px-3 font-sans font-medium text-slate-700 border-r border-slate-200">' + esc(ar.group) + '</td>' +
+          '<td class="py-1.5 px-3 text-center no-print">' +
+          '<button type="button" onclick="deleteImportedStagingRow(\'' + loc + '\')" title="Delete staged location ' + loc + '" class="px-2.5 py-0.5 bg-rose-50 hover:bg-rose-100 text-rose-700 hover:text-rose-900 border border-rose-200 rounded text-[11px] font-sans font-semibold transition-colors inline-flex items-center gap-1 shadow-2xs">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>' +
+          '<span>Delete</span></button></td></tr>' +
+          '<tr class="imported-data-detail-row hidden bg-purple-50/30 border-b border-slate-200"><td class="py-0 px-0" colspan="6"><table class="w-full text-xs text-left border-collapse"><thead><tr class="bg-slate-100 text-slate-500 font-bold text-[10px] uppercase tracking-wider border-b border-slate-200">' +
+          '<th class="py-1 pl-11 pr-3 border-r border-slate-200 font-bold">Device ID</th><th class="py-1 px-3 border-r border-slate-200 font-bold">SKU Code</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Barcode</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Product Description</th><th class="py-1 px-3 text-right font-bold border-r border-slate-200">Qty</th><th class="py-1 px-3 text-center no-print font-bold w-28">Actions</th></tr></thead>' +
+          '<tbody class="divide-y divide-slate-100">' + items + '</tbody></table></td></tr>');
+        return { qty: qty, dup: dupInJob };
+      }
+
+      window.deleteImportedStagingRow = function (loc) {
+        var row = document.querySelector('#imported-data-tbody tr.imported-data-row[data-location="' + loc + '"]');
+        if (!row) return;
+        var detailRow = row.nextElementSibling;
+        if (detailRow && detailRow.classList.contains('imported-data-detail-row')) {
+          detailRow.remove();
+        }
+        row.remove();
+
+        var tbody = document.getElementById('imported-data-tbody');
+        if (!tbody.querySelector('tr.imported-data-row')) {
+          tbody.innerHTML = '<tr><td colspan="6" class="py-6 px-3 text-center text-slate-400 font-sans text-xs">No device files waiting in the staging buffer — use “Import Device File” or “Import Laptop File”.</td></tr>';
+        }
+
         if (typeof filterImportedDataTable === 'function') filterImportedDataTable();
-        var msg = locCount + ' location(s), ' + units.toLocaleString('en-GB') + ' units staged' + (dups ? ' — ' + dups + ' duplicate(s) flagged' : '') + (bad.length ? ' — not recognised: ' + bad.join(', ') : '');
-        showToast(msg, bad.length && !locCount ? 'error' : 'success');
-        var t = $('imported-data-table'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      });
-    };
+        showToast('Staged Location #' + loc + ' deleted from staging buffer.', 'info');
+      };
 
-    // one small dialog, two modes
-    window.openImportModal = function (m) {
-      mode = m === 'laptop' ? 'laptop' : 'device';
-      $('import-modal-title').textContent = mode === 'laptop' ? 'Import Laptop File' : 'Import Device File';
-      var input = $('modal-file-input');
-      input.accept = mode === 'laptop' ? '.csv' : '.txt,.dat,.csv';
-      input.value = ''; $('file-selection-name').classList.add('hidden');
-      var hint = document.querySelector('#import-file-modal label[for="modal-file-input"] span:last-child');
-      var lead = document.querySelector('#import-file-modal label[for="modal-file-input"] span:nth-of-type(1)');
-      if (lead) lead.textContent = mode === 'laptop' ? 'Click to select the stock take file from the other laptop' : 'Click to select handheld device file(s)';
-      if (hint) hint.textContent = mode === 'laptop' ? 'The CSV made by “Export Data” on the other laptop' : 'For a handheld that could not sync over the local network • DAT, TXT, CSV';
-      $('import-file-modal').classList.remove('hidden');
-    };
-    window.submitImportFile = function () {
-      var input = $('modal-file-input');
-      if (!input.files || !input.files.length) { showToast('Choose a file first', 'info'); return; }
-      closeImportModal();
-      importFiles(input.files, mode).then(function () { input.value = ''; $('file-selection-name').classList.add('hidden'); });
-    };
+      window.deleteImportedStagingItem = function (btn, loc) {
+        var itemRow = btn.closest('tr');
+        var detailRow = itemRow ? itemRow.closest('tr.imported-data-detail-row') : null;
+        var locRow = detailRow ? detailRow.previousElementSibling : null;
 
-    // Export Data → the laptop file other laptops import
-    window.handleExportData = function () {
-      var q = function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; };
-      var lines = [['Area', 'Location', 'Group', 'Device ID', 'Product Code', 'Barcode', 'Description', 'Qty'].join(',')];
-      var n = 0, locs = 0;
-      document.querySelectorAll('#current-data-tbody tr.current-data-row:not(.hidden)').forEach(function (row) {
-        var d = row.nextElementSibling; locs++;
-        d.querySelectorAll(':scope tbody tr').forEach(function (tr) {
-          var c = tr.children; var desc = c[3].textContent.trim(); if (desc === 'No description on file') desc = '';
-          lines.push([row.children[1].textContent.trim(), row.dataset.location, row.dataset.group, c[0].textContent.trim(), c[1].textContent.trim(), c[2].textContent.trim(), desc, c[4].textContent.trim()].map(q).join(',')); n++;
+        var skuCode = itemRow ? (itemRow.querySelector('.text-blue-700')?.textContent.trim() || 'Product') : 'Product';
+        if (itemRow) itemRow.remove();
+
+        if (locRow && locRow.classList.contains('imported-data-row')) {
+          var remainingItemRows = detailRow.querySelectorAll('tbody tr.imported-item-row');
+          if (remainingItemRows.length === 0) {
+            deleteImportedStagingRow(loc);
+          } else {
+            var newTotalQty = 0;
+            remainingItemRows.forEach(function (r) {
+              var qCell = r.querySelector('.item-qty');
+              newTotalQty += parseInt(qCell ? qCell.textContent : '0', 10) || 0;
+            });
+            var qtyCell = locRow.children[3];
+            if (qtyCell) qtyCell.textContent = newTotalQty;
+            if (typeof filterImportedDataTable === 'function') filterImportedDataTable();
+            showToast('Deleted product (' + skuCode + ') from Location #' + loc + '.', 'success');
+          }
+        } else {
+          showToast('Product line deleted.', 'info');
+        }
+      };
+
+      window.importFiles = function (files, kind) {
+        files = Array.prototype.slice.call(files || []);
+        if (!files.length) { showToast('Choose a file first', 'info'); return Promise.resolve(); }
+        var parse = kind === 'laptop' ? parseLaptopFile : parseDeviceFile;
+        return Promise.all(files.map(function (f) { return f.text().then(function (t) { return { name: f.name, res: parse(t) }; }); })).then(function (results) {
+          var locCount = 0, units = 0, dups = 0, bad = [];
+          results.forEach(function (r) {
+            if (r.res.error) { bad.push(r.name); return; }
+            r.res.order.forEach(function (loc) { var o = stageLocation(loc, r.res.locs[loc], r.name); locCount++; units += o.qty; if (o.dup) dups++; });
+          });
+          if (typeof filterImportedDataTable === 'function') filterImportedDataTable();
+          var msg = locCount + ' location(s), ' + units.toLocaleString('en-GB') + ' units staged' + (dups ? ' — ' + dups + ' duplicate(s) flagged' : '') + (bad.length ? ' — not recognised: ' + bad.join(', ') : '');
+          showToast(msg, bad.length && !locCount ? 'error' : 'success');
+          var t = $('imported-data-table'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
-      });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' }));
-      a.download = JOB.id + '_laptop_file.csv';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
-      showToast('Laptop file saved: ' + n.toLocaleString('en-GB') + ' scan lines across ' + locs + ' locations', 'success');
-    };
+      };
 
-    var _merge = window.handleMergeData;
-    window.handleMergeData = function () {
-      var dups = Array.prototype.slice.call(document.querySelectorAll('#imported-data-tbody tr.imported-data-row')).filter(function (r) { return r.querySelector('.bg-amber-100'); }).map(function (r) { return r.dataset.location; });
-      if (dups.length && !confirm('Location(s) ' + dups.join(', ') + ' already exist in the stock take data.\nMerging adds these scans on top of the existing counts (a duplicate). Continue?')) return;
-      _merge();
-      var tb = $('imported-data-tbody');
-      if (!tb.querySelector('tr')) tb.innerHTML = '<tr><td colspan="5" class="py-6 px-3 text-center text-slate-400 font-sans text-xs">Nothing waiting — use “Import Device File” or “Import Laptop File”.</td></tr>';
-    };
-  })();
+      // one small dialog, two modes
+      window.openImportModal = function (m) {
+        mode = m === 'laptop' ? 'laptop' : 'device';
+        $('import-modal-title').textContent = mode === 'laptop' ? 'Import Laptop File' : 'Import Device File';
+        var input = $('modal-file-input');
+        input.accept = mode === 'laptop' ? '.csv' : '.txt,.dat,.csv';
+        input.value = ''; $('file-selection-name').classList.add('hidden');
+        var hint = document.querySelector('#import-file-modal label[for="modal-file-input"] span:last-child');
+        var lead = document.querySelector('#import-file-modal label[for="modal-file-input"] span:nth-of-type(1)');
+        if (lead) lead.textContent = mode === 'laptop' ? 'Click to select the stock take file from the other laptop' : 'Click to select handheld device file(s)';
+        if (hint) hint.textContent = mode === 'laptop' ? 'The CSV made by “Export Data” on the other laptop' : 'For a handheld that could not sync over the local network • DAT, TXT, CSV';
+        $('import-file-modal').classList.remove('hidden');
+      };
+      window.submitImportFile = function () {
+        var input = $('modal-file-input');
+        if (!input.files || !input.files.length) { showToast('Choose a file first', 'info'); return; }
+        closeImportModal();
+        importFiles(input.files, mode).then(function () { input.value = ''; $('file-selection-name').classList.add('hidden'); });
+      };
+
+      // Export Data → the laptop file other laptops import
+      window.handleExportData = function () {
+        var q = function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; };
+        var lines = [['Area', 'Location', 'Group', 'Device ID', 'Product Code', 'Barcode', 'Description', 'Qty'].join(',')];
+        var n = 0, locs = 0;
+        document.querySelectorAll('#current-data-tbody tr.current-data-row:not(.hidden)').forEach(function (row) {
+          var d = row.nextElementSibling; locs++;
+          d.querySelectorAll(':scope tbody tr').forEach(function (tr) {
+            var c = tr.children; var desc = c[3].textContent.trim(); if (desc === 'No description on file') desc = '';
+            lines.push([row.children[1].textContent.trim(), row.dataset.location, row.dataset.group, c[0].textContent.trim(), c[1].textContent.trim(), c[2].textContent.trim(), desc, c[4].textContent.trim()].map(q).join(',')); n++;
+          });
+        });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' }));
+        a.download = JOB.id + '_laptop_file.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
+        showToast('Laptop file saved: ' + n.toLocaleString('en-GB') + ' scan lines across ' + locs + ' locations', 'success');
+      };
+
+      var _merge = window.handleMergeData;
+      window.handleMergeData = function () {
+        var dups = Array.prototype.slice.call(document.querySelectorAll('#imported-data-tbody tr.imported-data-row')).filter(function (r) { return r.querySelector('.bg-rose-100') || r.querySelector('.bg-amber-100'); }).map(function (r) { return r.dataset.location; });
+        if (dups.length && !confirm('Location(s) ' + dups.join(', ') + ' already exist in the stock take data.\nMerging adds these scans on top of the existing counts (a duplicate). Continue?')) return;
+        _merge();
+        var tb = $('imported-data-tbody');
+        if (!tb.querySelector('tr')) tb.innerHTML = '<tr><td colspan="6" class="py-6 px-3 text-center text-slate-400 font-sans text-xs">Nothing waiting — use “Import Device File” or “Import Laptop File”.</td></tr>';
+      };
+    })();
   </script>
 </body>
 
