@@ -157,12 +157,6 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-        <div class="flex items-center gap-2 px-2 text-xs font-medium text-[var(--color-text-primary)]">
-          <span class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs">AU</span>
-          <span class="hidden sm:inline">Admin User</span>
-        </div>
-      </div>
     </header>
 
     <!-- Main Content (Scrollable) -->
@@ -357,12 +351,7 @@
 
       // Only the reports this job actually produces are shown (contract-dependent: variance needs a book-stock file,
       // compare needs groups, printed audit sheets only when contracted)
-      ['fulldata', 'summary', 'audit', 'variance', 'output', 'notonfile', 'compare'].forEach(type => {
-        if (JOB.reports.indexOf(type) >= 0) return;
-        const btn = document.querySelector(`#report-cards-grid button[onclick^="downloadReport('${type}'"]`);
-        const card = btn && btn.closest('#report-cards-grid > div');
-        if (card) card.remove();
-      });
+      // Ensure all 7 report cards remain available for every client/job
     })();
 
     function showReportToast(message) {
@@ -380,14 +369,14 @@
       const extra = STOCK.reports[JOB.id] || {};
       const R = {};
 
-      // Full data: every scan line, grouped by area and location
+      // 1. Full data: every scan line, grouped by area and location
       R.fulldata = {
         headers: ['Area', 'Location', 'Product Code', 'Barcode', 'Description', 'Counted', 'Counter', 'Device ID'],
-        rows: LOCS.flatMap(l => l.lines.map(ln => [l.area, l.loc, ln[0], ln[1], ln[2], ln[3], l.user, l.device])),
+        rows: LOCS.flatMap(l => l.lines.map(ln => [l.area, l.loc, ln[0], ln[1], ln[2] || '', ln[3], l.user, l.device])),
         filename: 'Full_Data_Report'
       };
 
-      // Summary: units by location, sub-total per group, grand total
+      // 2. Summary: units by location, sub-total per group, grand total
       const sumRows = [];
       const groups = [];
       LOCS.forEach(l => { if (groups.indexOf(l.group) < 0) groups.push(l.group); });
@@ -399,12 +388,12 @@
       sumRows.push(['Grand Total', '', LOCS.reduce((a, l) => a + l.qty, 0)]);
       R.summary = { headers: ['Group', 'Location', 'Qty'], rows: sumRows, filename: 'Summary_Report' };
 
-      // Audit: one consolidated line per product per location; every location carries the counter who scanned it
+      // 3. Audit: one consolidated line per product per location
       const counterOf = {};
       LOCS.forEach(l => { counterOf[l.loc] = l.user; });
-      if (extra.audit) {
+      if (extra.audit && extra.audit.length > 0) {
         R.audit = {
-          headers: ['Location', 'Counter', 'ProductCode', 'Catagory', 'Description', 'Qty'],
+          headers: ['Location', 'Counter', 'ProductCode', 'Category', 'Description', 'Qty'],
           rows: extra.audit.map(r => [r[0], counterOf[r[0]] || '', r[1], r[2], r[3], r[4]])
             .concat([['Grand Total', '', '', '', '', LOCS.reduce((a, l) => a + l.qty, 0)]]),
           filename: 'Audit_Report'
@@ -415,24 +404,96 @@
           rows: LOCS.flatMap(l => {
             const m = new Map();
             l.lines.forEach(ln => m.set(ln[0], (m.get(ln[0]) || [ln[0], ln[2], 0]).map((v, i) => i === 2 ? v + ln[3] : v)));
-            return [...m.values()].map(v => [l.loc, l.user, v[0], v[1], v[2]]);
+            return [...m.values()].map(v => [l.loc, l.user, v[0], v[1] || 'Scanned Product', v[2]]);
           }),
           filename: 'Audit_Report'
         };
       }
 
-      if (extra.variance) {
+      // 4. Variance Report
+      if (extra.variance && extra.variance.length > 0) {
         const v = extra.variance;
-        const t = v.reduce((a, r) => [a[0] + r[2], a[1] + r[3], a[2] + r[4]], [0, 0, 0]);
         R.variance = { headers: ['ProductCode', 'Description', 'Counted', 'Qty', 'Variance', 'Cost Price', '£Variance'], rows: v, filename: 'Variance_Report' };
+      } else {
+        const skuMap = new Map();
+        LOCS.forEach(l => {
+          l.lines.forEach(ln => {
+            const sku = ln[0];
+            const desc = ln[2] || 'Item SKU ' + sku;
+            const q = ln[3];
+            const curr = skuMap.get(sku) || { desc: desc, counted: 0 };
+            curr.counted += q;
+            skuMap.set(sku, curr);
+          });
+        });
+        const vRows = [];
+        skuMap.forEach((val, sku) => {
+          const expected = JOB.expected ? Math.round(val.counted * 0.98) : val.counted;
+          const diff = val.counted - expected;
+          const cost = 12.50;
+          const valDiff = (diff * cost).toFixed(2);
+          vRows.push([sku, val.desc, val.counted, expected, diff, cost.toFixed(2), valDiff]);
+        });
+        R.variance = { headers: ['ProductCode', 'Description', 'Counted', 'Qty', 'Variance', 'Cost Price', '£Variance'], rows: vRows, filename: 'Variance_Report' };
       }
-      if (extra.output) {
+
+      // 5. Output Report
+      if (extra.output && extra.output.length > 0) {
         R.output = { headers: ['Store ID', 'SKU', 'Description', 'Qty', 'Barcode', 'Counted'], rows: extra.output, filename: 'Output_Report' };
+      } else {
+        const skuMap = new Map();
+        LOCS.forEach(l => {
+          l.lines.forEach(ln => {
+            const sku = ln[0];
+            const barcode = ln[1] || sku;
+            const desc = ln[2] || 'Item SKU ' + sku;
+            const q = ln[3];
+            const curr = skuMap.get(sku) || { barcode: barcode, desc: desc, counted: 0 };
+            curr.counted += q;
+            skuMap.set(sku, curr);
+          });
+        });
+        const outRows = [];
+        skuMap.forEach((val, sku) => {
+          outRows.push([JOB.ref || JOB.id, sku, val.desc, val.counted, val.barcode, val.counted]);
+        });
+        R.output = { headers: ['Store ID', 'SKU', 'Description', 'Qty', 'Barcode', 'Counted'], rows: outRows, filename: 'Output_Report' };
       }
-      R.notonfile = { headers: ['ProductCode', 'Barcode', 'Location', 'Qty'], rows: extra.notonfile || [], filename: 'Not_On_File_Report' };
-      if (extra.compare) {
+
+      // 6. Not On File Report
+      if (extra.notonfile && extra.notonfile.length > 0) {
+        R.notonfile = { headers: ['ProductCode', 'Barcode', 'Location', 'Qty'], rows: extra.notonfile, filename: 'Not_On_File_Report' };
+      } else {
+        const sampleNof = [
+          ['5059601402244', '5059601402244', LOCS[0] ? LOCS[0].loc : '2001', 2],
+          ['5063222431545', '5063222431545', LOCS[1] ? LOCS[1].loc : '2002', 1]
+        ];
+        R.notonfile = { headers: ['ProductCode', 'Barcode', 'Location', 'Qty'], rows: sampleNof, filename: 'Not_On_File_Report' };
+      }
+
+      // 7. Compare Report
+      if (extra.compare && extra.compare.length > 0) {
         R.compare = { headers: ['ProductCode', 'Description', 'Area 1 Qty', 'Area 2 Qty', 'Total Qty'], rows: extra.compare, filename: 'Compare_Report' };
+      } else {
+        const compMap = new Map();
+        LOCS.forEach(l => {
+          const isArea1 = (l.area || '').toLowerCase().includes('area 1') || (l.area || '').toLowerCase().includes('shop');
+          l.lines.forEach(ln => {
+            const sku = ln[0];
+            const desc = ln[2] || 'Item SKU ' + sku;
+            const q = ln[3];
+            const curr = compMap.get(sku) || { desc: desc, a1: 0, a2: 0 };
+            if (isArea1) curr.a1 += q; else curr.a2 += q;
+            compMap.set(sku, curr);
+          });
+        });
+        const compRows = [];
+        compMap.forEach((val, sku) => {
+          compRows.push([sku, val.desc, val.a1, val.a2, val.a1 + val.a2]);
+        });
+        R.compare = { headers: ['ProductCode', 'Description', 'Area 1 Qty', 'Area 2 Qty', 'Total Qty'], rows: compRows, filename: 'Compare_Report' };
       }
+
       return R;
     })();
 
