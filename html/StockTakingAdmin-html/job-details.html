@@ -2530,21 +2530,29 @@
         var qty = info.lines.reduce(function (a, r) { return a + r[3]; }, 0);
         var ar = info.area ? { name: info.area, group: info.group || 'None' } : areaOf(loc);
 
-        // Red badge and red row styling for duplicates
+        // Red badge on location button for duplicate locations
         var flag = dupInJob ? ' <span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold font-sans bg-rose-100 text-rose-800 border border-rose-300 shadow-2xs" title="This location already exists in the job data">Duplicate</span>' : '';
-        var rowBg = dupInJob ? 'bg-rose-50/80 hover:bg-rose-100/70 border-rose-200 text-rose-950' : 'hover:bg-purple-50/50';
-        var locBtnColor = dupInJob ? 'text-rose-900 hover:text-rose-700' : 'text-purple-900 hover:text-purple-700';
-        var qtyColor = dupInJob ? 'text-rose-800' : 'text-purple-700';
+        var rowBg = 'hover:bg-purple-50/50';
+        var locBtnColor = 'text-purple-900 hover:text-purple-700';
+        var qtyColor = 'text-purple-700';
+
+        // Sub-rows (Accordion Detail Rows): Marked RED when dupInJob is true so user easily identifies duplicate items
+        var itemRowBg = dupInJob ? 'bg-rose-50/80 hover:bg-rose-100/70 border-b border-rose-200/80 text-rose-950' : 'hover:bg-slate-100/70 border-b border-slate-200';
+        var itemSkuColor = dupInJob ? 'text-rose-900 font-bold' : 'text-blue-700 font-semibold';
+        var itemQtyColor = dupInJob ? 'text-rose-900 font-bold' : 'text-purple-700 font-bold';
+        var detailRowBg = dupInJob ? 'imported-data-detail-row hidden bg-rose-50/40 border-b border-rose-200' : 'imported-data-detail-row hidden bg-purple-50/30 border-b border-slate-200';
+        var detailHeaderBg = dupInJob ? 'bg-rose-100/70 text-rose-900 font-bold text-[10px] uppercase tracking-wider border-b border-rose-200' : 'bg-slate-100 text-slate-500 font-bold text-[10px] uppercase tracking-wider border-b border-slate-200';
+        var borderCell = dupInJob ? 'border-rose-200' : 'border-slate-200';
 
         var items = info.lines.map(function (r) {
-          return '<tr class="imported-item-row hover:bg-slate-100/70 border-b border-slate-200">' +
-            '<td class="py-1.5 pl-11 pr-3 text-slate-600 border-r border-slate-200 truncate max-w-[200px]">' + esc(r[4]) + '</td>' +
-            '<td class="py-1.5 px-3 font-semibold text-blue-700 border-r border-slate-200">' + esc(r[0]) + '</td>' +
-            '<td class="py-1.5 px-3 text-slate-600 border-r border-slate-200">' + esc(r[1]) + '</td>' +
-            '<td class="py-1.5 px-3 text-slate-700 font-sans border-r border-slate-200">' + (r[2] ? esc(r[2]) : NODESC) + '</td>' +
-            '<td class="py-1.5 px-3 text-right font-bold text-purple-700 border-r border-slate-200 item-qty">' + r[3] + '</td>' +
+          return '<tr class="imported-item-row ' + itemRowBg + '">' +
+            '<td class="py-1.5 pl-11 pr-3 border-r ' + borderCell + ' ' + (dupInJob ? 'text-rose-900 font-medium' : 'text-slate-600') + ' truncate max-w-[200px]">' + esc(r[4]) + '</td>' +
+            '<td class="py-1.5 px-3 border-r ' + borderCell + ' ' + itemSkuColor + '">' + esc(r[0]) + (dupInJob ? ' <span class="ml-1 px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-200/80 text-rose-900 border border-rose-300">Duplicate</span>' : '') + '</td>' +
+            '<td class="py-1.5 px-3 border-r ' + borderCell + ' ' + (dupInJob ? 'text-rose-900 font-medium' : 'text-slate-600') + '">' + esc(r[1]) + '</td>' +
+            '<td class="py-1.5 px-3 font-sans border-r ' + borderCell + ' ' + (dupInJob ? 'text-rose-900 font-medium' : 'text-slate-700') + '">' + (r[2] ? esc(r[2]) : NODESC) + '</td>' +
+            '<td class="py-1.5 px-3 text-right font-bold border-r ' + borderCell + ' ' + itemQtyColor + ' item-qty">' + r[3] + '</td>' +
             '<td class="py-1.5 px-3 text-center no-print">' +
-            '<button type="button" onclick="deleteImportedStagingItem(this, \'' + loc + '\')" title="Delete product item" class="px-2 py-0.5 bg-rose-50 hover:bg-rose-100 text-rose-700 hover:text-rose-900 border border-rose-200 rounded text-[10px] font-sans font-semibold transition-colors inline-flex items-center gap-1 shadow-2xs">' +
+            '<button type="button" onclick="deleteImportedStagingItem(this, \'' + loc + '\')" title="Delete product item" class="px-2 py-0.5 ' + (dupInJob ? 'bg-rose-100 hover:bg-rose-200 text-rose-900 border-rose-300' : 'bg-rose-50 hover:bg-rose-100 text-rose-700 hover:text-rose-900 border-rose-200') + ' border rounded text-[10px] font-sans font-semibold transition-colors inline-flex items-center gap-1 shadow-2xs">' +
             '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>' +
             '<span>Delete Product</span></button></td></tr>';
         }).join('');
@@ -2561,9 +2569,9 @@
           '<button type="button" onclick="deleteImportedStagingRow(\'' + loc + '\')" title="Delete staged location ' + loc + '" class="px-2.5 py-0.5 bg-rose-50 hover:bg-rose-100 text-rose-700 hover:text-rose-900 border border-rose-200 rounded text-[11px] font-sans font-semibold transition-colors inline-flex items-center gap-1 shadow-2xs">' +
           '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>' +
           '<span>Delete</span></button></td></tr>' +
-          '<tr class="imported-data-detail-row hidden bg-purple-50/30 border-b border-slate-200"><td class="py-0 px-0" colspan="6"><table class="w-full text-xs text-left border-collapse"><thead><tr class="bg-slate-100 text-slate-500 font-bold text-[10px] uppercase tracking-wider border-b border-slate-200">' +
-          '<th class="py-1 pl-11 pr-3 border-r border-slate-200 font-bold">Device ID</th><th class="py-1 px-3 border-r border-slate-200 font-bold">SKU Code</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Barcode</th><th class="py-1 px-3 border-r border-slate-200 font-bold">Product Description</th><th class="py-1 px-3 text-right font-bold border-r border-slate-200">Qty</th><th class="py-1 px-3 text-center no-print font-bold w-28">Actions</th></tr></thead>' +
-          '<tbody class="divide-y divide-slate-100">' + items + '</tbody></table></td></tr>');
+          '<tr class="' + detailRowBg + '"><td class="py-0 px-0" colspan="6"><table class="w-full text-xs text-left border-collapse"><thead><tr class="' + detailHeaderBg + '">' +
+          '<th class="py-1 pl-11 pr-3 border-r ' + borderCell + ' font-bold">Device ID</th><th class="py-1 px-3 border-r ' + borderCell + ' font-bold">SKU Code</th><th class="py-1 px-3 border-r ' + borderCell + ' font-bold">Barcode</th><th class="py-1 px-3 border-r ' + borderCell + ' font-bold">Product Description</th><th class="py-1 px-3 text-right font-bold border-r ' + borderCell + '">Qty</th><th class="py-1 px-3 text-center no-print font-bold w-28">Actions</th></tr></thead>' +
+          '<tbody class="divide-y ' + (dupInJob ? 'divide-rose-200/60' : 'divide-slate-100') + '">' + items + '</tbody></table></td></tr>');
         return { qty: qty, dup: dupInJob };
       }
 
